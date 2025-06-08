@@ -1,0 +1,25 @@
+{
+  "cities": [
+    {
+      "id": "bengaluru",
+      "name": "Bengaluru",
+      "displayName": "Bengaluru"
+    },
+    {
+      "id": "hyderabad",
+      "name": "Hyderabad",
+      "displayName": "Hyderabad"
+    },
+    {
+      "id": "chennai",
+      "name": "Chennai",
+      "displayName": "Chennai"
+    },
+    {
+      "id": "bellary",
+      "name": "Bellary",
+      "displayName": "Bellary"
+    }
+  ],
+  "defaultCity": "bengaluru"
+}

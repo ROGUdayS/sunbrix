@@ -1,0 +1,274 @@
+{
+  "projects": [
+    {
+      "id": "rajendras-residence",
+      "title": "Mr. Rajendra's Residence",
+      "location": "Indore",
+      "floors": "G+2",
+      "plotSize": "30x50 sq. ft",
+      "facing": "East",
+      "budget": "60-70L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A modern 3-story residence designed with contemporary architecture and optimal space utilization.",
+      "features": [
+        "Modern architectural design",
+        "Optimal space utilization",
+        "East-facing for natural light",
+        "Premium finishing materials",
+        "Energy-efficient design"
+      ],
+      "specifications": {
+        "totalArea": "1500 sq. ft",
+        "builtUpArea": "1200 sq. ft",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "parking": "2 cars",
+        "garden": "Front & Back"
+      }
+    },
+    {
+      "id": "shailendras-residence",
+      "title": "Mr. Shailendra's Residence",
+      "location": "Indore",
+      "floors": "G+2",
+      "plotSize": "40x60 sq. ft",
+      "facing": "East",
+      "budget": "70-80L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A spacious family home with elegant design and premium amenities for comfortable living.",
+      "features": [
+        "Spacious family layout",
+        "Premium amenities",
+        "Elegant architectural design",
+        "Large windows for ventilation",
+        "Modern kitchen design"
+      ],
+      "specifications": {
+        "totalArea": "2400 sq. ft",
+        "builtUpArea": "1900 sq. ft",
+        "bedrooms": 4,
+        "bathrooms": 4,
+        "parking": "2 cars",
+        "garden": "Landscaped garden"
+      }
+    },
+    {
+      "id": "itishrees-residence",
+      "title": "Mrs. Itishree's Residence",
+      "location": "Bhubaneswar",
+      "floors": "G+3",
+      "plotSize": "30x50 sq. ft",
+      "facing": "South",
+      "budget": ">1 Cr",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A luxurious 4-story residence with premium finishes and contemporary design elements.",
+      "features": [
+        "Luxury finishes throughout",
+        "4-story contemporary design",
+        "Premium materials",
+        "Smart home features",
+        "Rooftop terrace"
+      ],
+      "specifications": {
+        "totalArea": "1500 sq. ft",
+        "builtUpArea": "1800 sq. ft",
+        "bedrooms": 4,
+        "bathrooms": 5,
+        "parking": "2 cars",
+        "garden": "Rooftop garden"
+      }
+    },
+    {
+      "id": "srishtis-residence",
+      "title": "Mrs. Srishti's Residence",
+      "location": "Bengaluru",
+      "floors": "G+1",
+      "plotSize": "30x40 sq. ft",
+      "facing": "East",
+      "budget": "40-50L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A cozy 2-story home designed for young families with efficient space planning.",
+      "features": [
+        "Efficient space planning",
+        "Young family friendly",
+        "Cost-effective design",
+        "Natural lighting",
+        "Compact yet comfortable"
+      ],
+      "specifications": {
+        "totalArea": "1200 sq. ft",
+        "builtUpArea": "1000 sq. ft",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "parking": "1 car",
+        "garden": "Small front garden"
+      }
+    },
+    {
+      "id": "rajbeers-residence",
+      "title": "Mr. Rajbeer's Residence",
+      "location": "Bhubaneswar",
+      "floors": "G+1",
+      "plotSize": "30x40 sq. ft",
+      "facing": "East",
+      "budget": "40-50L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A traditional yet modern home design that balances comfort with functionality.",
+      "features": [
+        "Traditional modern blend",
+        "Functional layout",
+        "Comfortable living spaces",
+        "Good ventilation",
+        "Affordable luxury"
+      ],
+      "specifications": {
+        "totalArea": "1200 sq. ft",
+        "builtUpArea": "1000 sq. ft",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "parking": "1 car",
+        "garden": "Side garden"
+      }
+    },
+    {
+      "id": "sanjays-residence",
+      "title": "Mr. Sanjay's Residence",
+      "location": "Indore",
+      "floors": "G+1",
+      "plotSize": "30x50 sq. ft",
+      "facing": "West",
+      "budget": "<40L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "An economical yet stylish home design that maximizes value without compromising on quality.",
+      "features": [
+        "Budget-friendly design",
+        "Quality construction",
+        "Stylish interiors",
+        "Practical layout",
+        "Value for money"
+      ],
+      "specifications": {
+        "totalArea": "1500 sq. ft",
+        "builtUpArea": "1200 sq. ft",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "parking": "1 car",
+        "garden": "Back garden"
+      }
+    },
+    {
+      "id": "ranjeeths-residence",
+      "title": "Mr. Ranjeeth's Residence",
+      "location": "Bengaluru",
+      "floors": "G+2",
+      "plotSize": "30x40 sq. ft",
+      "facing": "West",
+      "budget": "40-50L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A well-planned 3-story residence with modern amenities and thoughtful design.",
+      "features": [
+        "Well-planned layout",
+        "Modern amenities",
+        "Thoughtful design",
+        "Compact efficiency",
+        "Urban living optimized"
+      ],
+      "specifications": {
+        "totalArea": "1200 sq. ft",
+        "builtUpArea": "1400 sq. ft",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "parking": "1 car",
+        "garden": "Terrace garden"
+      }
+    },
+    {
+      "id": "narayans-residence",
+      "title": "Mr. Narayan's Residence",
+      "location": "Bhubaneswar",
+      "floors": "G+2",
+      "plotSize": "30x50 sq. ft",
+      "facing": "South",
+      "budget": "60-70L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A family-oriented home with spacious rooms and excellent natural lighting.",
+      "features": [
+        "Family-oriented design",
+        "Spacious rooms",
+        "Excellent natural lighting",
+        "South-facing advantage",
+        "Comfortable living"
+      ],
+      "specifications": {
+        "totalArea": "1500 sq. ft",
+        "builtUpArea": "1600 sq. ft",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "parking": "2 cars",
+        "garden": "Front garden"
+      }
+    },
+    {
+      "id": "ashoks-residence",
+      "title": "Mr. Ashok's Residence",
+      "location": "Bhubaneswar",
+      "floors": "G+1",
+      "plotSize": "30x40 sq. ft",
+      "facing": "South",
+      "budget": "40-50L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "A simple yet elegant 2-story home perfect for small families seeking comfort.",
+      "features": [
+        "Simple elegant design",
+        "Small family perfect",
+        "Comfortable spaces",
+        "Efficient use of space",
+        "Affordable comfort"
+      ],
+      "specifications": {
+        "totalArea": "1200 sq. ft",
+        "builtUpArea": "1000 sq. ft",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "parking": "1 car",
+        "garden": "Small garden"
+      }
+    },
+    {
+      "id": "nileshs-residence",
+      "title": "Mr. Nilesh's Residence",
+      "location": "Indore",
+      "floors": "G+1",
+      "plotSize": "30x40 sq. ft",
+      "facing": "East",
+      "budget": "<40L",
+      "image": "/images/HomeHeroWebImage.webp",
+      "heroImage": "/images/HomeHeroWebImage.webp",
+      "description": "An affordable starter home with smart design solutions and quality construction.",
+      "features": [
+        "Affordable starter home",
+        "Smart design solutions",
+        "Quality construction",
+        "First-time buyer friendly",
+        "Essential amenities"
+      ],
+      "specifications": {
+        "totalArea": "1200 sq. ft",
+        "builtUpArea": "950 sq. ft",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "parking": "1 car",
+        "garden": "Compact garden"
+      }
+    }
+  ]
+}
