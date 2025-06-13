@@ -9,6 +9,7 @@ import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
 import { useCity } from "./contexts/CityContext";
 import packagesData from "../data/packages.json";
+import { scrollToContactForm } from "./utils/scrollToContactForm";
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -163,7 +164,10 @@ export default function Home() {
             </div>
           </div>
 
-          <button className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg text-xl font-semibold transition-all duration-300 shadow-2xl hover:shadow-orange-500/25 hover:scale-105">
+          <button
+            onClick={scrollToContactForm}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg text-xl font-semibold transition-all duration-300 shadow-2xl hover:shadow-orange-500/25 hover:scale-105"
+          >
             Contact Us
           </button>
         </div>
@@ -429,7 +433,10 @@ export default function Home() {
 
           {/* Call to Action Button */}
           <div className="text-center mt-12">
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-md">
+            <button
+              onClick={scrollToContactForm}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-md"
+            >
               Contact Us
             </button>
           </div>
@@ -1132,9 +1139,12 @@ export default function Home() {
                 </li>
 
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <button
+                    onClick={scrollToContactForm}
+                    className="hover:text-white transition-colors text-left"
+                  >
                     Contact us
-                  </Link>
+                  </button>
                 </li>
                 <li>
                   <Link

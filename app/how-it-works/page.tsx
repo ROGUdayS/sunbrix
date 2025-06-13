@@ -5,6 +5,7 @@ import Image from "next/image";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
+import { scrollToContactForm } from "../utils/scrollToContactForm";
 
 export default function HowItWorks() {
   return (
@@ -318,9 +319,12 @@ export default function HowItWorks() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <button
+                    onClick={scrollToContactForm}
+                    className="hover:text-white transition-colors text-left"
+                  >
                     Contact us
-                  </Link>
+                  </button>
                 </li>
                 <li>
                   <Link href="#" className="hover:text-white transition-colors">

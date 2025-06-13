@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useCity } from "../contexts/CityContext";
+import { scrollToContactForm } from "../utils/scrollToContactForm";
 
 interface HeaderProps {
   showCitySelector?: boolean;
@@ -133,13 +134,15 @@ export default function Header({
                     About us
                   </Link>
 
-                  <Link
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amber-900"
-                    onClick={() => setShowMoreDropdown(false)}
+                  <button
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amber-900"
+                    onClick={() => {
+                      setShowMoreDropdown(false);
+                      scrollToContactForm();
+                    }}
                   >
                     Contact us
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
@@ -174,6 +177,7 @@ export default function Header({
               )}
             </div>
             <button
+              onClick={scrollToContactForm}
               className={`px-6 py-2 rounded-lg font-medium transition-all ${
                 isTransparent
                   ? "bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-orange-500/25"
