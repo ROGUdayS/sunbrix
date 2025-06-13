@@ -54,7 +54,7 @@ export default function HowItWorks() {
 
           {/* Process Steps */}
           <div className="space-y-8">
-            {/* Step 1: Book a meeting */}
+            {/* Step 1: Contact Us */}
             <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
               <div className="flex items-start space-x-6">
                 <div className="flex-shrink-0">
@@ -70,7 +70,7 @@ export default function HowItWorks() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    Book a meeting
+                    Contact Us
                   </h3>
                   <p className="text-gray-600 text-lg">
                     Schedule a session to learn about us and our process.
@@ -231,7 +231,7 @@ export default function HowItWorks() {
             <div className="lg:col-span-5">
               <div className="text-3xl font-bold mb-6">Sunbrix</div>
               <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
-                Browse ideas, explore options and book a meeting with our expert
+                Browse ideas, explore options and Contact Us with our expert
                 consultants to finalise your design.
               </p>
               <div className="space-y-3 mb-8">
@@ -354,7 +354,7 @@ export default function HowItWorks() {
         </div>
       </footer>
 
-      {/* Floating Book a Meeting Button */}
+      {/* Floating Contact Us Button */}
       <FloatingBookButton />
     </div>
   );

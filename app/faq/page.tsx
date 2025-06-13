@@ -365,7 +365,7 @@ export default function FAQ() {
             the Sunbrix way.
           </p>
           <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-md">
-            Book a meeting
+            Contact Us
           </button>
         </div>
       </section>
@@ -384,7 +384,7 @@ export default function FAQ() {
             <div className="lg:col-span-5">
               <div className="text-3xl font-bold mb-6">Sunbrix</div>
               <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
-                Browse ideas, explore options and book a meeting with our expert
+                Browse ideas, explore options and Contact Us with our expert
                 consultants to finalise your design.
               </p>
               <div className="space-y-3 mb-8">
@@ -512,7 +512,7 @@ export default function FAQ() {
         </div>
       </footer>
 
-      {/* Floating Book a Meeting Button */}
+      {/* Floating Contact Us Button */}
       <FloatingBookButton />
     </div>
   );

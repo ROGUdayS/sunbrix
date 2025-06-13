@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
@@ -11,8 +11,21 @@ import { useCity } from "./contexts/CityContext";
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
   // City context is used by the Header component and CityModal
   const { setShowCityModal } = useCity();
+
+  // Add scroll effect for header transparency
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const heroHeight = window.innerHeight;
+      setIsScrolled(scrollPosition > heroHeight * 0.8);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Add accordion state for packages - simplified to track which section is open
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -290,127 +303,110 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
-      {/* Header */}
-      <Header showCitySelector={true} />
+      {/* Header - Fixed with transparency effects */}
+      <div
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-md shadow-lg"
+            : "bg-transparent"
+        }`}
+      >
+        <Header showCitySelector={true} isTransparent={!isScrolled} />
+      </div>
 
-      {/* Hero Section */}
-      <section className="bg-[#fdfdf8] flex items-center min-h-[calc(100vh-4rem)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12">
-          {/* Left: Text */}
-          <div className="w-full lg:w-1/2 flex flex-col justify-center lg:pr-12">
-            <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight text-left">
-              Building homes Since 1999
-            </h1>
-            <p className="text-lg text-gray-500 mb-10 text-left">
-              Build your dream home hassle-free
-              <br className="hidden lg:block" /> with Sunbrix.
-            </p>
+      {/* Hero Section with Motion Background */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Motion Background Video */}
+        <div className="absolute inset-0 w-full h-full">
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+          >
+            <source src="/videos/motion-backgorund.mp4" type="video/mp4" />
+            {/* Fallback image if video doesn't load */}
+            <Image
+              src="/images/motions-background.webp"
+              alt="Modern dream home"
+              fill
+              className="object-cover"
+              priority
+            />
+          </video>
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
 
-            {/* Key Features Grid */}
-            <div className="grid grid-cols-2 gap-6 mb-10">
-              {/* Designs Matching Vision */}
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg
-                    className="w-5 h-5 text-amber-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                    Designs Matching Vision
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    Functional layouts unique to your lifestyle
-                  </p>
-                </div>
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight drop-shadow-2xl">
+            Building homes Since 1999
+          </h1>
+          <p className="text-xl lg:text-2xl mb-12 drop-shadow-lg max-w-3xl mx-auto">
+            Build your dream home hassle-free with Sunbrix.
+            <br />
+            Experience excellence in every detail.
+          </p>
+
+          {/* Key Stats */}
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-12 max-w-5xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+              <div className="text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+                25
               </div>
-
-              {/* High-Quality Materials */}
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg
-                    className="w-5 h-5 text-amber-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                    High-Quality Materials
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    Only certified-grade materials, no compromises
-                  </p>
-                </div>
+              <div className="text-sm lg:text-base font-medium">Years</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+              <div className="text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+                100+
               </div>
-
-              {/* Price Transparency */}
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg
-                    className="w-5 h-5 text-amber-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                    Price Transparency
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    Clear pricing with no surprises
-                  </p>
-                </div>
+              <div className="text-sm lg:text-base font-medium">Homes</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+              <div className="text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+                100%
               </div>
-
-              {/* On-Time Delivery */}
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg
-                    className="w-5 h-5 text-amber-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">
-                    On-Time Delivery
-                  </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    Turnkey model that stays on schedule
-                  </p>
-                </div>
+              <div className="text-sm lg:text-base font-medium">
+                Transparent
               </div>
             </div>
-
-            <button className="bg-orange-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-colors shadow-md text-left w-fit">
-              Book a meeting
-            </button>
-          </div>
-
-          {/* Right: Image */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center">
-            <div className="rounded-2xl overflow-hidden shadow-xl border border-gray-100 w-full max-w-xl">
-              <Image
-                src="/images/HomeHeroWebImage.webp"
-                alt="Modern dream home with contemporary architecture"
-                width={600}
-                height={400}
-                className="w-full h-auto object-cover"
-                priority
-              />
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+              <div className="text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+                100%
+              </div>
+              <div className="text-sm lg:text-base font-medium">On-Time</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 col-span-2 lg:col-span-1">
+              <div className="text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+                ★★★★★
+              </div>
+              <div className="text-sm lg:text-base font-medium">Quality</div>
             </div>
           </div>
+
+          <button className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg text-xl font-semibold transition-all duration-300 shadow-2xl hover:shadow-orange-500/25 hover:scale-105">
+            Contact Us
+          </button>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
         </div>
       </section>
 
@@ -424,6 +420,7 @@ export default function Home() {
             <p className="text-xl text-amber-800 mb-16">
               You build your dream home once. Build it right with Sunbrix.
             </p>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -657,7 +654,7 @@ export default function Home() {
           {/* Call to Action Button */}
           <div className="text-center mt-12">
             <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-md">
-              Book a meeting
+              Contact Us
             </button>
           </div>
         </div>
@@ -1239,7 +1236,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Floating Book a Meeting Button */}
+      {/* Floating Contact Us Button */}
       <FloatingBookButton />
     </div>
   );

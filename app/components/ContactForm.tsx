@@ -322,7 +322,7 @@ export default function ContactForm({
                     : "bg-orange-400 hover:bg-orange-500 text-white"
                 }`}
               >
-                {isSubmitting ? "Submitting..." : "Book a meeting"}
+                {isSubmitting ? "Submitting..." : "Contact Us"}
               </button>
             </div>
           </form>

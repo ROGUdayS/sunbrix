@@ -168,7 +168,7 @@ export default function Contact() {
         </div>
       </footer>
 
-      {/* Floating Book a Meeting Button */}
+      {/* Floating Contact Us Button */}
       <FloatingBookButton />
     </div>
   );

@@ -441,7 +441,7 @@ export default function About() {
         </div>
       </footer>
 
-      {/* Floating Book a Meeting Button */}
+      {/* Floating Contact Us Button */}
       <FloatingBookButton />
     </div>
   );
