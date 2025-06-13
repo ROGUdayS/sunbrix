@@ -78,8 +78,8 @@ export default function Home() {
         structure: {
           title: "Structure",
           items: [
-            "JSW OPC 53, JSW Max super PPC",
-            "JSW Neo Steel 550D",
+            "Sunbrix OPC 53, Sunbrix Max super PPC",
+            "Sunbrix Neo Steel 550D",
             "10.5' Ceiling Height",
             "2' elevated Plinth level",
           ],
@@ -148,8 +148,8 @@ export default function Home() {
         structure: {
           title: "Structure",
           items: [
-            "JSW OPC 53, JSW Max super PPC",
-            "JSW Neo Steel 550D",
+            "Sunbrix OPC 53, Sunbrix Max super PPC",
+            "Sunbrix Neo Steel 550D",
             "10.5' Ceiling Height",
             "2' elevated Plinth level",
           ],
@@ -222,8 +222,8 @@ export default function Home() {
         structure: {
           title: "Structure",
           items: [
-            "JSW OPC 53, JSW Max super PPC",
-            "JSW Neo Steel 550D",
+            "Sunbrix OPC 53, Sunbrix Max super PPC",
+            "Sunbrix Neo Steel 550D",
             "10.5' Ceiling Height",
             "2' elevated Plinth level",
           ],
@@ -305,7 +305,7 @@ export default function Home() {
             </h1>
             <p className="text-lg text-gray-500 mb-10 text-left">
               Build your dream home hassle-free
-              <br className="hidden lg:block" /> with JSW One Homes.
+              <br className="hidden lg:block" /> with Sunbrix.
             </p>
 
             {/* Key Features Grid */}
@@ -416,15 +416,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why JSW One Homes */}
+      {/* Why Sunbrix */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-amber-900 mb-4">
-              Why JSW One Homes
+              Why Sunbrix
             </h2>
             <p className="text-xl text-amber-800 mb-16">
-              You build your dream home once. Build it right with JSW One Homes.
+              You build your dream home once. Build it right with Sunbrix.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center">
@@ -1011,8 +1011,8 @@ export default function Home() {
                   </div>
                   <p className="text-gray-700 text-center mb-4 leading-relaxed">
                     Most people struggle with delays, finances, or contractors.
-                    I didn't face even 1% of that. JSW One Homes made my home
-                    journey smooth and hassle-free.
+                    I didn't face even 1% of that. Sunbrix made my home journey
+                    smooth and hassle-free.
                   </p>
                   <div className="text-center font-semibold text-gray-900">
                     Mr. Suryanarayanan Karthikeyan
@@ -1043,7 +1043,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <p className="text-gray-700 text-center mb-4 leading-relaxed">
-                    JSW One's expert team guided me at every step. Their quality
+                    Sunbrix's expert team guided me at every step. Their quality
                     gave me total confidence throughout the journey.
                   </p>
                   <div className="text-center font-semibold text-gray-900">
@@ -1075,7 +1075,7 @@ export default function Home() {
                     </svg>
                   </div>
                   <p className="text-gray-700 text-center mb-4 leading-relaxed">
-                    JSW Homes exceeded our expectations! The construction
+                    Sunbrix Homes exceeded our expectations! The construction
                     quality and timely delivery were remarkable. Truly a dream
                     home.
                   </p>
@@ -1108,7 +1108,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Brand Section - Takes up 5 columns */}
             <div className="lg:col-span-5">
-              <div className="text-3xl font-bold mb-6">JSW ONE HOMES</div>
+              <div className="text-3xl font-bold mb-6">Sunbrix</div>
               <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
                 Browse ideas, explore options and book a meeting with our expert
                 consultants to finalise your design.

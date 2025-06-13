@@ -20,7 +20,7 @@ export default function FAQ() {
 
   const categories = [
     "All",
-    "JSW One Homes",
+    "Sunbrix",
     "Material procurement",
     "Construction",
     "Design",
@@ -29,10 +29,10 @@ export default function FAQ() {
   const faqData: FAQItem[] = [
     {
       id: "1",
-      question: "Since how long has JSW been in the construction business?",
+      question: "Since how long has Sunbrix been in the construction business?",
       answer:
-        "JSW One Homes was launched in 2021 to offer independent homeowners a hassle-free home-building experience.",
-      category: "JSW One Homes",
+        "Sunbrix was launched in 2021 to offer independent homeowners a hassle-free home-building experience.",
+      category: "Sunbrix",
     },
     {
       id: "2",
@@ -43,36 +43,35 @@ export default function FAQ() {
     },
     {
       id: "3",
-      question: "Does JSW One Homes undertake home designing services?",
+      question: "Does Sunbrix undertake home designing services?",
       answer:
         "Yes, we offer a premium design service through a carefully vetted pool of empanelled architects.",
       category: "Design",
     },
     {
       id: "4",
-      question: "Does JSW One Homes undertake home interior services?",
+      question: "Does Sunbrix undertake home interior services?",
       answer:
         "No, we do not currently offer home interior services. However, we continue to improve our offerings and progressively expand our affiliate service partnerships.",
-      category: "JSW One Homes",
+      category: "Sunbrix",
     },
     {
       id: "5",
-      question: "Does JSW One Homes undertake any commercial projects?",
+      question: "Does Sunbrix undertake any commercial projects?",
       answer:
         "No, we do not undertake commercial or semi-commercial projects. Our focus is firmly on shaping the future of independent homebuilding - one dream home at a time.",
-      category: "JSW One Homes",
+      category: "Sunbrix",
     },
     {
       id: "6",
-      question:
-        "Does JSW One Homes assist in getting government approvals & loans?",
+      question: "Does Sunbrix assist in getting government approvals & loans?",
       answer:
         "Yes, we assist with loans and financial support through our affiliate partners. However, customers are required to obtain government approvals independently.",
-      category: "JSW One Homes",
+      category: "Sunbrix",
     },
     {
       id: "7",
-      question: "Does JSW One Homes offer any construction warranties?",
+      question: "Does Sunbrix offer any construction warranties?",
       answer:
         "Yes, for all homes handed over, our contractors provide a one-year workmanship warranty and a five-year structural warranty. All contractor partners are carefully selected through a stringent, end-to-end onboarding process.",
       category: "Construction",
@@ -80,7 +79,7 @@ export default function FAQ() {
     {
       id: "8",
       question:
-        "Does JSW One Homes provide any protection against delays in completion of the project?",
+        "Does Sunbrix provide any protection against delays in completion of the project?",
       answer:
         "Yes, the contract includes delay penalty clauses to safeguard the customer against inadvertent delays by the contractor.",
       category: "Construction",
@@ -90,7 +89,7 @@ export default function FAQ() {
       question:
         "Will I get to choose the materials that are planned to be used in my project?",
       answer:
-        "Yes. While steel, cement, RMC and paints are provided by JSW, all other materials can be selected by customers from the product assortments of our affiliate partners, who offer them at discounted prices. The material budgets considered for the project are detailed in the quotations and agreements to simplify shortlisting and selection.",
+        "Yes. While steel, cement, RMC and paints are provided by Sunbrix, all other materials can be selected by customers from the product assortments of our affiliate partners, who offer them at discounted prices. The material budgets considered for the project are detailed in the quotations and agreements to simplify shortlisting and selection.",
       category: "Material procurement",
     },
     {
@@ -103,15 +102,14 @@ export default function FAQ() {
     },
     {
       id: "11",
-      question:
-        "Is it mandatory to purchase all materials through JSW One Homes?",
+      question: "Is it mandatory to purchase all materials through Sunbrix?",
       answer:
-        "For core materials such as TMT steel and cement, we use only JSW products to ensure consistent quality and structural reliability. For other categories, you are welcome to choose your own vendors. However, our affiliate partners offer advantages such as better pricing, assured quality and timely delivery.",
+        "For core materials such as TMT steel and cement, we use only Sunbrix products to ensure consistent quality and structural reliability. For other categories, you are welcome to choose your own vendors. However, our affiliate partners offer advantages such as better pricing, assured quality and timely delivery.",
       category: "Material procurement",
     },
     {
       id: "12",
-      question: "Which material categories does JSW One Homes support?",
+      question: "Which material categories does Sunbrix support?",
       answer:
         "We cover everything needed for a complete home: Construction essentials: TMT steel, cement, RMC, paints, and construction chemicals. Finishes and fixtures: Tiles, sanitaryware, doors, and windows. Interiors and technology: Electricals, interior solutions, solar systems, and home automation.",
       category: "Material procurement",
@@ -134,7 +132,7 @@ export default function FAQ() {
     },
     {
       id: "15",
-      question: "How does JSW One Homes ensure material quality?",
+      question: "How does Sunbrix ensure material quality?",
       answer:
         "We partner only with reputed brands known for quality and reliability. Our team ensures that the right materials reach your site in the right condition.",
       category: "Material procurement",
@@ -152,20 +150,19 @@ export default function FAQ() {
       question:
         "What are the payments process & controls in place for a project?",
       answer:
-        "All customer payments are made to a nodal or escrow account managed by JSW. The payment schedule is defined according to construction milestones and varies by project scale. For each milestone, payment is collected in advance from the customer and released to the contractor only after successful completion and customer confirmation.",
+        "All customer payments are made to a nodal or escrow account managed by Sunbrix. The payment schedule is defined according to construction milestones and varies by project scale. For each milestone, payment is collected in advance from the customer and released to the contractor only after successful completion and customer confirmation.",
       category: "Construction",
     },
     {
       id: "18",
-      question:
-        "What are the benefits of procuring materials through JSW One Homes?",
+      question: "What are the benefits of procuring materials through Sunbrix?",
       answer:
         "We ensure high-quality materials from trusted brands at competitive prices, with timely delivery to your site.",
       category: "Material procurement",
     },
     {
       id: "19",
-      question: "Which brands are partnered with JSW One Homes?",
+      question: "Which brands are partnered with Sunbrix?",
       answer:
         "We collaborate with industry leaders for guaranteed quality: • Tiles: Kajaria, Creanza, Somany, Johnson • Sanitaryware: Jaquar, Kohler, TOTO, Johnson, Cera • Doors and windows: Fenesta • Pipes: Astral • Electricals: Polycab • Interior solutions: Homelane",
       category: "Material procurement",
@@ -174,7 +171,7 @@ export default function FAQ() {
       id: "20",
       question: "Can I use my own vendors for certain materials?",
       answer:
-        "Yes, you can. However, procuring through JSW One Homes often ensures better pricing, assured availability and brand-backed quality.",
+        "Yes, you can. However, procuring through Sunbrix often ensures better pricing, assured availability and brand-backed quality.",
       category: "Material procurement",
     },
     {
@@ -187,7 +184,7 @@ export default function FAQ() {
     {
       id: "22",
       question:
-        "Is there a cost benefit if I procure materials through JSW One Homes?",
+        "Is there a cost benefit if I procure materials through Sunbrix?",
       answer:
         "Yes, we leverage our scale and partnerships to offer competitive prices, often better than market rates.",
       category: "Material procurement",
@@ -196,7 +193,7 @@ export default function FAQ() {
       id: "23",
       question: "How will an architect be allocated to our projects?",
       answer:
-        "Local architects empaneled with JSW Homes post clearing certain quality checks and having high customer NPS.",
+        "Local architects empaneled with Sunbrix Homes post clearing certain quality checks and having high customer NPS.",
       category: "Design",
     },
     {
@@ -258,8 +255,8 @@ export default function FAQ() {
             Frequently asked questions
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Find answers to common questions about JSW One Homes, our
-            construction process, materials, and services.
+            Find answers to common questions about Sunbrix, our construction
+            process, materials, and services.
           </p>
         </div>
       </section>
@@ -361,11 +358,11 @@ export default function FAQ() {
             You Dream. We Deliver.
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            JSW One Homes is a venture by the JSW Group, a leading name in
-            steel, cement, energy and other core sectors. We believe building a
-            home should put you firmly in control, with access to verified
+            Sunbrix is a venture by the Sunbrix Group, a leading name in steel,
+            cement, energy and other core sectors. We believe building a home
+            should put you firmly in control, with access to verified
             professionals, quality products and a safe, transparent process -
-            the JSW way.
+            the Sunbrix way.
           </p>
           <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-md">
             Book a meeting
@@ -385,7 +382,7 @@ export default function FAQ() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Brand Section */}
             <div className="lg:col-span-5">
-              <div className="text-3xl font-bold mb-6">JSW ONE HOMES</div>
+              <div className="text-3xl font-bold mb-6">Sunbrix</div>
               <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
                 Browse ideas, explore options and book a meeting with our expert
                 consultants to finalise your design.

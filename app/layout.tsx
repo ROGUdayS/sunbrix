@@ -4,11 +4,11 @@ import { CityProvider } from "./contexts/CityContext";
 import CityModal from "./components/CityModal";
 
 export const metadata: Metadata = {
-  title: "JSW One Homes - You Dream. We Deliver.",
+  title: "Sunbrix - You Dream. We Deliver.",
   description:
-    "Build your dream home hassle-free with JSW One Homes. High-quality materials, transparent pricing, and on-time delivery.",
+    "Build your dream home hassle-free with Sunbrix. High-quality materials, transparent pricing, and on-time delivery.",
   keywords:
-    "home construction, dream home, JSW homes, house building, construction company",
+    "home construction, dream home, Sunbrix homes, house building, construction company",
 };
 
 export default function RootLayout({

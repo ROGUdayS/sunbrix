@@ -23,7 +23,7 @@ export default function Testimonials() {
       name: "Mr. Suryanarayanan Karthikeyan",
       location: "",
       quote:
-        "Most people struggle with delays, finances, or contractors. I didn't face even 1% of that. JSW One Homes made my home journey smooth and hassle-free.",
+        "Most people struggle with delays, finances, or contractors. I didn't face even 1% of that. Sunbrix made my home journey smooth and hassle-free.",
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     },
     {
@@ -31,7 +31,7 @@ export default function Testimonials() {
       name: "Mr. Gururaj Naik",
       location: "Hyderabad",
       quote:
-        "JSW One's expert team guided me at every step. Their quality gave me total confidence throughout the journey.",
+        "Sunbrix's expert team guided me at every step. Their quality gave me total confidence throughout the journey.",
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     },
     {
@@ -39,7 +39,7 @@ export default function Testimonials() {
       name: "Mr. Hariharasudan",
       location: "Coimbatore",
       quote:
-        "JSW Homes exceeded our expectations! The construction quality and timely delivery were remarkable. Truly a dream home.",
+        "Sunbrix Homes exceeded our expectations! The construction quality and timely delivery were remarkable. Truly a dream home.",
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     },
     {
@@ -47,7 +47,7 @@ export default function Testimonials() {
       name: "Mr. Radhakrishna",
       location: "Bengaluru",
       quote:
-        "JSW One Homes made my dream home a hassle-free reality - clear costs, quality build, and service you can trust.",
+        "Sunbrix made my dream home a hassle-free reality - clear costs, quality build, and service you can trust.",
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     },
     {
@@ -55,7 +55,7 @@ export default function Testimonials() {
       name: "Mr. RP Sharma",
       location: "Others",
       quote:
-        "JSW One's holistic support was reassuring. Their team patiently guided me from design to execution.",
+        "Sunbrix's holistic support was reassuring. Their team patiently guided me from design to execution.",
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     },
     {
@@ -63,7 +63,7 @@ export default function Testimonials() {
       name: "Mr. Santosh",
       location: "Bengaluru",
       quote:
-        "With JSW One Homes, we didn't just build a home - we gained trust, care, and peace of mind.",
+        "With Sunbrix, we didn't just build a home - we gained trust, care, and peace of mind.",
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     },
   ];
@@ -109,7 +109,7 @@ export default function Testimonials() {
               Customer Stories
             </h2>
             <p className="text-xl text-gray-600">
-              Real experiences from homeowners who chose JSW One Homes
+              Real experiences from homeowners who chose Sunbrix
             </p>
           </div>
 
@@ -217,8 +217,7 @@ export default function Testimonials() {
               More Customer Stories
             </h2>
             <p className="text-xl text-gray-600">
-              Discover why families choose JSW One Homes for their dream home
-              journey
+              Discover why families choose Sunbrix for their dream home journey
             </p>
           </div>
 
@@ -281,7 +280,7 @@ export default function Testimonials() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Brand Section */}
             <div className="lg:col-span-5">
-              <div className="text-3xl font-bold mb-6">JSW ONE HOMES</div>
+              <div className="text-3xl font-bold mb-6">Sunbrix</div>
               <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
                 Browse ideas, explore options and book a meeting with our expert
                 consultants to finalise your design.

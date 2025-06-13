@@ -36,7 +36,7 @@ export default function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Brand Section */}
             <div className="lg:col-span-5">
-              <div className="text-3xl font-bold mb-6">JSW ONE HOMES</div>
+              <div className="text-3xl font-bold mb-6">Sunbrix</div>
               <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
                 Browse ideas, explore options and book a meeting with our expert
                 consultants to finalise your design.

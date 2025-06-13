@@ -49,7 +49,7 @@ export default function Header({ showCitySelector = false }: HeaderProps) {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="text-2xl font-bold text-amber-900">
-              JSW ONE HOMES
+              Sunbrix
             </Link>
           </div>
           <nav className="hidden md:flex space-x-8">

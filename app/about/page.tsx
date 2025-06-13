@@ -17,7 +17,7 @@ export default function About() {
       <section className="bg-gradient-to-br from-orange-50 to-amber-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-            About JSW One Homes
+            About Sunbrix
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Building dreams with trust, quality, and innovation. We're here to
@@ -35,7 +35,7 @@ export default function About() {
                 Our Story
               </h2>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                JSW One Homes was launched in 2021 as part of the JSW Group, a
+                Sunbrix was launched in 2021 as part of the Sunbrix Group, a
                 leading name in steel, cement, energy, and other core sectors.
                 We recognized that building a home shouldn't be a stressful
                 experience filled with uncertainty and delays.
@@ -47,7 +47,7 @@ export default function About() {
                 building your dream home should put you firmly in control.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                With the backing of JSW Group's decades of expertise in
+                With the backing of Sunbrix Group's decades of expertise in
                 construction materials and our commitment to innovation, we're
                 reshaping the future of independent homebuilding - one dream
                 home at a time.
@@ -57,7 +57,7 @@ export default function About() {
               <div className="rounded-2xl overflow-hidden shadow-xl border border-gray-100">
                 <Image
                   src="/images/HomeHeroWebImage.webp"
-                  alt="JSW One Homes construction site"
+                  alt="Sunbrix construction site"
                   width={600}
                   height={400}
                   className="w-full h-auto object-cover"
@@ -181,12 +181,12 @@ export default function About() {
               What Makes Us Different
             </h2>
             <p className="text-xl text-gray-600">
-              The JSW advantage in home construction
+              The Sunbrix advantage in home construction
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* JSW Group Heritage */}
+            {/* Sunbrix Group Heritage */}
             <div className="bg-gray-50 rounded-2xl p-8">
               <div className="bg-orange-100 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
                 <svg
@@ -203,11 +203,11 @@ export default function About() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                JSW Group Heritage
+                Sunbrix Group Heritage
               </h3>
               <p className="text-gray-700 leading-relaxed">
-                Backed by JSW Group's decades of expertise in steel, cement, and
-                construction materials. We bring industrial-grade quality to
+                Backed by Sunbrix Group's decades of expertise in steel, cement,
+                and construction materials. We bring industrial-grade quality to
                 residential construction.
               </p>
             </div>
@@ -273,8 +273,8 @@ export default function About() {
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             We understand that building a home is one of life's biggest
             investments. That's why we're committed to making the process
-            transparent, efficient, and stress-free. With JSW One Homes, you're
-            not just building a house - you're creating a foundation for your
+            transparent, efficient, and stress-free. With Sunbrix, you're not
+            just building a house - you're creating a foundation for your
             family's future.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
@@ -303,7 +303,7 @@ export default function About() {
       {/* Contact Form */}
       <ContactForm
         title="Ready to Build Your Dream Home?"
-        subtitle="Join hundreds of satisfied homeowners who chose JSW One Homes for their construction journey."
+        subtitle="Join hundreds of satisfied homeowners who chose Sunbrix for their construction journey."
       />
 
       {/* Footer */}
@@ -312,7 +312,7 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Brand Section */}
             <div className="lg:col-span-5">
-              <div className="text-3xl font-bold mb-6">JSW ONE HOMES</div>
+              <div className="text-3xl font-bold mb-6">Sunbrix</div>
               <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
                 Browse ideas, explore options and book a meeting with our expert
                 consultants to finalise your design.
