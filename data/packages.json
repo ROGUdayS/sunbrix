@@ -1,0 +1,493 @@
+{
+  "serviceTypes": [
+    {
+      "id": "construction",
+      "name": "Construction",
+      "description": "Complete home construction services"
+    },
+    {
+      "id": "architecture",
+      "name": "Architecture",
+      "description": "Architectural design and planning services"
+    },
+    {
+      "id": "interior",
+      "name": "Interior",
+      "description": "Interior design and finishing services"
+    }
+  ],
+  "packages": {
+    "construction": {
+      "standard": {
+        "title": "Standard",
+        "popular": false,
+        "pricing": {
+          "bengaluru": { "price": "₹ 1,850", "startingAt": false },
+          "hyderabad": { "price": "₹ 1,750", "startingAt": false },
+          "chennai": { "price": "₹ 1,800", "startingAt": false },
+          "bellary": { "price": "₹ 1,650", "startingAt": false }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Sunbrix OPC 53, Sunbrix Max super PPC",
+              "Sunbrix Neo Steel 550D",
+              "2' X 2' Vetrified tiles",
+              "Standard wooden doors & UPVC windows"
+            ]
+          },
+          "design": {
+            "title": "Design",
+            "items": [
+              "Digital plot and contour survey",
+              "2D floor plan & 3D Elevation",
+              "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
+              "RCC drawings",
+              "Electrical & Plumbing drawings"
+            ]
+          },
+          "structure": {
+            "title": "Structure",
+            "items": [
+              "Sunbrix OPC 53, Sunbrix Max super PPC",
+              "Sunbrix Neo Steel 550D",
+              "10.5' Ceiling Height",
+              "2' elevated Plinth level"
+            ]
+          },
+          "flooring": {
+            "title": "Flooring and dado",
+            "items": [
+              "2' X 2' Vetrified tiles",
+              "Granite for Staircase",
+              "Kitchen countertop"
+            ]
+          },
+          "doors": {
+            "title": "Door and windows",
+            "items": ["Standard wooden doors", "UPVC windows", "Basic hardware"]
+          },
+          "plumbing": {
+            "title": "Plumbing accessories",
+            "items": [
+              "Basic fixtures",
+              "Standard fittings",
+              "Essential accessories"
+            ]
+          },
+          "painting": {
+            "title": "Painting",
+            "items": [
+              "Interior wall painting",
+              "Exterior wall painting",
+              "Standard finish"
+            ]
+          },
+          "electrical": {
+            "title": "Electrical",
+            "items": ["Basic wiring", "Standard switches", "Essential points"]
+          },
+          "plumbingSystem": {
+            "title": "Plumbing",
+            "items": [
+              "Basic plumbing system",
+              "Standard pipes",
+              "Essential connections"
+            ]
+          },
+          "railing": {
+            "title": "Railing and handrails",
+            "items": ["Standard railing", "Basic handrails", "Safety features"]
+          }
+        }
+      },
+      "premium": {
+        "title": "Premium",
+        "popular": true,
+        "pricing": {
+          "bengaluru": { "price": "₹ 2,250", "startingAt": false },
+          "hyderabad": { "price": "₹ 2,150", "startingAt": false },
+          "chennai": { "price": "₹ 2,200", "startingAt": false },
+          "bellary": { "price": "₹ 2,050", "startingAt": false }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Sunbrix OPC 53, Sunbrix Max super PPC",
+              "Sunbrix Neo Steel 550D",
+              "4' X 2' Premium Vetrified tiles",
+              "Premium wooden doors & UPVC windows with grills"
+            ]
+          },
+          "design": {
+            "title": "Design",
+            "items": [
+              "Digital plot and contour survey",
+              "2D floor plan & 3D Elevation",
+              "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
+              "RCC drawings",
+              "Electrical & Plumbing drawings"
+            ]
+          },
+          "structure": {
+            "title": "Structure",
+            "items": [
+              "Sunbrix OPC 53, Sunbrix Max super PPC",
+              "Sunbrix Neo Steel 550D",
+              "10.5' Ceiling Height",
+              "2' elevated Plinth level"
+            ]
+          },
+          "flooring": {
+            "title": "Flooring and dado",
+            "items": [
+              "4' X 2' Premium Vetrified tiles",
+              "Jaguar Continental series",
+              "Wall mounted EWC"
+            ]
+          },
+          "doors": {
+            "title": "Door and windows",
+            "items": [
+              "Premium wooden doors",
+              "UPVC windows with grills",
+              "Quality hardware"
+            ]
+          },
+          "plumbing": {
+            "title": "Plumbing accessories",
+            "items": [
+              "Premium fixtures",
+              "Quality fittings",
+              "Enhanced accessories"
+            ]
+          },
+          "painting": {
+            "title": "Painting",
+            "items": [
+              "Premium interior painting",
+              "Weather-resistant exterior",
+              "Smooth finish"
+            ]
+          },
+          "electrical": {
+            "title": "Electrical",
+            "items": ["Premium wiring", "Modular switches", "Additional points"]
+          },
+          "plumbingSystem": {
+            "title": "Plumbing",
+            "items": [
+              "Premium plumbing system",
+              "Quality pipes",
+              "Enhanced connections"
+            ]
+          },
+          "railing": {
+            "title": "Railing and handrails",
+            "items": [
+              "Premium railing",
+              "Designer handrails",
+              "Enhanced safety"
+            ]
+          }
+        }
+      },
+      "luxury": {
+        "title": "Luxury",
+        "popular": false,
+        "pricing": {
+          "bengaluru": { "price": "₹ 2,850", "startingAt": false },
+          "hyderabad": { "price": "₹ 2,750", "startingAt": false },
+          "chennai": { "price": "₹ 2,800", "startingAt": false },
+          "bellary": { "price": "₹ 2,650", "startingAt": false }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Sunbrix OPC 53, Sunbrix Max super PPC",
+              "Sunbrix Neo Steel 550D",
+              "6' X 4' Marble flooring",
+              "Luxury wooden doors & Premium UPVC windows"
+            ]
+          },
+          "design": {
+            "title": "Design",
+            "items": [
+              "Digital plot and contour survey",
+              "2D floor plan & 3D Elevation",
+              "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
+              "RCC drawings",
+              "Electrical & Plumbing drawings"
+            ]
+          },
+          "structure": {
+            "title": "Structure",
+            "items": [
+              "Sunbrix OPC 53, Sunbrix Max super PPC",
+              "Sunbrix Neo Steel 550D",
+              "10.5' Ceiling Height",
+              "2' elevated Plinth level"
+            ]
+          },
+          "flooring": {
+            "title": "Flooring and dado",
+            "items": [
+              "6' X 4' Marble flooring",
+              "Jaguar Premium series",
+              "Toughened glass railing"
+            ]
+          },
+          "doors": {
+            "title": "Door and windows",
+            "items": [
+              "Luxury wooden doors",
+              "Premium UPVC windows",
+              "Designer hardware"
+            ]
+          },
+          "plumbing": {
+            "title": "Plumbing accessories",
+            "items": [
+              "Luxury fixtures",
+              "Premium fittings",
+              "Designer accessories"
+            ]
+          },
+          "painting": {
+            "title": "Painting",
+            "items": [
+              "Luxury interior painting",
+              "Premium exterior finish",
+              "Designer textures"
+            ]
+          },
+          "electrical": {
+            "title": "Electrical",
+            "items": [
+              "Premium wiring system",
+              "Designer switches",
+              "Smart home ready"
+            ]
+          },
+          "plumbingSystem": {
+            "title": "Plumbing",
+            "items": [
+              "Luxury plumbing system",
+              "Premium pipes",
+              "Designer connections"
+            ]
+          },
+          "railing": {
+            "title": "Railing and handrails",
+            "items": [
+              "Designer railing",
+              "Luxury handrails",
+              "Premium safety features"
+            ]
+          }
+        }
+      }
+    },
+    "architecture": {
+      "basic": {
+        "title": "Basic",
+        "popular": false,
+        "pricing": {
+          "bengaluru": { "price": "Starting at ₹ 25", "startingAt": true },
+          "hyderabad": { "price": "Starting at ₹ 22", "startingAt": true },
+          "chennai": { "price": "Starting at ₹ 24", "startingAt": true },
+          "bellary": { "price": "Starting at ₹ 20", "startingAt": true }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "2D floor plans",
+              "Basic elevation design",
+              "Structural drawings",
+              "Essential documentation"
+            ]
+          },
+          "design": {
+            "title": "Design Services",
+            "items": [
+              "Site survey and analysis",
+              "2D floor plan design",
+              "Basic elevation design",
+              "Structural layout",
+              "Basic documentation"
+            ]
+          }
+        }
+      },
+      "comprehensive": {
+        "title": "Comprehensive",
+        "popular": true,
+        "pricing": {
+          "bengaluru": { "price": "Starting at ₹ 45", "startingAt": true },
+          "hyderabad": { "price": "Starting at ₹ 42", "startingAt": true },
+          "chennai": { "price": "Starting at ₹ 44", "startingAt": true },
+          "bellary": { "price": "Starting at ₹ 40", "startingAt": true }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Complete architectural drawings",
+              "3D visualization",
+              "Detailed structural plans",
+              "Interior layout suggestions"
+            ]
+          },
+          "design": {
+            "title": "Design Services",
+            "items": [
+              "Comprehensive site analysis",
+              "Detailed 2D floor plans",
+              "3D elevation and visualization",
+              "Complete structural drawings",
+              "Interior layout planning",
+              "Landscape design basics"
+            ]
+          }
+        }
+      },
+      "premium": {
+        "title": "Premium",
+        "popular": false,
+        "pricing": {
+          "bengaluru": { "price": "Starting at ₹ 65", "startingAt": true },
+          "hyderabad": { "price": "Starting at ₹ 62", "startingAt": true },
+          "chennai": { "price": "Starting at ₹ 64", "startingAt": true },
+          "bellary": { "price": "Starting at ₹ 60", "startingAt": true }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Complete architectural package",
+              "Advanced 3D modeling",
+              "Landscape design",
+              "Smart home integration planning"
+            ]
+          },
+          "design": {
+            "title": "Design Services",
+            "items": [
+              "Advanced site analysis and planning",
+              "Detailed architectural drawings",
+              "High-quality 3D visualization",
+              "Complete structural engineering",
+              "Interior and exterior design",
+              "Landscape architecture",
+              "Smart home integration planning",
+              "Sustainability consulting"
+            ]
+          }
+        }
+      }
+    },
+    "interior": {
+      "essential": {
+        "title": "Essential",
+        "popular": false,
+        "pricing": {
+          "bengaluru": { "price": "Starting at ₹ 850", "startingAt": true },
+          "hyderabad": { "price": "Starting at ₹ 800", "startingAt": true },
+          "chennai": { "price": "Starting at ₹ 825", "startingAt": true },
+          "bellary": { "price": "Starting at ₹ 750", "startingAt": true }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Basic interior layout",
+              "Color scheme suggestions",
+              "Essential furniture planning",
+              "Lighting layout"
+            ]
+          },
+          "design": {
+            "title": "Interior Design",
+            "items": [
+              "Space planning and layout",
+              "Color scheme development",
+              "Basic furniture selection",
+              "Lighting design",
+              "Material recommendations"
+            ]
+          }
+        }
+      },
+      "complete": {
+        "title": "Complete",
+        "popular": true,
+        "pricing": {
+          "bengaluru": { "price": "Starting at ₹ 1,250", "startingAt": true },
+          "hyderabad": { "price": "Starting at ₹ 1,200", "startingAt": true },
+          "chennai": { "price": "Starting at ₹ 1,225", "startingAt": true },
+          "bellary": { "price": "Starting at ₹ 1,150", "startingAt": true }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Complete interior design",
+              "Custom furniture design",
+              "Premium materials selection",
+              "Detailed execution drawings"
+            ]
+          },
+          "design": {
+            "title": "Interior Design",
+            "items": [
+              "Comprehensive space planning",
+              "Custom interior design",
+              "Furniture design and selection",
+              "Premium material sourcing",
+              "Detailed execution drawings",
+              "Lighting and electrical planning"
+            ]
+          }
+        }
+      },
+      "luxury": {
+        "title": "Luxury",
+        "popular": false,
+        "pricing": {
+          "bengaluru": { "price": "Starting at ₹ 1,850", "startingAt": true },
+          "hyderabad": { "price": "Starting at ₹ 1,800", "startingAt": true },
+          "chennai": { "price": "Starting at ₹ 1,825", "startingAt": true },
+          "bellary": { "price": "Starting at ₹ 1,750", "startingAt": true }
+        },
+        "sections": {
+          "materialsProvided": {
+            "title": "Materials Provided",
+            "items": [
+              "Luxury interior design",
+              "Bespoke furniture creation",
+              "Premium imported materials",
+              "Smart home integration"
+            ]
+          },
+          "design": {
+            "title": "Interior Design",
+            "items": [
+              "Luxury space planning",
+              "Bespoke interior design",
+              "Custom furniture creation",
+              "Premium imported materials",
+              "Advanced lighting systems",
+              "Smart home integration",
+              "Art and decor curation",
+              "Project management"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

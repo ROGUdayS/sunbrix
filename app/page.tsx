@@ -8,12 +8,13 @@ import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
 import { useCity } from "./contexts/CityContext";
+import packagesData from "../data/packages.json";
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   // City context is used by the Header component and CityModal
-  const { setShowCityModal } = useCity();
+  const { selectedCity, setShowCityModal } = useCity();
 
   // Add scroll effect for header transparency
   useEffect(() => {
@@ -29,6 +30,11 @@ export default function Home() {
 
   // Add accordion state for packages - simplified to track which section is open
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  // Add service type selection state - default to construction
+  const [selectedServiceType, setSelectedServiceType] = useState<string | null>(
+    "construction"
+  );
 
   // Project gallery data
   const projects = [
@@ -69,236 +75,6 @@ export default function Home() {
 
   const toggleSection = (section: string) => {
     setExpandedSection((prev) => (prev === section ? null : section));
-  };
-
-  // Package data structure - updated without emojis
-  const packageData = {
-    standard: {
-      title: "Standard",
-      price: "₹ ****",
-      popular: false,
-      sections: {
-        design: {
-          title: "Design",
-          items: [
-            "Digital plot and contour survey",
-            "2D floor plan & 3D Elevation",
-            "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
-            "RCC drawings",
-            "Electrical & Plumbing drawings",
-          ],
-        },
-        structure: {
-          title: "Structure",
-          items: [
-            "Sunbrix OPC 53, Sunbrix Max super PPC",
-            "Sunbrix Neo Steel 550D",
-            "10.5' Ceiling Height",
-            "2' elevated Plinth level",
-          ],
-        },
-        flooring: {
-          title: "Flooring and dado",
-          items: [
-            "2' X 2' Vetrified tiles",
-            "Granite for Staircase",
-            "Kitchen countertop",
-          ],
-        },
-        doors: {
-          title: "Door and windows",
-          items: ["Standard wooden doors", "UPVC windows", "Basic hardware"],
-        },
-        plumbing: {
-          title: "Plumbing accessories",
-          items: [
-            "Basic fixtures",
-            "Standard fittings",
-            "Essential accessories",
-          ],
-        },
-        painting: {
-          title: "Painting",
-          items: [
-            "Interior wall painting",
-            "Exterior wall painting",
-            "Standard finish",
-          ],
-        },
-        electrical: {
-          title: "Electrical",
-          items: ["Basic wiring", "Standard switches", "Essential points"],
-        },
-        plumbingSystem: {
-          title: "Plumbing",
-          items: [
-            "Basic plumbing system",
-            "Standard pipes",
-            "Essential connections",
-          ],
-        },
-        railing: {
-          title: "Railing and handrails",
-          items: ["Standard railing", "Basic handrails", "Safety features"],
-        },
-      },
-    },
-    premium: {
-      title: "Premium",
-      price: "₹ ****",
-      popular: true,
-      sections: {
-        design: {
-          title: "Design",
-          items: [
-            "Digital plot and contour survey",
-            "2D floor plan & 3D Elevation",
-            "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
-            "RCC drawings",
-            "Electrical & Plumbing drawings",
-          ],
-        },
-        structure: {
-          title: "Structure",
-          items: [
-            "Sunbrix OPC 53, Sunbrix Max super PPC",
-            "Sunbrix Neo Steel 550D",
-            "10.5' Ceiling Height",
-            "2' elevated Plinth level",
-          ],
-        },
-        flooring: {
-          title: "Flooring and dado",
-          items: [
-            "4' X 2' Premium Vetrified tiles",
-            "Jaguar Continental series",
-            "Wall mounted EWC",
-          ],
-        },
-        doors: {
-          title: "Door and windows",
-          items: [
-            "Premium wooden doors",
-            "UPVC windows with grills",
-            "Quality hardware",
-          ],
-        },
-        plumbing: {
-          title: "Plumbing accessories",
-          items: [
-            "Premium fixtures",
-            "Quality fittings",
-            "Enhanced accessories",
-          ],
-        },
-        painting: {
-          title: "Painting",
-          items: [
-            "Premium interior painting",
-            "Weather-resistant exterior",
-            "Smooth finish",
-          ],
-        },
-        electrical: {
-          title: "Electrical",
-          items: ["Premium wiring", "Modular switches", "Additional points"],
-        },
-        plumbingSystem: {
-          title: "Plumbing",
-          items: [
-            "Premium plumbing system",
-            "Quality pipes",
-            "Enhanced connections",
-          ],
-        },
-        railing: {
-          title: "Railing and handrails",
-          items: ["Premium railing", "Designer handrails", "Enhanced safety"],
-        },
-      },
-    },
-    luxury: {
-      title: "Luxury",
-      price: "₹ ****",
-      popular: false,
-      sections: {
-        design: {
-          title: "Design",
-          items: [
-            "Digital plot and contour survey",
-            "2D floor plan & 3D Elevation",
-            "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
-            "RCC drawings",
-            "Electrical & Plumbing drawings",
-          ],
-        },
-        structure: {
-          title: "Structure",
-          items: [
-            "Sunbrix OPC 53, Sunbrix Max super PPC",
-            "Sunbrix Neo Steel 550D",
-            "10.5' Ceiling Height",
-            "2' elevated Plinth level",
-          ],
-        },
-        flooring: {
-          title: "Flooring and dado",
-          items: [
-            "6' X 4' Marble flooring",
-            "Jaguar Premium series",
-            "Toughened glass railing",
-          ],
-        },
-        doors: {
-          title: "Door and windows",
-          items: [
-            "Luxury wooden doors",
-            "Premium UPVC windows",
-            "Designer hardware",
-          ],
-        },
-        plumbing: {
-          title: "Plumbing accessories",
-          items: [
-            "Luxury fixtures",
-            "Premium fittings",
-            "Designer accessories",
-          ],
-        },
-        painting: {
-          title: "Painting",
-          items: [
-            "Luxury interior painting",
-            "Premium exterior finish",
-            "Designer textures",
-          ],
-        },
-        electrical: {
-          title: "Electrical",
-          items: [
-            "Premium wiring system",
-            "Designer switches",
-            "Smart home ready",
-          ],
-        },
-        plumbingSystem: {
-          title: "Plumbing",
-          items: [
-            "Luxury plumbing system",
-            "Premium pipes",
-            "Designer connections",
-          ],
-        },
-        railing: {
-          title: "Railing and handrails",
-          items: [
-            "Designer railing",
-            "Luxury handrails",
-            "Premium safety features",
-          ],
-        },
-      },
-    },
   };
 
   return (
@@ -668,268 +444,428 @@ export default function Home() {
             <p className="text-xl text-amber-800">
               Discover the package that fits your needs.
             </p>
-            <div className="mt-8 flex justify-center">
-              <button
-                onClick={() => setShowCityModal(true)}
-                className="border border-amber-300 rounded-lg px-4 py-3 focus:border-amber-600 text-amber-700 bg-white shadow-sm hover:shadow-md transition-shadow flex items-center space-x-2"
-              >
-                <span>Select City</span>
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+            {/* City + Service Type Selector (neat grid layout) */}
+            <div className="mt-8 grid grid-cols-3 items-center gap-4 px-4">
+              {/* Left spacer */}
+              <div />
+
+              {/* Center: Service Type Buttons */}
+              <div className="flex justify-center">
+                {selectedCity && (
+                  <div className="inline-flex space-x-2 rounded-lg bg-gray-50 border border-gray-200 p-2">
+                    {packagesData.serviceTypes.map((serviceType) => (
+                      <button
+                        key={serviceType.id}
+                        onClick={() => setSelectedServiceType(serviceType.id)}
+                        className={`px-4 py-2 text-sm font-medium rounded-md transition ${
+                          selectedServiceType === serviceType.id
+                            ? "bg-amber-600 text-white shadow"
+                            : "text-gray-700 hover:bg-white hover:shadow-sm"
+                        }`}
+                      >
+                        {serviceType.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Right: City Selection */}
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowCityModal(true)}
+                  className="flex items-center space-x-2 rounded-lg border border-amber-300 bg-white px-4 py-2 text-amber-700 shadow-sm transition hover:shadow-md"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
+                  <span>{selectedCity?.displayName || "Select City"}</span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {Object.entries(packageData).map(([packageKey, packageInfo]) => (
-              <div
-                key={packageKey}
-                className={`bg-gray-50 rounded-lg p-6 relative ${
-                  packageInfo.popular
-                    ? "border-2 border-amber-600"
-                    : "border border-gray-200"
-                }`}
-              >
-                {packageInfo.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-600 text-white px-4 py-1 rounded-full text-sm">
-                    Popular
-                  </div>
-                )}
+          {/* Package Cards */}
+          {selectedCity && selectedServiceType && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {Object.entries(
+                packagesData.packages[
+                  selectedServiceType as keyof typeof packagesData.packages
+                ]
+              ).map(([packageKey, packageInfo]) => {
+                const currentCityPricing =
+                  packageInfo.pricing[
+                    selectedCity.id as keyof typeof packageInfo.pricing
+                  ];
 
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  {packageInfo.title}
-                </h3>
-                <div className="text-3xl font-bold text-gray-800 mb-6">
-                  {packageInfo.price}
-                  <span className="text-sm text-gray-600">
-                    {" "}
-                    per sq. ft (Ex GST)
-                  </span>
-                </div>
-
-                <div className="space-y-1">
-                  {Object.entries(packageInfo.sections).map(
-                    ([sectionKey, section]) => (
-                      <div
-                        key={sectionKey}
-                        className="border-b border-gray-200 last:border-b-0"
-                      >
-                        <button
-                          onClick={() => toggleSection(sectionKey)}
-                          className="w-full flex items-center justify-between py-3 text-left hover:bg-gray-100 transition-colors rounded px-2"
-                        >
-                          <span className="font-medium text-gray-900 text-sm">
-                            {section.title}
-                          </span>
-                          <svg
-                            className={`w-4 h-4 text-gray-600 transition-transform ${
-                              expandedSection === sectionKey ? "rotate-180" : ""
-                            }`}
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </button>
-
-                        <div
-                          className={`
-                            transition-all duration-300 ease-in-out overflow-hidden
-                            ${
-                              expandedSection === sectionKey
-                                ? "max-h-96 opacity-100"
-                                : "max-h-0 opacity-0"
-                            }
-                          `}
-                        >
-                          <div className="pb-3 px-2">
-                            <ul className="text-xs text-gray-600 space-y-1">
-                              {section.items.map((item, index) => (
-                                <li key={index} className="flex items-start">
-                                  <span className="text-gray-400 mr-2 mt-1">
-                                    •
-                                  </span>
-                                  <span className="leading-relaxed">
-                                    {item}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                return (
+                  <div
+                    key={packageKey}
+                    className={`relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
+                      packageInfo.popular
+                        ? "ring-2 ring-amber-500 scale-105 z-10"
+                        : "border border-gray-100 hover:border-amber-200"
+                    }`}
+                  >
+                    {/* Popular Badge */}
+                    {packageInfo.popular && (
+                      <div className="absolute -top-0 left-0 right-0">
+                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                          ⭐ Most Popular
                         </div>
                       </div>
-                    )
-                  )}
-                </div>
+                    )}
+
+                    {/* Card Content */}
+                    <div
+                      className={`p-8 ${packageInfo.popular ? "pt-12" : ""}`}
+                    >
+                      {/* Package Title */}
+                      <div className="text-center mb-6">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                          {packageInfo.title}
+                        </h3>
+
+                        {/* Price Display */}
+                        <div className="mb-4">
+                          <div className="text-4xl font-bold text-amber-600 mb-1">
+                            {selectedCity ? currentCityPricing?.price : "X,XXX"}
+                          </div>
+                          {selectedCity && !currentCityPricing?.startingAt && (
+                            <div className="text-sm text-gray-500">
+                              per sq. ft (Ex GST)
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Divider */}
+                      <div className="border-t border-gray-100 mb-4"></div>
+
+                      {/* Expandable Sections */}
+                      <div className="space-y-2">
+                        {Object.entries(packageInfo.sections).map(
+                          ([sectionKey, section]) => (
+                            <div
+                              key={sectionKey}
+                              className="border border-gray-100 rounded-lg overflow-hidden"
+                            >
+                              <button
+                                onClick={() => toggleSection(sectionKey)}
+                                className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                              >
+                                <span className="font-semibold text-gray-900 text-sm">
+                                  {section.title}
+                                </span>
+                                <div className="flex items-center space-x-2">
+                                  <svg
+                                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+                                      expandedSection === sectionKey
+                                        ? "rotate-180"
+                                        : ""
+                                    }`}
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                </div>
+                              </button>
+
+                              <div
+                                className={`
+                                  transition-all duration-300 ease-in-out overflow-hidden
+                                  ${
+                                    expandedSection === sectionKey
+                                      ? "max-h-96 opacity-100"
+                                      : "max-h-0 opacity-0"
+                                  }
+                                `}
+                              >
+                                <div className="px-4 pb-4 bg-gray-50">
+                                  <ul className="space-y-2">
+                                    {section.items.map((item, index) => (
+                                      <li
+                                        key={index}
+                                        className="flex items-start text-sm text-gray-700"
+                                      >
+                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                        <span className="leading-relaxed">
+                                          {item}
+                                        </span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Message when no city or service type is selected */}
+          {!selectedCity && (
+            <div className="text-center py-12">
+              <div className="text-gray-500 text-lg">
+                Please select a city to view available packages
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {selectedCity && !selectedServiceType && (
+            <div className="text-center py-12">
+              <div className="text-gray-500 text-lg">
+                Please select a service type to view packages
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Building Process */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Service Timeline - Dynamic based on selected service type */}
+      {selectedCity && selectedServiceType && (
+        <section className="py-16 bg-gradient-to-br from-amber-50 to-orange-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-amber-900 mb-4">
+                Your{" "}
+                {
+                  packagesData.serviceTypes.find(
+                    (type) => type.id === selectedServiceType
+                  )?.name
+                }{" "}
+                Journey
+              </h2>
+              <p className="text-lg text-amber-800">
+                Follow our streamlined process from start to finish
+              </p>
+            </div>
+
+            {/* Timeline Steps */}
+            <div className="relative">
+              {/* Connecting Line */}
+              <div className="hidden lg:block absolute top-20 left-0 right-0 h-1">
+                <div className="flex justify-between items-center h-full max-w-5xl mx-auto px-16">
+                  <div className="flex-1 bg-gradient-to-r from-amber-400 to-orange-400 h-1 rounded-full"></div>
+                  <div className="w-8"></div>
+                  <div className="flex-1 bg-gradient-to-r from-amber-400 to-orange-400 h-1 rounded-full"></div>
+                  <div className="w-8"></div>
+                  <div className="flex-1 bg-gradient-to-r from-amber-400 to-orange-400 h-1 rounded-full"></div>
+                </div>
+              </div>
+
+              {/* Timeline Steps Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+                {/* Step 1 */}
+                <div className="text-center">
+                  <div className="relative mb-6">
+                    <div className="w-20 h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                      <Image
+                        src={
+                          selectedServiceType === "construction"
+                            ? "/icons/planning-drawing.png"
+                            : selectedServiceType === "architecture"
+                            ? "/icons/planning-drawing.png"
+                            : "/icons/planning-drawing.png"
+                        }
+                        alt="Planning"
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      1
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-amber-900 mb-2">
+                    {selectedServiceType === "construction"
+                      ? "Plan & Consult"
+                      : selectedServiceType === "architecture"
+                      ? "Initial Consultation"
+                      : "Design Consultation"}
+                  </h3>
+                  <p className="text-sm text-amber-700 leading-relaxed">
+                    {selectedServiceType === "construction"
+                      ? "Meet our experts to discuss your vision, budget, and requirements for your dream home."
+                      : selectedServiceType === "architecture"
+                      ? "Understand your needs, site conditions, and architectural preferences."
+                      : "Explore your style preferences, space requirements, and design goals."}
+                  </p>
+                </div>
+
+                {/* Step 2 */}
+                <div className="text-center">
+                  <div className="relative mb-6">
+                    <div className="w-20 h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                      <Image
+                        src={
+                          selectedServiceType === "construction"
+                            ? "/icons/planning-drawing.png"
+                            : selectedServiceType === "architecture"
+                            ? "/icons/planning-drawing.png"
+                            : "/icons/planning-drawing.png"
+                        }
+                        alt="Design"
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      2
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-amber-900 mb-2">
+                    {selectedServiceType === "construction"
+                      ? "Design & Approve"
+                      : selectedServiceType === "architecture"
+                      ? "Concept Design"
+                      : "Space Planning"}
+                  </h3>
+                  <p className="text-sm text-amber-700 leading-relaxed">
+                    {selectedServiceType === "construction"
+                      ? "Review detailed 3D designs, floor plans, and make final approvals before construction."
+                      : selectedServiceType === "architecture"
+                      ? "Develop initial concepts, sketches, and architectural layouts for your approval."
+                      : "Create detailed layouts, mood boards, and design concepts for your spaces."}
+                  </p>
+                </div>
+
+                {/* Step 3 */}
+                <div className="text-center">
+                  <div className="relative mb-6">
+                    <div className="w-20 h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                      <Image
+                        src={
+                          selectedServiceType === "construction"
+                            ? "/icons/building-under-construction.png"
+                            : selectedServiceType === "architecture"
+                            ? "/icons/planning-drawing.png"
+                            : "/icons/brick-layering.png"
+                        }
+                        alt="Build/Execute"
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      3
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-amber-900 mb-2">
+                    {selectedServiceType === "construction"
+                      ? "Build & Monitor"
+                      : selectedServiceType === "architecture"
+                      ? "Detailed Design"
+                      : "Execute & Install"}
+                  </h3>
+                  <p className="text-sm text-amber-700 leading-relaxed">
+                    {selectedServiceType === "construction"
+                      ? "Professional construction with regular quality checks and progress updates."
+                      : selectedServiceType === "architecture"
+                      ? "Finalize detailed drawings, specifications, and technical documentation."
+                      : "Professional installation of furniture, fixtures, and decorative elements."}
+                  </p>
+                </div>
+
+                {/* Step 4 */}
+                <div className="text-center">
+                  <div className="relative mb-6">
+                    <div className="w-20 h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                      <Image
+                        src={
+                          selectedServiceType === "construction"
+                            ? "/icons/built-homes.png"
+                            : selectedServiceType === "architecture"
+                            ? "/icons/delivery-of-buildings.png"
+                            : "/icons/built-homes.png"
+                        }
+                        alt="Complete"
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                      4
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-amber-900 mb-2">
+                    {selectedServiceType === "construction"
+                      ? "Handover & Move In"
+                      : selectedServiceType === "architecture"
+                      ? "Final Delivery"
+                      : "Final Styling & Handover"}
+                  </h3>
+                  <p className="text-sm text-amber-700 leading-relaxed">
+                    {selectedServiceType === "construction"
+                      ? "Final inspection, documentation handover, and keys to your dream home."
+                      : selectedServiceType === "architecture"
+                      ? "Complete architectural package with all drawings and documentation."
+                      : "Final touches, styling, and handover of your beautifully designed spaces."}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Bank Approval Section */}
+      <section id="bank-approval" className="py-16 bg-white">
+        <div className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              A glimpse into our building process
-            </h2>
-            <p className="text-xl text-gray-600">
-              Explore our step-by-step process of building your dream home.
+            <h2 className="text-4xl font-bold text-amber-900 mb-4">Banks</h2>
+            <p className="text-xl text-amber-800">
+              Easy Home Construction Loans
             </p>
           </div>
 
-          {/* Process Steps with Connecting Lines */}
-          <div className="relative">
-            {/* Dotted connecting line - hidden on mobile */}
-            <div className="hidden lg:block absolute top-16 left-0 right-0 h-0.5">
-              <div className="flex justify-between items-center h-full max-w-5xl mx-auto px-20">
-                <div className="flex-1 border-t-2 border-dotted border-gray-300"></div>
-                <div className="w-8"></div>
-                <div className="flex-1 border-t-2 border-dotted border-gray-300"></div>
-                <div className="w-8"></div>
-                <div className="flex-1 border-t-2 border-dotted border-gray-300"></div>
-              </div>
+          <div className="flex flex-wrap justify-center items-center gap-12">
+            <div className="w-40 h-20 relative">
+              <Image
+                src="/banks-icons/hdfc.png"
+                alt="HDFC Bank"
+                fill
+                className="object-contain"
+              />
             </div>
-
-            {/* Process Steps */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-              {/* Step 1: Meet our experts */}
-              <div className="text-center">
-                <div className="relative mb-6">
-                  <div className="w-16 h-16 bg-white border-2 border-gray-900 rounded-lg flex items-center justify-center mx-auto shadow-sm">
-                    {/* Handshake Icon */}
-                    <svg
-                      className="w-8 h-8 text-gray-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Meet our experts
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Discuss your ideas and goals. We'll help plan your budget and
-                  design preferences.
-                </p>
-              </div>
-
-              {/* Step 2: Design your custom home */}
-              <div className="text-center">
-                <div className="relative mb-6">
-                  <div className="w-16 h-16 bg-white border-2 border-gray-900 rounded-lg flex items-center justify-center mx-auto shadow-sm">
-                    {/* House Design Icon */}
-                    <svg
-                      className="w-8 h-8 text-gray-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Design your custom home
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  See detailed 3D renderings that let you visualise your home
-                  before construction begins.
-                </p>
-              </div>
-
-              {/* Step 3: Track the construction */}
-              <div className="text-center">
-                <div className="relative mb-6">
-                  <div className="w-16 h-16 bg-white border-2 border-gray-900 rounded-lg flex items-center justify-center mx-auto shadow-sm">
-                    {/* Clipboard/Checklist Icon */}
-                    <svg
-                      className="w-8 h-8 text-gray-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Track the construction
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Stay informed with regular updates on progress and quality
-                  checks at every stage.
-                </p>
-              </div>
-
-              {/* Step 4: Move in to your home */}
-              <div className="text-center">
-                <div className="relative mb-6">
-                  <div className="w-16 h-16 bg-white border-2 border-gray-900 rounded-lg flex items-center justify-center mx-auto shadow-sm">
-                    {/* Key/Home Icon */}
-                    <svg
-                      className="w-8 h-8 text-gray-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  Move in to your home
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  A pre-delivery inspection ensures everything is in place
-                  before handover.
-                </p>
-              </div>
+            <div className="w-40 h-20 relative">
+              <Image
+                src="/banks-icons/icici.png"
+                alt="ICICI Bank"
+                fill
+                className="object-contain"
+              />
             </div>
-          </div>
-
-          {/* View Details Button */}
-          <div className="text-center mt-12">
-            <button className="border-2 border-gray-900 text-gray-900 px-8 py-3 rounded-lg font-medium hover:bg-gray-900 hover:text-white transition-colors duration-200">
-              View details
-            </button>
+            <div className="w-40 h-20 relative ">
+              <Image
+                src="/banks-icons/sbi.png"
+                alt="SBI Bank"
+                fill
+                className="object-contain"
+              />
+            </div>
           </div>
         </div>
       </section>
