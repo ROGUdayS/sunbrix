@@ -299,9 +299,7 @@ export default function Home() {
           {/* Left: Text */}
           <div className="w-full lg:w-1/2 flex flex-col justify-center lg:pr-12">
             <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight text-left">
-              You Dream.
-              <br />
-              We Deliver.
+              Building homes Since 1999
             </h1>
             <p className="text-lg text-gray-500 mb-10 text-left">
               Build your dream home hassle-free

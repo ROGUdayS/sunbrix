@@ -4,7 +4,7 @@ import { CityProvider } from "./contexts/CityContext";
 import CityModal from "./components/CityModal";
 
 export const metadata: Metadata = {
-  title: "Sunbrix - You Dream. We Deliver.",
+  title: "Sunbrix - Building homes Since 1999",
   description:
     "Build your dream home hassle-free with Sunbrix. High-quality materials, transparent pricing, and on-time delivery.",
   keywords:
