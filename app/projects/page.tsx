@@ -29,10 +29,10 @@ interface Project {
     garden: string;
   };
   images?: string[];
-  yearBuilt?: string;
-  bhk?: string;
-  siteDimension?: string;
-  residential?: string;
+  yearBuilt: string;
+  bhk: string;
+  siteDimension: string;
+  residential: string;
 }
 
 export default function ProjectGallery() {
@@ -44,10 +44,10 @@ export default function ProjectGallery() {
   // Import project data from JSON - Add year built to each project for demo
   const allProjects = projectsData.projects.map((project) => ({
     ...project,
-    yearBuilt: project.yearBuilt || "2023", // Add default year if not present
-    bhk: project.bhk || `${project.specifications.bedrooms}BHK`,
-    siteDimension: project.siteDimension || project.plotSize,
-    residential: project.residential || "Residential",
+    yearBuilt: "2023", // Add default year if not present
+    bhk: `${project.specifications.bedrooms}BHK`,
+    siteDimension: project.plotSize,
+    residential: "Residential",
   }));
 
   // Pagination logic
