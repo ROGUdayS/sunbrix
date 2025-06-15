@@ -92,7 +92,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section with Motion Background */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col justify-end overflow-hidden">
         {/* Motion Background Video */}
         <div className="absolute inset-0 w-full h-full">
           <video
@@ -117,19 +117,10 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight drop-shadow-2xl">
-            Building homes Since 1999
-          </h1>
-          <p className="text-xl lg:text-2xl mb-12 drop-shadow-lg max-w-3xl mx-auto">
-            Build your dream home hassle-free with Sunbrix.
-            <br />
-            Experience excellence in every detail.
-          </p>
-
+        {/* Hero Content - Positioned at bottom */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white pb-20">
           {/* Key Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 mb-12 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8 max-w-4xl mx-auto">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
               <div className="text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
                 25
@@ -156,14 +147,9 @@ export default function Home() {
               </div>
               <div className="text-sm lg:text-base font-medium">On-Time</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 col-span-2 lg:col-span-1">
-              <div className="text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
-                ★★★★★
-              </div>
-              <div className="text-sm lg:text-base font-medium">Quality</div>
-            </div>
           </div>
 
+          {/* Contact Us Button */}
           <button
             onClick={scrollToContactForm}
             className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-lg text-xl font-semibold transition-all duration-300 shadow-2xl hover:shadow-orange-500/25 hover:scale-105"
@@ -190,15 +176,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Why Sunbrix */}
+      {/* Our Commitment to Quality */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-amber-900 mb-4">
-              Why Sunbrix
+              Our Commitment to Quality
             </h2>
             <p className="text-xl text-amber-800 mb-16">
-              You build your dream home once. Build it right with Sunbrix.
+              We are committed to building your dream home with the highest
+              quality materials and workmanship.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -280,9 +267,7 @@ export default function Home() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Our project gallery
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Gallery</h2>
             <p className="text-lg text-gray-600">
               Discover homes built with care, quality, and attention to detail.
             </p>

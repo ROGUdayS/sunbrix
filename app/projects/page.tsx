@@ -28,69 +28,47 @@ interface Project {
     parking: string;
     garden: string;
   };
+  images?: string[];
+  yearBuilt?: string;
+  bhk?: string;
+  siteDimension?: string;
+  residential?: string;
 }
 
 export default function ProjectGallery() {
-  const [selectedCity, setSelectedCity] = useState("All Cities");
-  const [selectedFloors, setSelectedFloors] = useState("All Floors");
-  const [selectedPlotSize, setSelectedPlotSize] = useState("All Plot Sizes");
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState<{
+    [key: string]: number;
+  }>({});
 
-  const cities = [
-    "All Cities",
-    "Bellary",
-    "Bengaluru",
-    "Bhubaneswar",
-    "Chennai",
-    "Indore",
-    "Kochi",
-    "Raipur",
-  ];
-  const floors = ["All Floors", "G+1", "G+2", "G+3"];
-  const plotSizes = [
-    "All Plot Sizes",
-    "30x40 sq. ft",
-    "30x50 sq. ft",
-    "40x50 sq. ft",
-    "40x60 sq. ft",
-  ];
-
-  // Import project data from JSON
-  const allProjects = projectsData.projects;
-
-  // Filter projects based on selected filters
-  const filteredProjects = allProjects.filter((project: Project) => {
-    const cityMatch =
-      selectedCity === "All Cities" || project.location === selectedCity;
-    const floorsMatch =
-      selectedFloors === "All Floors" || project.floors === selectedFloors;
-    const plotSizeMatch =
-      selectedPlotSize === "All Plot Sizes" ||
-      project.plotSize === selectedPlotSize;
-
-    return cityMatch && floorsMatch && plotSizeMatch;
-  });
+  // Import project data from JSON - Add year built to each project for demo
+  const allProjects = projectsData.projects.map((project) => ({
+    ...project,
+    yearBuilt: project.yearBuilt || "2023", // Add default year if not present
+    bhk: project.bhk || `${project.specifications.bedrooms}BHK`,
+    siteDimension: project.siteDimension || project.plotSize,
+    residential: project.residential || "Residential",
+  }));
 
   // Pagination logic
   const projectsPerPage = 6;
-  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+  const totalPages = Math.ceil(allProjects.length / projectsPerPage);
   const startIndex = (currentPage - 1) * projectsPerPage;
   const endIndex = startIndex + projectsPerPage;
-  const currentProjects = filteredProjects.slice(startIndex, endIndex);
+  const currentProjects = allProjects.slice(startIndex, endIndex);
 
-  // Reset to page 1 when filters change
-  const resetPagination = () => {
-    setCurrentPage(1);
+  const nextImage = (projectId: string, totalImages: number) => {
+    setCurrentImageIndex((prev) => ({
+      ...prev,
+      [projectId]: ((prev[projectId] || 0) + 1) % totalImages,
+    }));
   };
 
-  const handleFloorsChange = (floors: string) => {
-    setSelectedFloors(floors);
-    resetPagination();
-  };
-
-  const handlePlotSizeChange = (plotSize: string) => {
-    setSelectedPlotSize(plotSize);
-    resetPagination();
+  const prevImage = (projectId: string, totalImages: number) => {
+    setCurrentImageIndex((prev) => ({
+      ...prev,
+      [projectId]: ((prev[projectId] || 0) - 1 + totalImages) % totalImages,
+    }));
   };
 
   return (
@@ -102,262 +80,253 @@ export default function ProjectGallery() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Title */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Project gallery
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Gallery</h1>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:w-1/4">
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-900">Filter</h2>
-                <span className="text-sm text-gray-500">Filters</span>
-              </div>
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+          {currentProjects.map((project: Project) => {
+            // Create array of images - use multiple images if available, otherwise use main image
+            const projectImages =
+              project.images && project.images.length > 0
+                ? project.images
+                : [project.image];
+            const currentIndex = currentImageIndex[project.id] || 0;
 
-              {/* Cities Filter */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Cities
-                </h3>
-                <div className="space-y-2">
-                  {cities.map((city) => (
-                    <label key={city} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="city"
-                        value={city}
-                        checked={selectedCity === city}
-                        onChange={(e) => setSelectedCity(e.target.value)}
-                        className="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500"
+            return (
+              <Link
+                key={project.id}
+                href={`/projects/${project.id}`}
+                className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow block"
+              >
+                {/* Project Photo with Carousel */}
+                <div className="relative">
+                  <Image
+                    src={projectImages[currentIndex]}
+                    alt={project.title}
+                    width={500}
+                    height={320}
+                    className="w-full h-64 object-cover"
+                  />
+
+                  {/* Location overlay */}
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 flex items-center space-x-2">
+                    <svg
+                      className="w-4 h-4 text-gray-600"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                        clipRule="evenodd"
                       />
-                      <span className="ml-3 text-gray-700">{city}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+                    </svg>
+                    <span className="text-sm font-medium text-gray-700">
+                      {project.location}, {project.yearBuilt}
+                    </span>
+                  </div>
 
-              {/* Floors Filter */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Floors
-                </h3>
-                <div className="space-y-2">
-                  {floors.map((floor) => (
-                    <label key={floor} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="floors"
-                        value={floor}
-                        checked={selectedFloors === floor}
-                        onChange={(e) => handleFloorsChange(e.target.value)}
-                        className="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500"
-                      />
-                      <span className="ml-3 text-gray-700">{floor}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+                  {/* Carousel Navigation - Only show if more than 1 image */}
+                  {projectImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          prevImage(project.id, projectImages.length);
+                        }}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          nextImage(project.id, projectImages.length);
+                        }}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
 
-              {/* Plot Dimensions Filter */}
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Plot dimensions
-                </h3>
-                <div className="space-y-2">
-                  {plotSizes.map((size) => (
-                    <label key={size} className="flex items-center">
-                      <input
-                        type="radio"
-                        name="plotSize"
-                        value={size}
-                        checked={selectedPlotSize === size}
-                        onChange={(e) => handlePlotSizeChange(e.target.value)}
-                        className="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500"
-                      />
-                      <span className="ml-3 text-gray-700">{size}</span>
-                    </label>
-                  ))}
+                      {/* Image indicators */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {projectImages.map((_, index) => (
+                          <div
+                            key={index}
+                            className={`w-2 h-2 rounded-full ${
+                              index === currentIndex
+                                ? "bg-white"
+                                : "bg-white/50"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Projects Grid */}
-          <div className="lg:w-3/4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              {currentProjects.map((project: Project) => (
-                <Link
-                  key={project.id}
-                  href={`/projects/${project.id}`}
-                  className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow block"
-                >
-                  <div className="relative">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      width={500}
-                      height={320}
-                      className="w-full h-64 object-cover"
-                    />
-                    {/* Location overlay on image */}
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 flex items-center space-x-2">
+                <div className="p-6">
+                  {/* Project Name */}
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    {project.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {project.description}
+                  </p>
+
+                  {/* Overview - Single Line Design */}
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center space-x-1 text-gray-600">
                       <svg
-                        className="w-4 h-4 text-gray-600"
+                        className="w-4 h-4 text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
                         <path
                           fillRule="evenodd"
-                          d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                          d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span className="text-sm font-medium text-gray-700">
-                        {project.location}
+                      <span className="font-medium text-gray-800">
+                        {project.siteDimension}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center space-x-1 text-gray-600">
+                      <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="font-medium text-gray-800">
+                        {project.facing}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center space-x-1 text-gray-600">
+                      <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                      </svg>
+                      <span className="font-medium text-gray-800">
+                        {project.bhk}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center space-x-1 text-gray-600">
+                      <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z" />
+                      </svg>
+                      <span className="font-medium text-gray-800">
+                        {project.residential}
                       </span>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                      {project.title}
-                    </h3>
-                    {/* Single row for all details */}
-                    <div className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 rounded-lg p-4">
-                      <div className="flex items-center space-x-1">
-                        <svg
-                          className="w-4 h-4 text-gray-400"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                        </svg>
-                        <span>{project.floors}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <svg
-                          className="w-4 h-4 text-gray-400"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span>{project.plotSize}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <svg
-                          className="w-4 h-4 text-gray-400"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span>{project.facing}</span>
-                      </div>
-                      <div className="flex items-center space-x-1 font-semibold text-amber-700">
-                        <svg
-                          className="w-4 h-4 text-amber-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span>{project.budget}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
 
-            {/* Pagination - Only show if more than 6 projects */}
-            {filteredProjects.length > projectsPerPage && (
-              <div className="flex justify-center items-center space-x-2">
-                <button
-                  className={`px-3 py-2 text-gray-500 hover:text-gray-700 ${
-                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
+        {/* Pagination - Only show if more than 6 projects */}
+        {allProjects.length > projectsPerPage && (
+          <div className="flex justify-center items-center space-x-2">
+            <button
+              className={`px-3 py-2 text-gray-500 hover:text-gray-700 ${
+                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`px-3 py-2 rounded ${
-                        currentPage === page
-                          ? "bg-amber-600 text-white"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  )
-                )}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-2 rounded ${
+                  currentPage === page
+                    ? "bg-amber-600 text-white"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
 
-                <button
-                  className={`px-3 py-2 text-gray-500 hover:text-gray-700 ${
-                    currentPage === totalPages
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    setCurrentPage(Math.min(totalPages, currentPage + 1))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-            )}
-
-            {/* Show results count */}
-            <div className="text-center text-gray-600 mt-4">
-              Showing {currentProjects.length} of {filteredProjects.length}{" "}
-              projects
-              {filteredProjects.length !== allProjects.length && (
-                <span className="text-amber-600"> (filtered)</span>
-              )}
-            </div>
+            <button
+              className={`px-3 py-2 text-gray-500 hover:text-gray-700 ${
+                currentPage === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+              onClick={() =>
+                setCurrentPage(Math.min(totalPages, currentPage + 1))
+              }
+              disabled={currentPage === totalPages}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
           </div>
+        )}
+
+        {/* Show results count */}
+        <div className="text-center text-gray-600 mt-4">
+          Showing {currentProjects.length} of {allProjects.length} projects
         </div>
       </div>
 

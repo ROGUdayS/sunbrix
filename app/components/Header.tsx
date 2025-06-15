@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
 import { useCity } from "../contexts/CityContext";
-import { scrollToContactForm } from "../utils/scrollToContactForm";
 
 interface HeaderProps {
   showCitySelector?: boolean;
@@ -17,24 +15,6 @@ export default function Header({
 }: HeaderProps) {
   const pathname = usePathname();
   const { selectedCity, setShowCityModal } = useCity();
-  const [showMoreDropdown, setShowMoreDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowMoreDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const isActive = (path: string) => {
     if (path === "/" && pathname === "/") return true;
@@ -56,14 +36,6 @@ export default function Header({
       : `${baseClasses} ${inactiveClasses}`;
   };
 
-  const getMoreButtonClassName = () => {
-    const baseClasses =
-      "border-b-2 border-transparent pb-1 font-medium flex items-center space-x-1 transition-colors";
-    return isTransparent
-      ? `${baseClasses} text-white/90 hover:text-white hover:border-white/50`
-      : `${baseClasses} text-gray-700 hover:text-amber-900`;
-  };
-
   return (
     <header
       className={isTransparent ? "" : "bg-[#fdfdf8] border-b border-gray-100"}
@@ -82,13 +54,7 @@ export default function Header({
           </div>
           <nav className="hidden md:flex space-x-8">
             <Link href="/projects" className={getLinkClassName("/projects")}>
-              Our projects
-            </Link>
-            <Link
-              href="/how-it-works"
-              className={getLinkClassName("/how-it-works")}
-            >
-              How it works
+              Gallery
             </Link>
             <Link
               href="/testimonials"
@@ -96,16 +62,27 @@ export default function Header({
             >
               Testimonials
             </Link>
-            <div className="relative" ref={dropdownRef}>
+            <Link href="/faq" className={getLinkClassName("/faq")}>
+              FAQs
+            </Link>
+            <Link href="/about" className={getLinkClassName("/about")}>
+              About us
+            </Link>
+          </nav>
+          <div className="flex items-center">
+            {/* City selector moved to the right */}
+            {showCitySelector && (
               <button
-                onClick={() => setShowMoreDropdown(!showMoreDropdown)}
-                className={getMoreButtonClassName()}
+                onClick={() => setShowCityModal(true)}
+                className={`border rounded-lg px-4 py-2 text-sm shadow-sm hover:shadow-md transition-all flex items-center space-x-2 w-32 justify-between ${
+                  isTransparent
+                    ? "border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 focus:border-white/50"
+                    : "border-amber-300 text-amber-700 bg-white focus:border-amber-600"
+                }`}
               >
-                <span>More</span>
+                <span className="truncate">{selectedCity.displayName}</span>
                 <svg
-                  className={`w-4 h-4 transition-transform ${
-                    showMoreDropdown ? "rotate-180" : ""
-                  }`}
+                  className="w-4 h-4 flex-shrink-0"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -116,76 +93,7 @@ export default function Header({
                   />
                 </svg>
               </button>
-
-              {showMoreDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  <Link
-                    href="/faq"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amber-900"
-                    onClick={() => setShowMoreDropdown(false)}
-                  >
-                    FAQs
-                  </Link>
-                  <Link
-                    href="/about"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amber-900"
-                    onClick={() => setShowMoreDropdown(false)}
-                  >
-                    About us
-                  </Link>
-
-                  <button
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-amber-900"
-                    onClick={() => {
-                      setShowMoreDropdown(false);
-                      scrollToContactForm();
-                    }}
-                  >
-                    Contact us
-                  </button>
-                </div>
-              )}
-            </div>
-          </nav>
-          <div className="flex items-center">
-            {/* City selector with consistent spacing */}
-            <div className="mr-4">
-              {showCitySelector ? (
-                <button
-                  onClick={() => setShowCityModal(true)}
-                  className={`border rounded-lg px-4 py-2 text-sm shadow-sm hover:shadow-md transition-all flex items-center space-x-2 w-32 justify-between ${
-                    isTransparent
-                      ? "border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 focus:border-white/50"
-                      : "border-amber-300 text-amber-700 bg-white focus:border-amber-600"
-                  }`}
-                >
-                  <span className="truncate">{selectedCity.displayName}</span>
-                  <svg
-                    className="w-4 h-4 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              ) : (
-                <div className="w-32 h-10"></div>
-              )}
-            </div>
-            <button
-              onClick={scrollToContactForm}
-              className={`px-6 py-2 rounded-lg font-medium transition-all ${
-                isTransparent
-                  ? "bg-orange-500 hover:bg-orange-600 text-white shadow-lg hover:shadow-orange-500/25"
-                  : "bg-amber-600 hover:bg-amber-700 text-white"
-              }`}
-            >
-              Contact Us
-            </button>
+            )}
           </div>
         </div>
       </div>
