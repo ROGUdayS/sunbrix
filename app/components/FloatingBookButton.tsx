@@ -1,21 +1,35 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { scrollToContactForm } from "../utils/scrollToContactForm";
 
 export default function FloatingBookButton() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const pathname = usePathname();
+  const isMainPage = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop =
         window.pageYOffset || document.documentElement.scrollTop;
-      setShowFloatingButton(scrollTop > 300);
+
+      if (isMainPage) {
+        // On main page, show button only after scrolling past hero section (viewport height)
+        const heroHeight = window.innerHeight;
+        setShowFloatingButton(scrollTop > heroHeight * 0.8);
+      } else {
+        // On other pages, show button immediately (no scroll threshold)
+        setShowFloatingButton(true);
+      }
     };
+
+    // Initial check
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isMainPage]);
 
   if (!showFloatingButton) return null;
 

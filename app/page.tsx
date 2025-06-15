@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
@@ -13,21 +13,8 @@ import { scrollToContactForm } from "./utils/scrollToContactForm";
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isScrolled, setIsScrolled] = useState(false);
   // City context is used by the Header component and CityModal
   const { selectedCity, setShowCityModal } = useCity();
-
-  // Add scroll effect for header transparency
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const heroHeight = window.innerHeight;
-      setIsScrolled(scrollPosition > heroHeight * 0.8);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Add accordion state for packages - simplified to track which section is open
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -80,16 +67,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
-      {/* Header - Fixed with transparency effects */}
-      <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-white/95 backdrop-blur-md shadow-lg"
-            : "bg-transparent"
-        }`}
-      >
-        <Header showCitySelector={true} isTransparent={!isScrolled} />
-      </div>
+      {/* Header - Now handled by the Header component itself */}
+      <Header showCitySelector={true} isTransparent={true} />
 
       {/* Hero Section with Motion Background */}
       <section className="relative min-h-screen flex flex-col justify-end overflow-hidden">

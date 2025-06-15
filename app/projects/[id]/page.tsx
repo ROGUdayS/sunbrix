@@ -50,7 +50,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
       <Header />
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         {/* Back to projects */}
         <div className="mb-8">
           <Link
@@ -299,7 +299,6 @@ export default function ProjectPage({ params }: ProjectPageProps) {
         title="Building homes Since 1999"
         subtitle="Ready to build your dream home? Schedule a free consultation to start your journey today!"
       />
-
     </div>
   );
 }
