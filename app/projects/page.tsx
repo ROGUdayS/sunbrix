@@ -71,6 +71,157 @@ export default function ProjectGallery() {
     }));
   };
 
+  // Function to get directional arrow based on facing direction
+  const getDirectionalArrow = (facing: string) => {
+    const direction = facing.toLowerCase();
+
+    if (direction.includes("north")) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 3a1 1 0 011 1v10.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V4a1 1 0 011-1z"
+            clipRule="evenodd"
+            transform="rotate(180 10 10)"
+          />
+        </svg>
+      );
+    } else if (direction.includes("south")) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 3a1 1 0 011 1v10.586l2.293-2.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V4a1 1 0 011-1z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    } else if (direction.includes("east")) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M3 10a1 1 0 011-1h10.586L12.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H4a1 1 0 01-1-1z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    } else if (direction.includes("west")) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M17 10a1 1 0 01-1 1H5.414l2.293 2.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H16a1 1 0 011 1z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    } else if (
+      direction.includes("northeast") ||
+      direction.includes("north-east")
+    ) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clipRule="evenodd"
+            transform="rotate(-45 10 10)"
+          />
+        </svg>
+      );
+    } else if (
+      direction.includes("northwest") ||
+      direction.includes("north-west")
+    ) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clipRule="evenodd"
+            transform="rotate(45 10 10)"
+          />
+        </svg>
+      );
+    } else if (
+      direction.includes("southeast") ||
+      direction.includes("south-east")
+    ) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clipRule="evenodd"
+            transform="rotate(-135 10 10)"
+          />
+        </svg>
+      );
+    } else if (
+      direction.includes("southwest") ||
+      direction.includes("south-west")
+    ) {
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clipRule="evenodd"
+            transform="rotate(135 10 10)"
+          />
+        </svg>
+      );
+    } else {
+      // Default compass icon for unknown directions
+      return (
+        <svg
+          className="w-4 h-4 text-gray-400"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.736 6.979C9.208 6.193 9.696 6 10 6s.792.193 1.264.979L14 10l-2.736 3.021C10.792 13.807 10.304 14 10 14s-.792-.193-1.264-.979L6 10l2.736-3.021z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
       {/* Header */}
@@ -221,17 +372,7 @@ export default function ProjectGallery() {
                     </div>
 
                     <div className="flex items-center space-x-1 text-gray-600">
-                      <svg
-                        className="w-4 h-4 text-gray-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      {getDirectionalArrow(project.facing)}
                       <span className="font-medium text-gray-800">
                         {project.facing}
                       </span>
