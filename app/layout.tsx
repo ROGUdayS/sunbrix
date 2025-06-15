@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CityProvider } from "./contexts/CityContext";
 import CityModal from "./components/CityModal";
+import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
   title: "Sunbrix - Building homes Since 1999",
@@ -22,6 +23,7 @@ export default function RootLayout({
         <CityProvider>
           {children}
           <CityModal />
+          <Footer />
         </CityProvider>
       </body>
     </html>
