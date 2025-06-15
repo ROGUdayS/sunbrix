@@ -133,16 +133,16 @@ export default function ThankYou() {
             </h3>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6">
               <a
-                href="mailto:support.homes@jswone.in"
+                href="mailto:sunbrix.co@gmail.com"
                 className="text-orange-600 hover:text-orange-700 font-medium text-sm sm:text-base"
               >
-                support.homes@jswone.in
+                sunbrix.co@gmail.com
               </a>
               <a
                 href="tel:+917208055527"
                 className="text-orange-600 hover:text-orange-700 font-medium text-sm sm:text-base"
               >
-                +91 72080 55527
+                +91 8867920940
               </a>
             </div>
           </div>

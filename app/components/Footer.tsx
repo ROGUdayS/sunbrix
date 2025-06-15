@@ -17,9 +17,9 @@ export default function Footer() {
                 Get in touch
               </div>
               <div className="text-base text-orange-400">
-                support.homes@jswone.in
+                sunbrix.co@gmail.com
               </div>
-              <div className="text-base text-orange-400">+91 72080 55527</div>
+              <div className="text-base text-orange-400">+91 8867920940</div>
             </div>
             {/* Social Media Icons */}
             <div className="flex space-x-4">

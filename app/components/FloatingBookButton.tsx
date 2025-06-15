@@ -11,15 +11,11 @@ export default function FloatingBookButton() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
-
       if (isMainPage) {
-        // On main page, show button only after scrolling past hero section (viewport height)
-        const heroHeight = window.innerHeight;
-        setShowFloatingButton(scrollTop > heroHeight * 0.8);
+        // On main page, always show the button (visible even on hero section)
+        setShowFloatingButton(true);
       } else {
-        // On other pages, show button immediately (no scroll threshold)
+        // On other pages, show button immediately
         setShowFloatingButton(true);
       }
     };

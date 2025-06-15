@@ -8,7 +8,6 @@ import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
 import { useCity } from "./contexts/CityContext";
 import packagesData from "../data/packages.json";
-import { scrollToContactForm } from "./utils/scrollToContactForm";
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -23,6 +22,9 @@ export default function Home() {
   const [selectedServiceType, setSelectedServiceType] = useState<string | null>(
     "construction"
   );
+
+  // Add package carousel state
+  const [currentPackage, setCurrentPackage] = useState(0);
 
   // Project gallery data
   const projects = [
@@ -104,6 +106,31 @@ export default function Home() {
     setExpandedSection((prev) => (prev === section ? null : section));
   };
 
+  // Package carousel navigation functions
+  const nextPackage = () => {
+    const packageKeys = Object.keys(
+      packagesData.packages[
+        selectedServiceType as keyof typeof packagesData.packages
+      ] || {}
+    );
+    setCurrentPackage((prev) => (prev + 1) % packageKeys.length);
+  };
+
+  const prevPackage = () => {
+    const packageKeys = Object.keys(
+      packagesData.packages[
+        selectedServiceType as keyof typeof packagesData.packages
+      ] || {}
+    );
+    setCurrentPackage(
+      (prev) => (prev - 1 + packageKeys.length) % packageKeys.length
+    );
+  };
+
+  const goToPackage = (index: number) => {
+    setCurrentPackage(index);
+  };
+
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
       {/* Header - Now handled by the Header component itself */}
@@ -172,14 +199,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-          {/* Contact Us Button */}
-          <button
-            onClick={scrollToContactForm}
-            className="bg-orange-500 hover:bg-orange-600 text-white px-8 sm:px-10 py-3 sm:py-4 rounded-lg text-lg sm:text-xl font-semibold transition-all duration-300 shadow-2xl hover:shadow-orange-500/25 hover:scale-105"
-          >
-            Contact Us
-          </button>
         </div>
 
         {/* Scroll indicator */}
@@ -462,12 +481,12 @@ export default function Home() {
               {/* Service Type Buttons */}
               <div className="flex justify-center">
                 {selectedCity && (
-                  <div className="inline-flex flex-wrap justify-center gap-1 sm:gap-2 rounded-lg bg-gray-50 border border-gray-200 p-2">
+                  <div className="w-full sm:w-auto flex sm:inline-flex justify-center gap-2 sm:gap-2 rounded-lg bg-gray-50 border border-gray-200 p-2">
                     {packagesData.serviceTypes.map((serviceType) => (
                       <button
                         key={serviceType.id}
                         onClick={() => setSelectedServiceType(serviceType.id)}
-                        className={`px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition ${
+                        className={`flex-1 sm:flex-none px-4 sm:px-4 py-3 sm:py-2 text-sm sm:text-sm font-medium rounded-md transition ${
                           selectedServiceType === serviceType.id
                             ? "bg-amber-600 text-white shadow"
                             : "text-gray-700 hover:bg-white hover:shadow-sm"
@@ -503,134 +522,359 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Package Cards */}
+          {/* Package Cards - Desktop: All visible, Mobile: Carousel */}
           {selectedCity && selectedServiceType && (
-            <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:gap-8">
-              {Object.entries(
-                packagesData.packages[
-                  selectedServiceType as keyof typeof packagesData.packages
-                ]
-              ).map(([packageKey, packageInfo]) => {
-                const currentCityPricing =
-                  packageInfo.pricing[
-                    selectedCity.id as keyof typeof packageInfo.pricing
-                  ];
+            <>
+              {/* Desktop View - All packages visible */}
+              <div className="hidden lg:grid lg:grid-cols-3 gap-8">
+                {Object.entries(
+                  packagesData.packages[
+                    selectedServiceType as keyof typeof packagesData.packages
+                  ]
+                ).map(([packageKey, packageInfo]) => {
+                  const currentCityPricing =
+                    packageInfo.pricing[
+                      selectedCity.id as keyof typeof packageInfo.pricing
+                    ];
 
-                return (
-                  <div
-                    key={packageKey}
-                    className={`relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
-                      packageInfo.popular
-                        ? "ring-2 ring-amber-500 scale-105 z-10"
-                        : "border border-gray-100 hover:border-amber-200"
-                    }`}
-                  >
-                    {/* Popular Badge */}
-                    {packageInfo.popular && (
-                      <div className="absolute -top-0 left-0 right-0">
-                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1 sm:py-2 text-xs sm:text-sm font-semibold">
-                          ⭐ Most Popular
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Card Content */}
+                  return (
                     <div
-                      className={`p-2 sm:p-4 lg:p-8 ${
-                        packageInfo.popular ? "pt-6 sm:pt-8 lg:pt-12" : ""
+                      key={packageKey}
+                      className={`relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
+                        packageInfo.popular
+                          ? "ring-2 ring-amber-500 scale-105 z-10"
+                          : "border border-gray-100 hover:border-amber-200"
                       }`}
                     >
-                      {/* Package Title */}
-                      <div className="text-center mb-2 sm:mb-4 lg:mb-6">
-                        <h3 className="text-xs sm:text-lg lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
-                          {packageInfo.title}
-                        </h3>
-
-                        {/* Price Display */}
-                        <div className="mb-2 sm:mb-4">
-                          <div className="text-sm sm:text-2xl lg:text-4xl font-bold text-amber-600 mb-1">
-                            {selectedCity ? currentCityPricing?.price : "X,XXX"}
+                      {/* Popular Badge */}
+                      {packageInfo.popular && (
+                        <div className="absolute -top-0 left-0 right-0">
+                          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                            ⭐ Most Popular
                           </div>
-                          {selectedCity && !currentCityPricing?.startingAt && (
-                            <div className="text-xs sm:text-sm text-gray-500">
-                              per sq. ft (Ex GST)
+                        </div>
+                      )}
+
+                      {/* Card Content */}
+                      <div
+                        className={`p-8 ${packageInfo.popular ? "pt-12" : ""}`}
+                      >
+                        {/* Package Title */}
+                        <div className="text-center mb-6">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            {packageInfo.title}
+                          </h3>
+
+                          {/* Price Display */}
+                          <div className="mb-4">
+                            <div className="text-4xl font-bold text-amber-600 mb-1">
+                              {selectedCity
+                                ? currentCityPricing?.price
+                                : "X,XXX"}
                             </div>
+                            {selectedCity &&
+                              !currentCityPricing?.startingAt && (
+                                <div className="text-sm text-gray-500">
+                                  per sq. ft (Ex GST)
+                                </div>
+                              )}
+                          </div>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="border-t border-gray-100 mb-4"></div>
+
+                        {/* Expandable Sections */}
+                        <div className="space-y-2">
+                          {Object.entries(packageInfo.sections).map(
+                            ([sectionKey, section]) => (
+                              <div
+                                key={sectionKey}
+                                className="border border-gray-100 rounded-lg overflow-hidden"
+                              >
+                                <button
+                                  onClick={() => toggleSection(sectionKey)}
+                                  className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                                >
+                                  <span className="font-semibold text-gray-900 text-sm">
+                                    {section.title}
+                                  </span>
+                                  <div className="flex items-center space-x-2">
+                                    <svg
+                                      className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+                                        expandedSection === sectionKey
+                                          ? "rotate-180"
+                                          : ""
+                                      }`}
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                  </div>
+                                </button>
+
+                                <div
+                                  className={`
+                                    transition-all duration-300 ease-in-out overflow-hidden
+                                    ${
+                                      expandedSection === sectionKey
+                                        ? "max-h-96 opacity-100"
+                                        : "max-h-0 opacity-0"
+                                    }
+                                  `}
+                                >
+                                  <div className="px-4 pb-4 bg-gray-50">
+                                    <ul className="space-y-2">
+                                      {section.items.map((item, index) => (
+                                        <li
+                                          key={index}
+                                          className="flex items-start text-sm text-gray-700"
+                                        >
+                                          <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                          <span className="leading-relaxed">
+                                            {item}
+                                          </span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Mobile/Tablet Carousel View */}
+              <div className="lg:hidden relative">
+                {(() => {
+                  const packageEntries = Object.entries(
+                    packagesData.packages[
+                      selectedServiceType as keyof typeof packagesData.packages
+                    ]
+                  );
+
+                  return (
+                    <>
+                      {/* Carousel Container */}
+                      <div className="relative overflow-hidden">
+                        <div
+                          className="flex transition-transform duration-500 ease-in-out"
+                          style={{
+                            transform: `translateX(-${currentPackage * 85}%)`,
+                          }}
+                        >
+                          {packageEntries.map(
+                            ([packageKey, packageInfo], index) => {
+                              const currentCityPricing =
+                                packageInfo.pricing[
+                                  selectedCity.id as keyof typeof packageInfo.pricing
+                                ];
+
+                              return (
+                                <div
+                                  key={packageKey}
+                                  className={`w-[85%] flex-shrink-0 mx-2 ${
+                                    index === currentPackage ? "z-10" : "z-0"
+                                  }`}
+                                >
+                                  <div
+                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden ${
+                                      packageInfo.popular
+                                        ? "ring-2 ring-amber-500"
+                                        : "border border-gray-100"
+                                    } ${
+                                      index === currentPackage
+                                        ? "scale-100 opacity-100"
+                                        : "scale-95 opacity-75"
+                                    }`}
+                                  >
+                                    {/* Popular Badge */}
+                                    {packageInfo.popular && (
+                                      <div className="absolute -top-0 left-0 right-0">
+                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                                          ⭐ Most Popular
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Card Content */}
+                                    <div
+                                      className={`p-4 sm:p-6 ${
+                                        packageInfo.popular
+                                          ? "pt-8 sm:pt-10"
+                                          : ""
+                                      }`}
+                                    >
+                                      {/* Package Title */}
+                                      <div className="text-center mb-4 sm:mb-6">
+                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                          {packageInfo.title}
+                                        </h3>
+
+                                        {/* Price Display */}
+                                        <div className="mb-4">
+                                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">
+                                            {selectedCity
+                                              ? currentCityPricing?.price
+                                              : "X,XXX"}
+                                          </div>
+                                          {selectedCity &&
+                                            !currentCityPricing?.startingAt && (
+                                              <div className="text-sm text-gray-500">
+                                                per sq. ft (Ex GST)
+                                              </div>
+                                            )}
+                                        </div>
+                                      </div>
+
+                                      {/* Divider */}
+                                      <div className="border-t border-gray-100 mb-4"></div>
+
+                                      {/* Expandable Sections */}
+                                      <div className="space-y-2">
+                                        {Object.entries(
+                                          packageInfo.sections
+                                        ).map(([sectionKey, section]) => (
+                                          <div
+                                            key={sectionKey}
+                                            className="border border-gray-100 rounded-lg overflow-hidden"
+                                          >
+                                            <button
+                                              onClick={() =>
+                                                toggleSection(sectionKey)
+                                              }
+                                              className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors"
+                                            >
+                                              <span className="font-semibold text-gray-900 text-sm">
+                                                {section.title}
+                                              </span>
+                                              <div className="flex items-center space-x-2">
+                                                <svg
+                                                  className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-200 ${
+                                                    expandedSection ===
+                                                    sectionKey
+                                                      ? "rotate-180"
+                                                      : ""
+                                                  }`}
+                                                  fill="currentColor"
+                                                  viewBox="0 0 20 20"
+                                                >
+                                                  <path
+                                                    fillRule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clipRule="evenodd"
+                                                  />
+                                                </svg>
+                                              </div>
+                                            </button>
+
+                                            <div
+                                              className={`
+                                                transition-all duration-300 ease-in-out overflow-hidden
+                                                ${
+                                                  expandedSection === sectionKey
+                                                    ? "max-h-96 opacity-100"
+                                                    : "max-h-0 opacity-0"
+                                                }
+                                              `}
+                                            >
+                                              <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-gray-50">
+                                                <ul className="space-y-2">
+                                                  {section.items.map(
+                                                    (item, itemIndex) => (
+                                                      <li
+                                                        key={itemIndex}
+                                                        className="flex items-start text-sm text-gray-700"
+                                                      >
+                                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                                        <span className="leading-relaxed">
+                                                          {item}
+                                                        </span>
+                                                      </li>
+                                                    )
+                                                  )}
+                                                </ul>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
                           )}
                         </div>
                       </div>
 
-                      {/* Divider */}
-                      <div className="border-t border-gray-100 mb-2 sm:mb-4"></div>
+                      {/* Navigation Arrows */}
+                      <button
+                        onClick={prevPackage}
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-20"
+                      >
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={nextPackage}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-20"
+                      >
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </button>
 
-                      {/* Expandable Sections */}
-                      <div className="space-y-1 sm:space-y-2">
-                        {Object.entries(packageInfo.sections).map(
-                          ([sectionKey, section]) => (
-                            <div
-                              key={sectionKey}
-                              className="border border-gray-100 rounded-lg overflow-hidden"
-                            >
-                              <button
-                                onClick={() => toggleSection(sectionKey)}
-                                className="w-full flex items-center justify-between p-2 sm:p-3 lg:p-4 text-left hover:bg-gray-50 transition-colors"
-                              >
-                                <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                  {section.title}
-                                </span>
-                                <div className="flex items-center space-x-1 sm:space-x-2">
-                                  <svg
-                                    className={`w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-400 transition-transform duration-200 ${
-                                      expandedSection === sectionKey
-                                        ? "rotate-180"
-                                        : ""
-                                    }`}
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                </div>
-                              </button>
-
-                              <div
-                                className={`
-                                  transition-all duration-300 ease-in-out overflow-hidden
-                                  ${
-                                    expandedSection === sectionKey
-                                      ? "max-h-96 opacity-100"
-                                      : "max-h-0 opacity-0"
-                                  }
-                                `}
-                              >
-                                <div className="px-2 sm:px-3 lg:px-4 pb-2 sm:pb-3 lg:pb-4 bg-gray-50">
-                                  <ul className="space-y-1 sm:space-y-2">
-                                    {section.items.map((item, index) => (
-                                      <li
-                                        key={index}
-                                        className="flex items-start text-xs sm:text-sm text-gray-700"
-                                      >
-                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-400 rounded-full mt-1.5 sm:mt-2 mr-2 sm:mr-3 flex-shrink-0"></div>
-                                        <span className="leading-relaxed">
-                                          {item}
-                                        </span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        )}
+                      {/* Pagination Dots */}
+                      <div className="flex justify-center mt-6 space-x-2">
+                        {packageEntries.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => goToPackage(index)}
+                            className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                              index === currentPackage
+                                ? "bg-amber-600"
+                                : "bg-gray-300 hover:bg-gray-400"
+                            }`}
+                          />
+                        ))}
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                    </>
+                  );
+                })()}
+              </div>
+            </>
           )}
 
           {/* Message when no city or service type is selected */}
@@ -855,8 +1099,8 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
-            <div className="w-32 h-16 sm:w-40 sm:h-20 relative">
+          <div className="flex justify-center items-center gap-4 sm:gap-8 lg:gap-12">
+            <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
                 src="/banks-icons/hdfc.png"
                 alt="HDFC Bank"
@@ -864,7 +1108,7 @@ export default function Home() {
                 className="object-contain"
               />
             </div>
-            <div className="w-32 h-16 sm:w-40 sm:h-20 relative">
+            <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
                 src="/banks-icons/icici.png"
                 alt="ICICI Bank"
@@ -872,7 +1116,7 @@ export default function Home() {
                 className="object-contain"
               />
             </div>
-            <div className="w-32 h-16 sm:w-40 sm:h-20 relative">
+            <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
                 src="/banks-icons/sbi.png"
                 alt="SBI Bank"
