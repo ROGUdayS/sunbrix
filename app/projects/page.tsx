@@ -228,14 +228,16 @@ export default function ProjectGallery() {
       <Header showCitySelector={true} />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
         {/* Page Title */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Gallery</h1>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+            Gallery
+          </h1>
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
           {currentProjects.map((project: Project) => {
             // Create array of images - use multiple images if available, otherwise use main image
             const projectImages =
@@ -248,7 +250,7 @@ export default function ProjectGallery() {
               <Link
                 key={project.id}
                 href={`/projects/${project.id}`}
-                className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow block"
+                className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow block"
               >
                 {/* Project Photo with Carousel */}
                 <div className="relative">
@@ -257,13 +259,13 @@ export default function ProjectGallery() {
                     alt={project.title}
                     width={500}
                     height={320}
-                    className="w-full h-64 object-cover"
+                    className="w-full h-48 sm:h-56 lg:h-64 object-cover"
                   />
 
                   {/* Location overlay */}
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 flex items-center space-x-2">
+                  <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm rounded-lg px-2 sm:px-3 py-1 sm:py-2 flex items-center space-x-1 sm:space-x-2">
                     <svg
-                      className="w-4 h-4 text-gray-600"
+                      className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -273,7 +275,7 @@ export default function ProjectGallery() {
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-xs sm:text-sm font-medium text-gray-700">
                       {project.location}, {project.yearBuilt}
                     </span>
                   </div>
@@ -341,14 +343,14 @@ export default function ProjectGallery() {
                   )}
                 </div>
 
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   {/* Project Name */}
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                     {project.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
                     {project.description}
                   </p>
 

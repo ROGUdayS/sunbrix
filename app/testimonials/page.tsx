@@ -87,13 +87,13 @@ export default function Testimonials() {
       <Header />
 
       {/* Hero Section */}
-      <section className="py-20 pt-32 bg-gradient-to-br from-amber-50 to-orange-50">
+      <section className="py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 lg:pt-32 bg-gradient-to-br from-amber-50 to-orange-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
               Happy customers
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
               See what our customers have to say
             </p>
           </div>
@@ -101,13 +101,13 @@ export default function Testimonials() {
       </section>
 
       {/* Featured Video Testimonial */}
-      <section className="py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Customer Stories
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-gray-600">
               Real experiences from homeowners who chose Sunbrix
             </p>
           </div>
@@ -117,10 +117,10 @@ export default function Testimonials() {
             {/* Navigation Arrows */}
             <button
               onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-2 sm:p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
             >
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -135,10 +135,10 @@ export default function Testimonials() {
             </button>
             <button
               onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-2 sm:p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
             >
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -153,8 +153,8 @@ export default function Testimonials() {
             </button>
 
             {/* Video Container */}
-            <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
-              <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+            <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border border-orange-100">
+              <div className="relative aspect-video bg-gray-900 rounded-t-xl sm:rounded-t-2xl overflow-hidden">
                 <iframe
                   className="w-full h-full"
                   src={testimonials[currentTestimonial].videoUrl}
@@ -164,25 +164,25 @@ export default function Testimonials() {
                   allowFullScreen
                 ></iframe>
               </div>
-              <div className="p-8 bg-white">
-                <div className="flex items-center justify-center mb-6">
+              <div className="p-4 sm:p-6 lg:p-8 bg-white">
+                <div className="flex items-center justify-center mb-4 sm:mb-6">
                   <svg
-                    className="w-8 h-8 text-orange-400"
+                    className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                   </svg>
                 </div>
-                <p className="text-gray-700 text-center mb-6 leading-relaxed text-lg">
+                <p className="text-gray-700 text-center mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base lg:text-lg">
                   {testimonials[currentTestimonial].quote}
                 </p>
                 <div className="text-center">
-                  <div className="font-semibold text-gray-900 text-lg">
+                  <div className="font-semibold text-gray-900 text-base sm:text-lg">
                     {testimonials[currentTestimonial].name}
                   </div>
                   {testimonials[currentTestimonial].location && (
-                    <div className="text-gray-600 mt-1">
+                    <div className="text-gray-600 mt-1 text-sm sm:text-base">
                       {testimonials[currentTestimonial].location}
                     </div>
                   )}

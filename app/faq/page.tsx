@@ -247,12 +247,12 @@ export default function FAQ() {
       <Header showCitySelector={false} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-orange-50 to-amber-50 py-20 pt-32">
+      <section className="bg-gradient-to-br from-orange-50 to-amber-50 py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 lg:pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
             Frequently asked questions
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
             Find answers to common questions about Sunbrix, our construction
             process, materials, and services.
           </p>
@@ -260,19 +260,19 @@ export default function FAQ() {
       </section>
 
       {/* FAQ Content */}
-      <section className="py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Categories */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
               Categories
             </h2>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
                     activeCategory === category
                       ? "bg-gray-900 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -285,7 +285,7 @@ export default function FAQ() {
           </div>
 
           {/* FAQ Items */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {filteredFAQs.map((faq) => (
               <div
                 key={faq.id}
@@ -293,12 +293,12 @@ export default function FAQ() {
               >
                 <button
                   onClick={() => toggleFAQ(faq.id)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full px-4 sm:px-6 py-3 sm:py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
                 >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
                       <svg
-                        className="w-3 h-3 text-orange-600"
+                        className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-600"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -309,7 +309,7 @@ export default function FAQ() {
                         />
                       </svg>
                     </div>
-                    <span className="font-medium text-gray-900 text-left">
+                    <span className="font-medium text-gray-900 text-left text-sm sm:text-base">
                       {faq.question}
                     </span>
                   </div>
@@ -335,9 +335,9 @@ export default function FAQ() {
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="px-6 pb-4">
-                    <div className="pl-9">
-                      <p className="text-gray-700 leading-relaxed">
+                  <div className="px-4 sm:px-6 pb-3 sm:pb-4">
+                    <div className="pl-7 sm:pl-9">
+                      <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
                         {faq.answer}
                       </p>
                     </div>
@@ -350,19 +350,19 @@ export default function FAQ() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Building homes Since 1999
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8">
             Sunbrix is a venture by the Sunbrix Group, a leading name in steel,
             cement, energy and other core sectors. We believe building a home
             should put you firmly in control, with access to verified
             professionals, quality products and a safe, transparent process -
             the Sunbrix way.
           </p>
-          <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-md">
+          <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-base sm:text-lg font-semibold transition-colors shadow-md">
             Contact Us
           </button>
         </div>

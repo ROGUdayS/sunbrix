@@ -12,6 +12,7 @@ import { scrollToContactForm } from "./utils/scrollToContactForm";
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   // City context is used by the Header component and CityModal
   const { selectedCity, setShowCityModal } = useCity();
 
@@ -60,6 +61,45 @@ export default function Home() {
     setCurrentSlide(index);
   };
 
+  // Testimonial data
+  const testimonials = [
+    {
+      id: 1,
+      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
+      quote:
+        "Most people struggle with delays, finances, or contractors. I didn&apos;t face even 1% of that. Sunbrix made my home journey smooth and hassle-free.",
+      name: "Mr. Suryanarayanan Karthikeyan",
+    },
+    {
+      id: 2,
+      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
+      quote:
+        "Sunbrix&apos;s expert team guided me at every step. Their quality gave me total confidence throughout the journey.",
+      name: "Mr. Gururaj Naik",
+    },
+    {
+      id: 3,
+      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
+      quote:
+        "Sunbrix Homes exceeded our expectations! The construction quality and timely delivery were remarkable. Truly a dream home.",
+      name: "Mr. Hariharasudan",
+    },
+  ];
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+    );
+  };
+
+  const goToTestimonial = (index: number) => {
+    setCurrentTestimonial(index);
+  };
+
   const toggleSection = (section: string) => {
     setExpandedSection((prev) => (prev === section ? null : section));
   };
@@ -98,36 +138,36 @@ export default function Home() {
         {/* Hero Content - Positioned at bottom */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white pb-16 sm:pb-20">
           {/* Key Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8 max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
+              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
                 25
               </div>
-              <div className="text-xs sm:text-sm lg:text-base font-medium">
+              <div className="text-sm sm:text-sm lg:text-base font-medium">
                 Years
               </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
+              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
                 100+
               </div>
-              <div className="text-xs sm:text-sm lg:text-base font-medium">
+              <div className="text-sm sm:text-sm lg:text-base font-medium">
                 Homes
               </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
+              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
                 100%
               </div>
-              <div className="text-xs sm:text-sm lg:text-base font-medium">
+              <div className="text-sm sm:text-sm lg:text-base font-medium">
                 Transparent
               </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20">
-              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
+              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
                 100%
               </div>
-              <div className="text-xs sm:text-sm lg:text-base font-medium">
+              <div className="text-sm sm:text-sm lg:text-base font-medium">
                 On-Time
               </div>
             </div>
@@ -161,13 +201,13 @@ export default function Home() {
       </section>
 
       {/* Our Commitment to Quality */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Our Commitment to Quality
             </h2>
-            <p className="text-lg sm:text-xl text-amber-800 mb-8 sm:mb-16">
+            <p className="text-lg sm:text-xl text-amber-800 mb-6 sm:mb-12 lg:mb-16">
               We are committed to building your dream home with the highest
               quality materials and workmanship.
             </p>
@@ -248,9 +288,9 @@ export default function Home() {
       </section>
 
       {/* Project Gallery */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Gallery
             </h2>
@@ -321,7 +361,7 @@ export default function Home() {
             </div>
 
             {/* Project Description */}
-            <div className="text-center mt-6 sm:mt-8 px-4">
+            <div className="text-center mt-4 sm:mt-6 lg:mt-8 px-4">
               <div className="flex justify-center mb-4">
                 <svg
                   className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
@@ -337,7 +377,7 @@ export default function Home() {
             </div>
 
             {/* Pagination Dots */}
-            <div className="flex justify-center mt-8 space-x-2">
+            <div className="flex justify-center mt-4 sm:mt-6 lg:mt-8 space-x-2">
               {projects.map((_, index) => (
                 <button
                   key={index}
@@ -352,7 +392,7 @@ export default function Home() {
             </div>
 
             {/* Explore More Button */}
-            <div className="text-center mt-8 sm:mt-12">
+            <div className="text-center mt-6 sm:mt-8 lg:mt-12">
               <Link
                 href="/projects"
                 className="border-2 border-gray-900 text-gray-900 px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium hover:bg-gray-900 hover:text-white transition-colors duration-200 inline-block"
@@ -365,13 +405,13 @@ export default function Home() {
       </section>
 
       {/* Build Your Dream Home CTA */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
+      <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-12">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Build your dream home
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 sm:mb-12">
+            <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 lg:mb-12">
               Choose your layout, customise the details and receive a
               transparent quote.
             </p>
@@ -405,9 +445,9 @@ export default function Home() {
       </section>
 
       {/* Packages */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Packages
             </h2>
@@ -465,7 +505,7 @@ export default function Home() {
 
           {/* Package Cards */}
           {selectedCity && selectedServiceType && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 lg:gap-8">
               {Object.entries(
                 packagesData.packages[
                   selectedServiceType as keyof typeof packagesData.packages
@@ -488,7 +528,7 @@ export default function Home() {
                     {/* Popular Badge */}
                     {packageInfo.popular && (
                       <div className="absolute -top-0 left-0 right-0">
-                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1 sm:py-2 text-xs sm:text-sm font-semibold">
                           ⭐ Most Popular
                         </div>
                       </div>
@@ -496,19 +536,19 @@ export default function Home() {
 
                     {/* Card Content */}
                     <div
-                      className={`p-4 sm:p-6 lg:p-8 ${
-                        packageInfo.popular ? "pt-8 sm:pt-10 lg:pt-12" : ""
+                      className={`p-2 sm:p-4 lg:p-8 ${
+                        packageInfo.popular ? "pt-6 sm:pt-8 lg:pt-12" : ""
                       }`}
                     >
                       {/* Package Title */}
-                      <div className="text-center mb-4 sm:mb-6">
-                        <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2">
+                      <div className="text-center mb-2 sm:mb-4 lg:mb-6">
+                        <h3 className="text-xs sm:text-lg lg:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                           {packageInfo.title}
                         </h3>
 
                         {/* Price Display */}
-                        <div className="mb-4">
-                          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-600 mb-1">
+                        <div className="mb-2 sm:mb-4">
+                          <div className="text-sm sm:text-2xl lg:text-4xl font-bold text-amber-600 mb-1">
                             {selectedCity ? currentCityPricing?.price : "X,XXX"}
                           </div>
                           {selectedCity && !currentCityPricing?.startingAt && (
@@ -520,10 +560,10 @@ export default function Home() {
                       </div>
 
                       {/* Divider */}
-                      <div className="border-t border-gray-100 mb-4"></div>
+                      <div className="border-t border-gray-100 mb-2 sm:mb-4"></div>
 
                       {/* Expandable Sections */}
-                      <div className="space-y-2">
+                      <div className="space-y-1 sm:space-y-2">
                         {Object.entries(packageInfo.sections).map(
                           ([sectionKey, section]) => (
                             <div
@@ -532,14 +572,14 @@ export default function Home() {
                             >
                               <button
                                 onClick={() => toggleSection(sectionKey)}
-                                className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors"
+                                className="w-full flex items-center justify-between p-2 sm:p-3 lg:p-4 text-left hover:bg-gray-50 transition-colors"
                               >
                                 <span className="font-semibold text-gray-900 text-xs sm:text-sm">
                                   {section.title}
                                 </span>
-                                <div className="flex items-center space-x-2">
+                                <div className="flex items-center space-x-1 sm:space-x-2">
                                   <svg
-                                    className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-200 ${
+                                    className={`w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-400 transition-transform duration-200 ${
                                       expandedSection === sectionKey
                                         ? "rotate-180"
                                         : ""
@@ -566,14 +606,14 @@ export default function Home() {
                                   }
                                 `}
                               >
-                                <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-gray-50">
-                                  <ul className="space-y-2">
+                                <div className="px-2 sm:px-3 lg:px-4 pb-2 sm:pb-3 lg:pb-4 bg-gray-50">
+                                  <ul className="space-y-1 sm:space-y-2">
                                     {section.items.map((item, index) => (
                                       <li
                                         key={index}
                                         className="flex items-start text-xs sm:text-sm text-gray-700"
                                       >
-                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-400 rounded-full mt-1.5 sm:mt-2 mr-2 sm:mr-3 flex-shrink-0"></div>
                                         <span className="leading-relaxed">
                                           {item}
                                         </span>
@@ -614,9 +654,9 @@ export default function Home() {
 
       {/* Service Timeline - Dynamic based on selected service type */}
       {selectedCity && selectedServiceType && (
-        <section className="py-12 sm:py-16 bg-gradient-to-br from-amber-50 to-orange-50">
+        <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-amber-50 to-orange-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8 sm:mb-12">
+            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
               <h2 className="text-2xl sm:text-3xl font-bold text-amber-900 mb-4">
                 Your{" "}
                 {
@@ -804,9 +844,9 @@ export default function Home() {
       )}
 
       {/* Bank Approval Section */}
-      <section id="bank-approval" className="py-12 sm:py-16 bg-white">
+      <section id="bank-approval" className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Banks
             </h2>
@@ -845,9 +885,9 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Happy customers, real stories
             </h2>
@@ -858,8 +898,11 @@ export default function Home() {
 
           {/* Video Testimonials Carousel */}
           <div className="relative max-w-6xl mx-auto">
-            {/* Navigation Arrows - Hidden on mobile */}
-            <button className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10">
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevTestimonial}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -874,7 +917,10 @@ export default function Home() {
                 />
               </svg>
             </button>
-            <button className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10">
+            <button
+              onClick={nextTestimonial}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -890,8 +936,55 @@ export default function Home() {
               </svg>
             </button>
 
-            {/* Video Testimonials Grid - Single column on mobile, 3 columns on desktop */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* Video Testimonials - Single testimonial on mobile, 3 columns on desktop */}
+            <div className="block md:hidden">
+              {/* Mobile: Single testimonial carousel */}
+              <div className="relative overflow-hidden rounded-2xl">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{
+                    transform: `translateX(-${currentTestimonial * 100}%)`,
+                  }}
+                >
+                  {testimonials.map((testimonial) => (
+                    <div key={testimonial.id} className="w-full flex-shrink-0">
+                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                        <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                          <iframe
+                            className="w-full h-full"
+                            src={testimonial.videoUrl}
+                            title={`Customer Testimonial ${testimonial.id}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+                        <div className="p-4 sm:p-6 bg-white">
+                          <div className="flex items-center justify-center mb-4">
+                            <svg
+                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                            </svg>
+                          </div>
+                          <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                            {testimonial.quote}
+                          </p>
+                          <div className="text-center font-semibold text-gray-900 text-sm sm:text-base">
+                            {testimonial.name}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop: All testimonials visible */}
+            <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8">
               {/* Video Testimonial 1 */}
               <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
                 <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
@@ -991,8 +1084,23 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Pagination Dots */}
-            <div className="flex justify-center mt-8 space-x-2">
+            {/* Mobile Pagination Dots */}
+            <div className="flex justify-center mt-6 space-x-2 md:hidden">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    index === currentTestimonial
+                      ? "bg-gray-800"
+                      : "bg-gray-300 hover:bg-gray-400"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Desktop Pagination Dots */}
+            <div className="hidden md:flex justify-center mt-8 space-x-2">
               <button className="w-3 h-3 rounded-full bg-gray-800"></button>
               <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
               <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>

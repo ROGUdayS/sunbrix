@@ -12,13 +12,13 @@ export default function HowItWorks() {
       <Header />
 
       {/* Hero Section */}
-      <section className="py-20 pt-32 bg-gradient-to-br from-amber-50 to-orange-50">
+      <section className="py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 lg:pt-32 bg-gradient-to-br from-amber-50 to-orange-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
               How it works
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8">
               Expertly built homes, from concept to completion in approximately
               14 months.
             </p>
@@ -26,13 +26,13 @@ export default function HowItWorks() {
 
           {/* Hero Image */}
           <div className="max-w-6xl mx-auto">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl">
               <Image
                 src="/images/how-it-works.webp"
                 alt="How it works - Building process"
                 width={1200}
                 height={300}
-                className="w-full h-[300px] md:h-[300px] object-cover"
+                className="w-full h-[200px] sm:h-[250px] md:h-[300px] object-cover"
               />
             </div>
           </div>
@@ -40,26 +40,26 @@ export default function HowItWorks() {
       </section>
 
       {/* Our Building Process Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Our building process at glance
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-base sm:text-lg text-gray-600">
               Explore our step-by-step process of building your dream home.
             </p>
           </div>
 
           {/* Process Steps */}
-          <div className="space-y-8">
+          <div className="space-y-4 sm:space-y-6 lg:space-y-8">
             {/* Step 1: Contact Us */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="flex items-start space-x-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="flex items-start space-x-4 sm:space-x-6">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl sm:rounded-2xl flex items-center justify-center">
                     <svg
-                      className="w-8 h-8 text-amber-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-amber-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -68,10 +68,10 @@ export default function HowItWorks() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                     Contact Us
                   </h3>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                     Schedule a session to learn about us and our process.
                   </p>
                 </div>
@@ -79,12 +79,12 @@ export default function HowItWorks() {
             </div>
 
             {/* Step 2: Do your research */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="flex items-start space-x-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="flex items-start space-x-4 sm:space-x-6">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl sm:rounded-2xl flex items-center justify-center">
                     <svg
-                      className="w-8 h-8 text-amber-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-amber-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -93,10 +93,10 @@ export default function HowItWorks() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                     Do your research
                   </h3>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                     Explore reference sites, get a preliminary quote, and review
                     our contracts.
                   </p>
@@ -105,12 +105,12 @@ export default function HowItWorks() {
             </div>
 
             {/* Step 3: Begin design */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="flex items-start space-x-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="flex items-start space-x-4 sm:space-x-6">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl sm:rounded-2xl flex items-center justify-center">
                     <svg
-                      className="w-8 h-8 text-amber-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-amber-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -120,10 +120,10 @@ export default function HowItWorks() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                     Begin design
                   </h3>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                     Make the design phase payment to begin crafting your dream
                     home with your architect.
                   </p>
@@ -132,12 +132,12 @@ export default function HowItWorks() {
             </div>
 
             {/* Step 4: Pre-Construction */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="flex items-start space-x-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="flex items-start space-x-4 sm:space-x-6">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl sm:rounded-2xl flex items-center justify-center">
                     <svg
-                      className="w-8 h-8 text-amber-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-amber-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -150,10 +150,10 @@ export default function HowItWorks() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                     Pre-Construction
                   </h3>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                     Make the pre-construction payment and leave the rest to us -
                     while we finalise designs, conduct soil tests, provide final
                     quotations and project plans, arrange contractor meetings,
@@ -164,12 +164,12 @@ export default function HowItWorks() {
             </div>
 
             {/* Step 5: Construction */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="flex items-start space-x-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="flex items-start space-x-4 sm:space-x-6">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl sm:rounded-2xl flex items-center justify-center">
                     <svg
-                      className="w-8 h-8 text-amber-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-amber-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -178,10 +178,10 @@ export default function HowItWorks() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                     Construction
                   </h3>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                     Track progress through weekly updates, scheduled meetings
                     and detailed reports.
                   </p>
@@ -190,12 +190,12 @@ export default function HowItWorks() {
             </div>
 
             {/* Step 6: Handover and Housewarming */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="flex items-start space-x-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="flex items-start space-x-4 sm:space-x-6">
                 <div className="flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl sm:rounded-2xl flex items-center justify-center">
                     <svg
-                      className="w-8 h-8 text-amber-600"
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-amber-600"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -204,10 +204,10 @@ export default function HowItWorks() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
                     Handover and Housewarming
                   </h3>
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
                     From dream to reality - enjoy a seamless handover with
                     one-year defect liability support, a structural stability
                     certificate and a five-year structural warranty for
