@@ -22,7 +22,7 @@ interface FormData {
 }
 
 export default function ContactForm({
-  title = "Building homes Since 1999",
+  title = "Contact Us",
   subtitle = "Ready to build your dream home? Schedule a free consultation to start your journey today.",
 }: ContactFormProps) {
   const { selectedCity, setSelectedCity } = useCity();
@@ -293,7 +293,7 @@ export default function ContactForm({
                   className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 mt-0.5 flex-shrink-0"
                 />
                 <span className="ml-3 text-sm text-gray-700">
-                  I agree to{" "}
+                  By signing this form you agree to Sunbrix&apos;s{" "}
                   <Link
                     href="#"
                     className="text-orange-500 hover:text-orange-600 underline"

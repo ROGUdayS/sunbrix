@@ -75,64 +75,10 @@ export default function Header({
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <Link
-              href="/"
-              className={`text-2xl font-bold transition-colors ${
-                isTransparent && !isScrolled ? "text-white" : "text-amber-900"
-              }`}
-            >
-              Sunbrix
-            </Link>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <Link href="/projects" className={getLinkClassName("/projects")}>
-              Gallery
-            </Link>
-            <Link
-              href="/testimonials"
-              className={getLinkClassName("/testimonials")}
-            >
-              Testimonials
-            </Link>
-            <Link href="/faq" className={getLinkClassName("/faq")}>
-              FAQs
-            </Link>
-            <Link href="/about" className={getLinkClassName("/about")}>
-              About us
-            </Link>
-          </nav>
-
+        <div className="flex items-center justify-between h-16">
+          {/* Left side - Mobile menu button and Logo */}
           <div className="flex items-center space-x-4">
-            {/* City selector */}
-            {showCitySelector && (
-              <button
-                onClick={() => setShowCityModal(true)}
-                className={`border rounded-lg px-4 py-2 text-sm shadow-sm hover:shadow-md transition-all flex items-center space-x-2 w-32 justify-between ${
-                  isTransparent && !isScrolled
-                    ? "border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 focus:border-white/50"
-                    : "border-amber-300 text-amber-700 bg-white focus:border-amber-600"
-                }`}
-              >
-                <span className="truncate">{selectedCity.displayName}</span>
-                <svg
-                  className="w-4 h-4 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            )}
-
-            {/* Mobile menu button */}
+            {/* Mobile menu button - moved to left */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`md:hidden p-2 rounded-md transition-colors ${
@@ -165,6 +111,62 @@ export default function Header({
                 )}
               </svg>
             </button>
+
+            {/* Logo */}
+            <Link
+              href="/"
+              className={`text-2xl font-bold transition-colors ${
+                isTransparent && !isScrolled ? "text-white" : "text-amber-900"
+              }`}
+            >
+              Sunbrix
+            </Link>
+          </div>
+
+          {/* Center - Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+            <Link href="/projects" className={getLinkClassName("/projects")}>
+              Gallery
+            </Link>
+            <Link
+              href="/testimonials"
+              className={getLinkClassName("/testimonials")}
+            >
+              Testimonials
+            </Link>
+            <Link href="/faq" className={getLinkClassName("/faq")}>
+              FAQs
+            </Link>
+            <Link href="/about" className={getLinkClassName("/about")}>
+              About us
+            </Link>
+          </nav>
+
+          {/* Right side - City selector (with fixed width to prevent layout shift) */}
+          <div className="flex items-center justify-end w-32">
+            {showCitySelector && (
+              <button
+                onClick={() => setShowCityModal(true)}
+                className={`border rounded-lg px-4 py-2 text-sm shadow-sm hover:shadow-md transition-all flex items-center space-x-2 w-32 justify-between ${
+                  isTransparent && !isScrolled
+                    ? "border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 focus:border-white/50"
+                    : "border-amber-300 text-amber-700 bg-white focus:border-amber-600"
+                }`}
+              >
+                <span className="truncate">{selectedCity.displayName}</span>
+                <svg
+                  className="w-4 h-4 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 

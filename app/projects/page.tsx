@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import projectsData from "../../data/projects.json";
@@ -247,10 +246,9 @@ export default function ProjectGallery() {
             const currentIndex = currentImageIndex[project.id] || 0;
 
             return (
-              <Link
+              <div
                 key={project.id}
-                href={`/projects/${project.id}`}
-                className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow block"
+                className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow"
               >
                 {/* Project Photo with Carousel */}
                 <div className="relative">
@@ -284,8 +282,7 @@ export default function ProjectGallery() {
                   {projectImages.length > 1 && (
                     <>
                       <button
-                        onClick={(e) => {
-                          e.preventDefault();
+                        onClick={() => {
                           prevImage(project.id, projectImages.length);
                         }}
                         className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110"
@@ -305,8 +302,7 @@ export default function ProjectGallery() {
                         </svg>
                       </button>
                       <button
-                        onClick={(e) => {
-                          e.preventDefault();
+                        onClick={() => {
                           nextImage(project.id, projectImages.length);
                         }}
                         className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110"
@@ -407,7 +403,7 @@ export default function ProjectGallery() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

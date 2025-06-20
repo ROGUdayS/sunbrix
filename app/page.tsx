@@ -391,13 +391,13 @@ export default function Home() {
       </section>
 
       {/* Our Commitment to Quality */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-white">
+      <section className="py-8 sm:py-10 lg:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Our Commitment to Quality
             </h2>
-            <p className="text-lg sm:text-xl text-amber-800 mb-6 sm:mb-12 lg:mb-16">
+            <p className="text-lg sm:text-xl text-amber-800 mb-6 sm:mb-8 lg:mb-10">
               We are committed to building your dream home with the highest
               quality materials and workmanship.
             </p>
@@ -478,10 +478,10 @@ export default function Home() {
       </section>
 
       {/* Project Gallery */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-white">
+      <section className="py-8 sm:py-10 lg:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Gallery
             </h2>
           </div>
@@ -587,7 +587,7 @@ export default function Home() {
             <div className="text-center mt-6 sm:mt-8 lg:mt-12">
               <Link
                 href="/projects"
-                className="border-2 border-gray-900 text-gray-900 px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium hover:bg-gray-900 hover:text-white transition-colors duration-200 inline-block"
+                className="bg-amber-600 hover:bg-amber-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
               >
                 Explore more projects
               </Link>
@@ -597,18 +597,8 @@ export default function Home() {
       </section>
 
       {/* Build Your Dream Home CTA */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
+      <section className="py-8 sm:py-10 lg:py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Build your dream home
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 lg:mb-12">
-              Choose your layout, customise the details and receive a
-              transparent quote.
-            </p>
-          </div>
-
           {/* Video Container */}
           <div className="relative max-w-6xl mx-auto">
             <div className="relative bg-gradient-to-br from-orange-100 to-orange-50 rounded-2xl overflow-hidden shadow-xl">
@@ -622,24 +612,15 @@ export default function Home() {
                 <source src="/videos/video_demo.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-
-              {/* Optional: Custom play button overlay (if you want to style it differently) */}
-              {/* <div className="absolute inset-0 flex items-center justify-center">
-                <button className="bg-white/90 hover:bg-white text-orange-500 rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110">
-                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                </button>
-              </div> */}
             </div>
           </div>
         </div>
       </section>
 
       {/* Packages */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-white">
+      <section className="py-8 sm:py-10 lg:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Packages
             </h2>
@@ -1362,9 +1343,9 @@ export default function Home() {
 
       {/* Service Timeline - Dynamic based on selected service type */}
       {selectedCity && selectedServiceType && (
-        <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-amber-50 to-orange-50">
+        <section className="py-8 sm:py-10 lg:py-12 bg-gradient-to-br from-amber-50 to-orange-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+            <div className="text-center mb-6 sm:mb-8 lg:mb-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-amber-900 mb-4">
                 Your{" "}
                 {
@@ -1552,9 +1533,9 @@ export default function Home() {
       )}
 
       {/* Bank Approval Section */}
-      <section id="bank-approval" className="py-8 sm:py-12 lg:py-16 bg-white">
+      <section id="bank-approval" className="py-8 sm:py-10 lg:py-12 bg-white">
         <div className="max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Banks
             </h2>
@@ -1593,13 +1574,13 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-white">
+      <section className="py-8 sm:py-10 lg:py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Happy customer to real stories - Testimonials
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-amber-800">
               See what our customers have to say.
             </p>
           </div>
@@ -1673,19 +1654,7 @@ export default function Home() {
                           ></iframe>
                         </div>
                         <div className="p-4 sm:p-6 bg-white">
-                          <div className="flex items-center justify-center mb-4">
-                            <svg
-                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                            </svg>
-                          </div>
-                          <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
-                            {testimonial.quote}
-                          </p>
-                          <div className="text-center font-semibold text-gray-900 text-sm sm:text-base">
+                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                             {testimonial.name}
                           </div>
                         </div>
@@ -1711,21 +1680,7 @@ export default function Home() {
                   ></iframe>
                 </div>
                 <div className="p-4 sm:p-6 bg-white">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
-                    Most people struggle with delays, finances, or contractors.
-                    I didn&apos;t face even 1% of that. Sunbrix made my home
-                    journey smooth and hassle-free.
-                  </p>
-                  <div className="text-center font-semibold text-gray-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                     Mr. Suryanarayanan Karthikeyan
                   </div>
                 </div>
@@ -1744,20 +1699,7 @@ export default function Home() {
                   ></iframe>
                 </div>
                 <div className="p-4 sm:p-6 bg-white">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
-                    Sunbrix&apos;s expert team guided me at every step. Their
-                    quality gave me total confidence throughout the journey.
-                  </p>
-                  <div className="text-center font-semibold text-gray-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                     Mr. Gururaj Naik
                   </div>
                 </div>
@@ -1776,21 +1718,7 @@ export default function Home() {
                   ></iframe>
                 </div>
                 <div className="p-4 sm:p-6 bg-white">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
-                    Sunbrix Homes exceeded our expectations! The construction
-                    quality and timely delivery were remarkable. Truly a dream
-                    home.
-                  </p>
-                  <div className="text-center font-semibold text-gray-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                     Mr. Hariharasudan
                   </div>
                 </div>
