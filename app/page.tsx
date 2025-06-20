@@ -6,8 +6,24 @@ import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
+import ImageModal from "./components/ImageModal";
 import { useCity } from "./contexts/CityContext";
 import packagesData from "../data/packages.json";
+import projectsData from "../data/projects.json";
+
+interface ProjectData {
+  id: string;
+  title: string;
+  location: string;
+  plotSize: string;
+  facing: string;
+  image: string;
+  images?: string[];
+  description: string;
+  specifications: {
+    bedrooms: number;
+  };
+}
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -48,30 +64,60 @@ export default function Home() {
     null
   );
 
-  // Project gallery data
-  const projects = [
-    {
-      id: 1,
-      image: "/images/HomeHeroWebImage.webp",
-      title: "Modern Contemporary Home",
-      description:
-        "A warm, welcoming home that wraps around a peaceful courtyard—perfect for natural light, fresh air, and chill vibes. The layout feels cozy but open, with a sleek capsule lift adding a modern touch and easy access between floors. It's comfort, style, and convenience all in one neat bundle!",
-    },
-    {
-      id: 2,
-      image: "/images/HomeHeroWebImage.webp",
-      title: "Elegant Villa Design",
-      description:
-        "It's a modern, minimal, thoughtfully designed home that blends practicality and style. This home keeps it classy with open spaces, natural light, and a soft, elegant vibe throughout. It's all about clean design, calm energy, and comfy living but low on maintenance and super livable.",
-    },
-    {
-      id: 3,
-      image: "/images/HomeHeroWebImage.webp",
-      title: "Luxury Family Home",
-      description:
-        "A sophisticated family home featuring premium materials and thoughtful design. Every detail has been carefully considered to create a space that's both beautiful and functional for modern family living.",
-    },
-  ];
+  // Modal state for gallery images
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImages, setModalImages] = useState<string[]>([]);
+  const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
+  const [modalTitle, setModalTitle] = useState("");
+
+  // Project gallery data - get random images from project data
+  const getAllProjectImages = () => {
+    const allImages: {
+      image: string;
+      title: string;
+      description: string;
+      id: number;
+    }[] = [];
+
+    // Collect all images from all projects
+    projectsData.projects.forEach(
+      (project: ProjectData, projectIndex: number) => {
+        if (project.images && project.images.length > 0) {
+          project.images.forEach((image: string, imageIndex: number) => {
+            allImages.push({
+              id: projectIndex * 100 + imageIndex, // Unique ID
+              image: image,
+              title: project.title,
+              description: project.description,
+            });
+          });
+        } else {
+          // Fallback to main image if no images array
+          allImages.push({
+            id: projectIndex * 100,
+            image: project.image,
+            title: project.title,
+            description: project.description,
+          });
+        }
+      }
+    );
+
+    return allImages;
+  };
+
+  // Shuffle array function
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Get 6 random images for the gallery
+  const projects = shuffleArray(getAllProjectImages()).slice(0, 6);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % projects.length);
@@ -122,6 +168,36 @@ export default function Home() {
 
   const goToTestimonial = (index: number) => {
     setCurrentTestimonial(index);
+  };
+
+  // Modal functions for gallery
+  const openModal = (
+    images: string[],
+    title: string,
+    startIndex: number = 0
+  ) => {
+    setModalImages(images);
+    setModalTitle(title);
+    setModalCurrentIndex(startIndex);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const nextModalImage = () => {
+    setModalCurrentIndex((prev) => (prev + 1) % modalImages.length);
+  };
+
+  const prevModalImage = () => {
+    setModalCurrentIndex(
+      (prev) => (prev - 1 + modalImages.length) % modalImages.length
+    );
+  };
+
+  const goToModalImage = (index: number) => {
+    setModalCurrentIndex(index);
   };
 
   const toggleSection = (section: string) => {
@@ -501,7 +577,12 @@ export default function Home() {
               >
                 {projects.map((project) => (
                   <div key={project.id} className="w-full flex-shrink-0">
-                    <div className="relative">
+                    <div
+                      className="relative cursor-pointer"
+                      onClick={() =>
+                        openModal([project.image], project.title, 0)
+                      }
+                    >
                       <Image
                         src={project.image}
                         alt={project.title}
@@ -509,10 +590,13 @@ export default function Home() {
                         height={600}
                         className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
                       />
-                      {/* Navigation Arrows */}
+                      {/* Navigation Arrows for main carousel */}
                       <button
-                        onClick={prevSlide}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          prevSlide();
+                        }}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
                       >
                         <svg
                           className="w-6 h-6"
@@ -529,8 +613,11 @@ export default function Home() {
                         </svg>
                       </button>
                       <button
-                        onClick={nextSlide}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nextSlide();
+                        }}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
                       >
                         <svg
                           className="w-6 h-6"
@@ -573,7 +660,10 @@ export default function Home() {
               {projects.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goToSlide(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goToSlide(index);
+                  }}
                   className={`w-3 h-3 rounded-full transition-all duration-200 ${
                     index === currentSlide
                       ? "bg-gray-800"
@@ -1821,6 +1911,18 @@ export default function Home() {
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />
+
+      {/* Image Modal */}
+      <ImageModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        images={modalImages}
+        currentIndex={modalCurrentIndex}
+        onNext={nextModalImage}
+        onPrev={prevModalImage}
+        onGoTo={goToModalImage}
+        title={modalTitle}
+      />
     </div>
   );
 }

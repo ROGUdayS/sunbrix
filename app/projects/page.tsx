@@ -6,28 +6,20 @@ import projectsData from "../../data/projects.json";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
+import ImageModal from "../components/ImageModal";
 
 interface Project {
   id: string;
   title: string;
   location: string;
-  floors: string;
   plotSize: string;
   facing: string;
-  budget: string;
   image: string;
-  heroImage: string;
-  description: string;
-  features: string[];
-  specifications: {
-    totalArea: string;
-    builtUpArea: string;
-    bedrooms: number;
-    bathrooms: number;
-    parking: string;
-    garden: string;
-  };
   images?: string[];
+  description: string;
+  specifications: {
+    bedrooms: number;
+  };
   yearBuilt: string;
   bhk: string;
   siteDimension: string;
@@ -36,9 +28,12 @@ interface Project {
 
 export default function ProjectGallery() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState<{
-    [key: string]: number;
-  }>({});
+
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImages, setModalImages] = useState<string[]>([]);
+  const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
+  const [modalTitle, setModalTitle] = useState("");
 
   // Import project data from JSON - Add year built to each project for demo
   const allProjects = projectsData.projects.map((project) => ({
@@ -56,18 +51,34 @@ export default function ProjectGallery() {
   const endIndex = startIndex + projectsPerPage;
   const currentProjects = allProjects.slice(startIndex, endIndex);
 
-  const nextImage = (projectId: string, totalImages: number) => {
-    setCurrentImageIndex((prev) => ({
-      ...prev,
-      [projectId]: ((prev[projectId] || 0) + 1) % totalImages,
-    }));
+  // Modal functions
+  const openModal = (
+    images: string[],
+    title: string,
+    startIndex: number = 0
+  ) => {
+    setModalImages(images);
+    setModalTitle(title);
+    setModalCurrentIndex(startIndex);
+    setModalOpen(true);
   };
 
-  const prevImage = (projectId: string, totalImages: number) => {
-    setCurrentImageIndex((prev) => ({
-      ...prev,
-      [projectId]: ((prev[projectId] || 0) - 1 + totalImages) % totalImages,
-    }));
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const nextModalImage = () => {
+    setModalCurrentIndex((prev) => (prev + 1) % modalImages.length);
+  };
+
+  const prevModalImage = () => {
+    setModalCurrentIndex(
+      (prev) => (prev - 1 + modalImages.length) % modalImages.length
+    );
+  };
+
+  const goToModalImage = (index: number) => {
+    setModalCurrentIndex(index);
   };
 
   // Function to get directional arrow based on facing direction
@@ -243,7 +254,7 @@ export default function ProjectGallery() {
               project.images && project.images.length > 0
                 ? project.images
                 : [project.image];
-            const currentIndex = currentImageIndex[project.id] || 0;
+            const currentIndex = 0; // Always show first image since we removed carousel
 
             return (
               <div
@@ -251,7 +262,12 @@ export default function ProjectGallery() {
                 className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow"
               >
                 {/* Project Photo with Carousel */}
-                <div className="relative">
+                <div
+                  className="relative cursor-pointer"
+                  onClick={() =>
+                    openModal(projectImages, project.title, currentIndex)
+                  }
+                >
                   <Image
                     src={projectImages[currentIndex]}
                     alt={project.title}
@@ -278,64 +294,18 @@ export default function ProjectGallery() {
                     </span>
                   </div>
 
-                  {/* Carousel Navigation - Only show if more than 1 image */}
+                  {/* Image indicators - Only show if more than 1 image */}
                   {projectImages.length > 1 && (
-                    <>
-                      <button
-                        onClick={() => {
-                          prevImage(project.id, projectImages.length);
-                        }}
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => {
-                          nextImage(project.id, projectImages.length);
-                        }}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </button>
-
-                      {/* Image indicators */}
-                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                        {projectImages.map((_, index) => (
-                          <div
-                            key={index}
-                            className={`w-2 h-2 rounded-full ${
-                              index === currentIndex
-                                ? "bg-white"
-                                : "bg-white/50"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </>
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                      {projectImages.map((_, index) => (
+                        <div
+                          key={index}
+                          className={`w-2 h-2 rounded-full ${
+                            index === currentIndex ? "bg-white" : "bg-white/50"
+                          }`}
+                        />
+                      ))}
+                    </div>
                   )}
                 </div>
 
@@ -474,6 +444,18 @@ export default function ProjectGallery() {
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />
+
+      {/* Image Modal */}
+      <ImageModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        images={modalImages}
+        currentIndex={modalCurrentIndex}
+        onNext={nextModalImage}
+        onPrev={prevModalImage}
+        onGoTo={goToModalImage}
+        title={modalTitle}
+      />
     </div>
   );
 }

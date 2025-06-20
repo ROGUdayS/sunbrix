@@ -7,6 +7,11 @@
       "plotSize": "30x50 sq. ft",
       "facing": "East",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/HomeHeroWebImage.webp",
+        "/images/how-it-works.webp",
+        "/images/motions-background.webp"
+      ],
       "description": "A modern 3-story residence designed with contemporary architecture and optimal space utilization.",
       "specifications": {
         "bedrooms": 3
@@ -19,6 +24,12 @@
       "plotSize": "40x60 sq. ft",
       "facing": "East",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/HomeHeroWebImage.webp",
+        "/images/how-it-works.webp",
+        "/images/motions-background.webp",
+        "/images/HomeHeroWebImage.webp"
+      ],
       "description": "A spacious family home with elegant design and premium amenities for comfortable living.",
       "specifications": {
         "bedrooms": 4
@@ -31,6 +42,11 @@
       "plotSize": "30x50 sq. ft",
       "facing": "South",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/motions-background.webp",
+        "/images/HomeHeroWebImage.webp",
+        "/images/how-it-works.webp"
+      ],
       "description": "A luxurious 4-story residence with premium finishes and contemporary design elements.",
       "specifications": {
         "bedrooms": 4
@@ -43,6 +59,12 @@
       "plotSize": "30x40 sq. ft",
       "facing": "East",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/how-it-works.webp",
+        "/images/motions-background.webp",
+        "/images/HomeHeroWebImage.webp",
+        "/images/how-it-works.webp"
+      ],
       "description": "A cozy 2-story home designed for young families with efficient space planning.",
       "specifications": {
         "bedrooms": 2
@@ -55,6 +77,11 @@
       "plotSize": "30x40 sq. ft",
       "facing": "East",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/HomeHeroWebImage.webp",
+        "/images/motions-background.webp",
+        "/images/how-it-works.webp"
+      ],
       "description": "A traditional yet modern home design that balances comfort with functionality.",
       "specifications": {
         "bedrooms": 2
@@ -67,6 +94,12 @@
       "plotSize": "30x50 sq. ft",
       "facing": "West",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/motions-background.webp",
+        "/images/how-it-works.webp",
+        "/images/HomeHeroWebImage.webp",
+        "/images/motions-background.webp"
+      ],
       "description": "An economical yet stylish home design that maximizes value without compromising on quality.",
       "specifications": {
         "bedrooms": 3
@@ -79,6 +112,11 @@
       "plotSize": "30x40 sq. ft",
       "facing": "West",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/how-it-works.webp",
+        "/images/HomeHeroWebImage.webp",
+        "/images/motions-background.webp"
+      ],
       "description": "A well-planned 3-story residence with modern amenities and thoughtful design.",
       "specifications": {
         "bedrooms": 3
@@ -91,6 +129,12 @@
       "plotSize": "30x50 sq. ft",
       "facing": "South",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/HomeHeroWebImage.webp",
+        "/images/how-it-works.webp",
+        "/images/motions-background.webp",
+        "/images/how-it-works.webp"
+      ],
       "description": "A family-oriented home with spacious rooms and excellent natural lighting.",
       "specifications": {
         "bedrooms": 3
@@ -103,6 +147,11 @@
       "plotSize": "30x40 sq. ft",
       "facing": "South",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/motions-background.webp",
+        "/images/HomeHeroWebImage.webp",
+        "/images/how-it-works.webp"
+      ],
       "description": "A simple yet elegant 2-story home perfect for small families seeking comfort.",
       "specifications": {
         "bedrooms": 2
@@ -115,6 +164,12 @@
       "plotSize": "30x40 sq. ft",
       "facing": "East",
       "image": "/images/HomeHeroWebImage.webp",
+      "images": [
+        "/images/how-it-works.webp",
+        "/images/motions-background.webp",
+        "/images/HomeHeroWebImage.webp",
+        "/images/motions-background.webp"
+      ],
       "description": "An affordable starter home with smart design solutions and quality construction.",
       "specifications": {
         "bedrooms": 2
