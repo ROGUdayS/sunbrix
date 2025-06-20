@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
@@ -25,6 +25,28 @@ export default function Home() {
 
   // Add package carousel state
   const [currentPackage, setCurrentPackage] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // Touch state for packages carousel
+  const [packageTouchStart, setPackageTouchStart] = useState<number | null>(
+    null
+  );
+  const [packageTouchEnd, setPackageTouchEnd] = useState<number | null>(null);
+
+  // Touch state for gallery carousel
+  const [galleryTouchStart, setGalleryTouchStart] = useState<number | null>(
+    null
+  );
+  const [galleryTouchEnd, setGalleryTouchEnd] = useState<number | null>(null);
+
+  // Touch state for testimonials carousel
+  const [testimonialTouchStart, setTestimonialTouchStart] = useState<
+    number | null
+  >(null);
+  const [testimonialTouchEnd, setTestimonialTouchEnd] = useState<number | null>(
+    null
+  );
 
   // Project gallery data
   const projects = [
@@ -106,29 +128,178 @@ export default function Home() {
     setExpandedSection((prev) => (prev === section ? null : section));
   };
 
-  // Package carousel navigation functions
+  // Package carousel navigation functions with infinite loop
   const nextPackage = () => {
+    if (!selectedServiceType || isTransitioning) return;
+
     const packageKeys = Object.keys(
       packagesData.packages[
         selectedServiceType as keyof typeof packagesData.packages
       ] || {}
     );
-    setCurrentPackage((prev) => (prev + 1) % packageKeys.length);
+
+    if (packageKeys.length === 0) return;
+
+    setIsTransitioning(true);
+    setCurrentPackage((prev) => prev + 1);
   };
 
   const prevPackage = () => {
+    if (!selectedServiceType || isTransitioning) return;
+
     const packageKeys = Object.keys(
       packagesData.packages[
         selectedServiceType as keyof typeof packagesData.packages
       ] || {}
     );
-    setCurrentPackage(
-      (prev) => (prev - 1 + packageKeys.length) % packageKeys.length
-    );
+
+    if (packageKeys.length === 0) return;
+
+    setIsTransitioning(true);
+    setCurrentPackage((prev) => prev - 1);
   };
 
   const goToPackage = (index: number) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
     setCurrentPackage(index);
+  };
+
+  // Handle infinite loop transitions with smooth reset
+  useEffect(() => {
+    if (!selectedServiceType || !isTransitioning) return;
+
+    const packageKeys = Object.keys(
+      packagesData.packages[
+        selectedServiceType as keyof typeof packagesData.packages
+      ] || {}
+    );
+
+    const totalPackages = packageKeys.length;
+    if (totalPackages === 0) return;
+
+    const timer = setTimeout(() => {
+      // Handle infinite loop reset without animation
+      if (currentPackage >= totalPackages) {
+        if (carouselRef.current) {
+          carouselRef.current.style.transition = "none";
+          setCurrentPackage(0);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (carouselRef.current) {
+              carouselRef.current.style.transition = "";
+            }
+          }, 50);
+        }
+      } else if (currentPackage < 0) {
+        if (carouselRef.current) {
+          carouselRef.current.style.transition = "none";
+          setCurrentPackage(totalPackages - 1);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (carouselRef.current) {
+              carouselRef.current.style.transition = "";
+            }
+          }, 50);
+        }
+      }
+      setIsTransitioning(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [currentPackage, isTransitioning, selectedServiceType]);
+
+  // Reset carousel when service type changes
+  useEffect(() => {
+    setCurrentPackage(0);
+    setIsTransitioning(false);
+  }, [selectedServiceType]);
+
+  // Touch handlers for packages carousel
+  const handlePackageTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setPackageTouchStart(touch.clientX);
+    setPackageTouchEnd(null);
+  };
+
+  const handlePackageTouchMove = (e: React.TouchEvent) => {
+    if (!packageTouchStart) return;
+    const touch = e.touches[0];
+    setPackageTouchEnd(touch.clientX);
+  };
+
+  const handlePackageTouchEnd = () => {
+    if (!packageTouchStart || !packageTouchEnd) return;
+    const distance = packageTouchStart - packageTouchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      nextPackage();
+    } else if (isRightSwipe) {
+      prevPackage();
+    }
+
+    setPackageTouchStart(null);
+    setPackageTouchEnd(null);
+  };
+
+  // Touch handlers for gallery carousel
+  const handleGalleryTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setGalleryTouchStart(touch.clientX);
+    setGalleryTouchEnd(null);
+  };
+
+  const handleGalleryTouchMove = (e: React.TouchEvent) => {
+    if (!galleryTouchStart) return;
+    const touch = e.touches[0];
+    setGalleryTouchEnd(touch.clientX);
+  };
+
+  const handleGalleryTouchEnd = () => {
+    if (!galleryTouchStart || !galleryTouchEnd) return;
+    const distance = galleryTouchStart - galleryTouchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      nextSlide();
+    } else if (isRightSwipe) {
+      prevSlide();
+    }
+
+    setGalleryTouchStart(null);
+    setGalleryTouchEnd(null);
+  };
+
+  // Touch handlers for testimonials carousel
+  const handleTestimonialTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setTestimonialTouchStart(touch.clientX);
+    setTestimonialTouchEnd(null);
+  };
+
+  const handleTestimonialTouchMove = (e: React.TouchEvent) => {
+    if (!testimonialTouchStart) return;
+    const touch = e.touches[0];
+    setTestimonialTouchEnd(touch.clientX);
+  };
+
+  const handleTestimonialTouchEnd = () => {
+    if (!testimonialTouchStart || !testimonialTouchEnd) return;
+    const distance = testimonialTouchStart - testimonialTouchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      nextTestimonial();
+    } else if (isRightSwipe) {
+      prevTestimonial();
+    }
+
+    setTestimonialTouchStart(null);
+    setTestimonialTouchEnd(null);
   };
 
   return (
@@ -313,15 +484,17 @@ export default function Home() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Gallery
             </h2>
-            <p className="text-base sm:text-lg text-gray-600">
-              Discover homes built with care, quality, and attention to detail.
-            </p>
           </div>
 
           {/* Carousel Container */}
           <div className="relative max-w-6xl mx-auto">
             {/* Main Image Container */}
-            <div className="relative overflow-hidden rounded-2xl">
+            <div
+              className="relative overflow-hidden rounded-2xl select-none"
+              onTouchStart={handleGalleryTouchStart}
+              onTouchMove={handleGalleryTouchMove}
+              onTouchEnd={handleGalleryTouchEnd}
+            >
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -470,9 +643,6 @@ export default function Home() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
               Packages
             </h2>
-            <p className="text-lg sm:text-xl text-amber-800">
-              Discover the package that fits your needs.
-            </p>
             {/* City + Service Type Selector - Responsive Layout */}
             <div className="mt-6 sm:mt-8 space-y-4 lg:space-y-0 lg:grid lg:grid-cols-3 lg:items-center lg:gap-4 px-4">
               {/* Left spacer on desktop */}
@@ -666,13 +836,163 @@ export default function Home() {
                   return (
                     <>
                       {/* Carousel Container */}
-                      <div className="relative overflow-hidden">
+                      <div
+                        className="relative overflow-hidden select-none"
+                        onTouchStart={handlePackageTouchStart}
+                        onTouchMove={handlePackageTouchMove}
+                        onTouchEnd={handlePackageTouchEnd}
+                      >
                         <div
-                          className="flex transition-transform duration-500 ease-in-out"
+                          ref={carouselRef}
+                          className={`flex transition-transform duration-500 ease-in-out ${
+                            !isTransitioning ? "transition-none" : ""
+                          }`}
                           style={{
-                            transform: `translateX(-${currentPackage * 85}%)`,
+                            transform: `translateX(-${
+                              (currentPackage + packageEntries.length) * 100
+                            }%)`,
                           }}
                         >
+                          {/* Duplicate packages for infinite loop effect */}
+                          {/* Previous set for seamless left scrolling */}
+                          {packageEntries.map(
+                            ([packageKey, packageInfo], index) => {
+                              const currentCityPricing =
+                                packageInfo.pricing[
+                                  selectedCity.id as keyof typeof packageInfo.pricing
+                                ];
+                              const actualIndex = index - packageEntries.length;
+
+                              return (
+                                <div
+                                  key={`prev-${packageKey}`}
+                                  className={`w-full flex-shrink-0 px-4 ${
+                                    actualIndex === currentPackage
+                                      ? "z-10"
+                                      : "z-0"
+                                  }`}
+                                >
+                                  <div
+                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
+                                      packageInfo.popular
+                                        ? "ring-2 ring-amber-500"
+                                        : "border border-gray-100"
+                                    } ${
+                                      actualIndex === currentPackage
+                                        ? "scale-100 opacity-100 shadow-xl"
+                                        : "scale-90 opacity-60 shadow-md"
+                                    }`}
+                                  >
+                                    {/* Package content - same as original */}
+                                    {packageInfo.popular && (
+                                      <div className="absolute -top-0 left-0 right-0">
+                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                                          ⭐ Most Popular
+                                        </div>
+                                      </div>
+                                    )}
+                                    <div
+                                      className={`p-4 sm:p-6 ${
+                                        packageInfo.popular
+                                          ? "pt-8 sm:pt-10"
+                                          : ""
+                                      }`}
+                                    >
+                                      <div className="text-center mb-4 sm:mb-6">
+                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                          {packageInfo.title}
+                                        </h3>
+                                        <div className="mb-4">
+                                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">
+                                            {selectedCity
+                                              ? currentCityPricing?.price
+                                              : "X,XXX"}
+                                          </div>
+                                          {selectedCity &&
+                                            !currentCityPricing?.startingAt && (
+                                              <div className="text-sm text-gray-500">
+                                                per sq. ft (Ex GST)
+                                              </div>
+                                            )}
+                                        </div>
+                                      </div>
+                                      <div className="border-t border-gray-100 mb-4"></div>
+                                      <div className="space-y-2">
+                                        {Object.entries(
+                                          packageInfo.sections
+                                        ).map(([sectionKey, section]) => (
+                                          <div
+                                            key={sectionKey}
+                                            className="border border-gray-100 rounded-lg overflow-hidden"
+                                          >
+                                            <button
+                                              onClick={() =>
+                                                toggleSection(sectionKey)
+                                              }
+                                              className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors"
+                                            >
+                                              <span className="font-semibold text-gray-900 text-sm">
+                                                {section.title}
+                                              </span>
+                                              <div className="flex items-center space-x-2">
+                                                <svg
+                                                  className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-200 ${
+                                                    expandedSection ===
+                                                    sectionKey
+                                                      ? "rotate-180"
+                                                      : ""
+                                                  }`}
+                                                  fill="currentColor"
+                                                  viewBox="0 0 20 20"
+                                                >
+                                                  <path
+                                                    fillRule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clipRule="evenodd"
+                                                  />
+                                                </svg>
+                                              </div>
+                                            </button>
+                                            <div
+                                              className={`
+                                                  transition-all duration-300 ease-in-out overflow-hidden
+                                                  ${
+                                                    expandedSection ===
+                                                    sectionKey
+                                                      ? "max-h-96 opacity-100"
+                                                      : "max-h-0 opacity-0"
+                                                  }
+                                                `}
+                                            >
+                                              <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-gray-50">
+                                                <ul className="space-y-2">
+                                                  {section.items.map(
+                                                    (item, itemIndex) => (
+                                                      <li
+                                                        key={itemIndex}
+                                                        className="flex items-start text-sm text-gray-700"
+                                                      >
+                                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                                        <span className="leading-relaxed">
+                                                          {item}
+                                                        </span>
+                                                      </li>
+                                                    )
+                                                  )}
+                                                </ul>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          )}
+
+                          {/* Current set - main packages */}
                           {packageEntries.map(
                             ([packageKey, packageInfo], index) => {
                               const currentCityPricing =
@@ -683,19 +1003,19 @@ export default function Home() {
                               return (
                                 <div
                                   key={packageKey}
-                                  className={`w-[85%] flex-shrink-0 mx-2 ${
+                                  className={`w-full flex-shrink-0 px-4 ${
                                     index === currentPackage ? "z-10" : "z-0"
                                   }`}
                                 >
                                   <div
-                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden ${
+                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
                                       packageInfo.popular
                                         ? "ring-2 ring-amber-500"
                                         : "border border-gray-100"
                                     } ${
                                       index === currentPackage
-                                        ? "scale-100 opacity-100"
-                                        : "scale-95 opacity-75"
+                                        ? "scale-100 opacity-100 shadow-xl"
+                                        : "scale-90 opacity-60 shadow-md"
                                     }`}
                                   >
                                     {/* Popular Badge */}
@@ -815,6 +1135,144 @@ export default function Home() {
                               );
                             }
                           )}
+
+                          {/* Next set for seamless right scrolling */}
+                          {packageEntries.map(
+                            ([packageKey, packageInfo], index) => {
+                              const currentCityPricing =
+                                packageInfo.pricing[
+                                  selectedCity.id as keyof typeof packageInfo.pricing
+                                ];
+                              const actualIndex = index + packageEntries.length;
+
+                              return (
+                                <div
+                                  key={`next-${packageKey}`}
+                                  className={`w-full flex-shrink-0 px-4 ${
+                                    actualIndex === currentPackage
+                                      ? "z-10"
+                                      : "z-0"
+                                  }`}
+                                >
+                                  <div
+                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
+                                      packageInfo.popular
+                                        ? "ring-2 ring-amber-500"
+                                        : "border border-gray-100"
+                                    } ${
+                                      actualIndex === currentPackage
+                                        ? "scale-100 opacity-100 shadow-xl"
+                                        : "scale-90 opacity-60 shadow-md"
+                                    }`}
+                                  >
+                                    {/* Package content - same as original */}
+                                    {packageInfo.popular && (
+                                      <div className="absolute -top-0 left-0 right-0">
+                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                                          ⭐ Most Popular
+                                        </div>
+                                      </div>
+                                    )}
+                                    <div
+                                      className={`p-4 sm:p-6 ${
+                                        packageInfo.popular
+                                          ? "pt-8 sm:pt-10"
+                                          : ""
+                                      }`}
+                                    >
+                                      <div className="text-center mb-4 sm:mb-6">
+                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                          {packageInfo.title}
+                                        </h3>
+                                        <div className="mb-4">
+                                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">
+                                            {selectedCity
+                                              ? currentCityPricing?.price
+                                              : "X,XXX"}
+                                          </div>
+                                          {selectedCity &&
+                                            !currentCityPricing?.startingAt && (
+                                              <div className="text-sm text-gray-500">
+                                                per sq. ft (Ex GST)
+                                              </div>
+                                            )}
+                                        </div>
+                                      </div>
+                                      <div className="border-t border-gray-100 mb-4"></div>
+                                      <div className="space-y-2">
+                                        {Object.entries(
+                                          packageInfo.sections
+                                        ).map(([sectionKey, section]) => (
+                                          <div
+                                            key={sectionKey}
+                                            className="border border-gray-100 rounded-lg overflow-hidden"
+                                          >
+                                            <button
+                                              onClick={() =>
+                                                toggleSection(sectionKey)
+                                              }
+                                              className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors"
+                                            >
+                                              <span className="font-semibold text-gray-900 text-sm">
+                                                {section.title}
+                                              </span>
+                                              <div className="flex items-center space-x-2">
+                                                <svg
+                                                  className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-200 ${
+                                                    expandedSection ===
+                                                    sectionKey
+                                                      ? "rotate-180"
+                                                      : ""
+                                                  }`}
+                                                  fill="currentColor"
+                                                  viewBox="0 0 20 20"
+                                                >
+                                                  <path
+                                                    fillRule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clipRule="evenodd"
+                                                  />
+                                                </svg>
+                                              </div>
+                                            </button>
+                                            <div
+                                              className={`
+                                                  transition-all duration-300 ease-in-out overflow-hidden
+                                                  ${
+                                                    expandedSection ===
+                                                    sectionKey
+                                                      ? "max-h-96 opacity-100"
+                                                      : "max-h-0 opacity-0"
+                                                  }
+                                                `}
+                                            >
+                                              <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-gray-50">
+                                                <ul className="space-y-2">
+                                                  {section.items.map(
+                                                    (item, itemIndex) => (
+                                                      <li
+                                                        key={itemIndex}
+                                                        className="flex items-start text-sm text-gray-700"
+                                                      >
+                                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                                        <span className="leading-relaxed">
+                                                          {item}
+                                                        </span>
+                                                      </li>
+                                                    )
+                                                  )}
+                                                </ul>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          )}
                         </div>
                       </div>
 
@@ -858,17 +1316,23 @@ export default function Home() {
 
                       {/* Pagination Dots */}
                       <div className="flex justify-center mt-6 space-x-2">
-                        {packageEntries.map((_, index) => (
-                          <button
-                            key={index}
-                            onClick={() => goToPackage(index)}
-                            className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                              index === currentPackage
-                                ? "bg-amber-600"
-                                : "bg-gray-300 hover:bg-gray-400"
-                            }`}
-                          />
-                        ))}
+                        {packageEntries.map((_, index) => {
+                          const actualCurrentPackage =
+                            ((currentPackage % packageEntries.length) +
+                              packageEntries.length) %
+                            packageEntries.length;
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => goToPackage(index)}
+                              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                                index === actualCurrentPackage
+                                  ? "bg-amber-600"
+                                  : "bg-gray-300 hover:bg-gray-400"
+                              }`}
+                            />
+                          );
+                        })}
                       </div>
                     </>
                   );
@@ -1133,10 +1597,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Happy customers, real stories
+              Happy customer to real stories - Testimonials
             </h2>
             <p className="text-lg sm:text-xl text-gray-600">
-              Don&apos;t believe us? See what our customers have to say.
+              See what our customers have to say.
             </p>
           </div>
 
@@ -1183,7 +1647,12 @@ export default function Home() {
             {/* Video Testimonials - Single testimonial on mobile, 3 columns on desktop */}
             <div className="block md:hidden">
               {/* Mobile: Single testimonial carousel */}
-              <div className="relative overflow-hidden rounded-2xl">
+              <div
+                className="relative overflow-hidden rounded-2xl select-none"
+                onTouchStart={handleTestimonialTouchStart}
+                onTouchMove={handleTestimonialTouchMove}
+                onTouchEnd={handleTestimonialTouchEnd}
+              >
                 <div
                   className="flex transition-transform duration-500 ease-in-out"
                   style={{
