@@ -13,25 +13,21 @@ async function testGoogleSheetsConnection() {
   const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
 
   console.log(
-    `✅ GOOGLE_SHEETS_SPREADSHEET_ID: ${spreadsheetId ? "Set" : "❌ Missing"}`
+    `GOOGLE_SHEETS_SPREADSHEET_ID: ${spreadsheetId ? "Set" : "Missing"}`
   );
-  console.log(
-    `✅ GOOGLE_SHEETS_CLIENT_EMAIL: ${clientEmail ? "Set" : "❌ Missing"}`
-  );
-  console.log(
-    `✅ GOOGLE_SHEETS_PRIVATE_KEY: ${privateKey ? "Set" : "❌ Missing"}\n`
-  );
+  console.log(`GOOGLE_SHEETS_CLIENT_EMAIL: ${clientEmail ? "Set" : "Missing"}`);
+  console.log(`GOOGLE_SHEETS_PRIVATE_KEY: ${privateKey ? "Set" : "Missing"}\n`);
 
   if (!spreadsheetId || !clientEmail || !privateKey) {
     console.log(
-      "❌ Missing required environment variables. Please check your .env.local file."
+      "Missing required environment variables. Please check your .env.local file."
     );
     return;
   }
 
   try {
     // Initialize Google Sheets client
-    console.log("🔐 Initializing Google Sheets client...");
+    console.log("Initializing Google Sheets client...");
     const auth = new google.auth.GoogleAuth({
       credentials: {
         client_email: clientEmail,
@@ -41,16 +37,16 @@ async function testGoogleSheetsConnection() {
     });
 
     const sheets = google.sheets({ version: "v4", auth });
-    console.log("✅ Google Sheets client initialized successfully\n");
+    console.log("Google Sheets client initialized successfully\n");
 
     // Test reading from the spreadsheet
-    console.log("📖 Testing spreadsheet access...");
+    console.log("Testing spreadsheet access...");
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: "Sheet1!A1:I1",
     });
 
-    console.log("✅ Successfully accessed spreadsheet!");
+    console.log("Successfully accessed spreadsheet!");
     console.log(
       `📊 Current headers: ${
         response.data.values ? response.data.values[0] : "No headers found"
@@ -58,7 +54,7 @@ async function testGoogleSheetsConnection() {
     );
 
     // Test adding headers
-    console.log("📝 Testing header management...");
+    console.log("Testing header management...");
     const headers = [
       "Timestamp",
       "Full Name",
@@ -79,10 +75,10 @@ async function testGoogleSheetsConnection() {
         values: [headers],
       },
     });
-    console.log("✅ Headers added successfully");
+    console.log("Headers added successfully");
 
     // Test writing to the spreadsheet
-    console.log("✏️  Testing write access...");
+    console.log("Testing write access...");
     const testData = [
       new Date().toISOString(),
       "Test User",
@@ -105,17 +101,17 @@ async function testGoogleSheetsConnection() {
       },
     });
 
-    console.log("✅ Successfully wrote test data to spreadsheet!");
-    console.log("🎉 Google Sheets integration is working correctly!\n");
+    console.log("Successfully wrote test data to spreadsheet!");
+    console.log("Google Sheets integration is working correctly!\n");
     console.log(
       "💡 You can now submit forms and they will be saved to your spreadsheet."
     );
   } catch (error) {
-    console.log("❌ Error testing Google Sheets connection:");
+    console.log("Error testing Google Sheets connection:");
     console.error(error.message);
 
     if (error.message.includes("permission")) {
-      console.log("\n💡 Troubleshooting tips:");
+      console.log("\n Troubleshooting tips:");
       console.log(
         "1. Make sure you've shared the spreadsheet with the service account email:"
       );

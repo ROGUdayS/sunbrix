@@ -1362,9 +1362,15 @@ export default function Home() {
 
             {/* Timeline Steps */}
             <div className="relative">
-              {/* Connecting Line - Desktop Only */}
-              <div className="hidden lg:block absolute top-20 left-0 right-0 h-1">
-                <div className="flex justify-between items-center h-full max-w-5xl mx-auto px-16">
+              {/* Connecting Line - Mobile: Horizontal line, Desktop: Complex line */}
+              <div className="absolute top-6 sm:top-8 lg:top-20 left-0 right-0 h-0.5 lg:h-1">
+                {/* Mobile/Tablet: Simple horizontal line */}
+                <div className="lg:hidden flex items-center h-full mx-8 sm:mx-12">
+                  <div className="flex-1 bg-gradient-to-r from-amber-400 to-orange-400 h-0.5 rounded-full"></div>
+                </div>
+
+                {/* Desktop: Complex connecting line */}
+                <div className="hidden lg:flex justify-between items-center h-full max-w-5xl mx-auto px-16">
                   <div className="flex-1 bg-gradient-to-r from-amber-400 to-orange-400 h-1 rounded-full"></div>
                   <div className="w-8"></div>
                   <div className="flex-1 bg-gradient-to-r from-amber-400 to-orange-400 h-1 rounded-full"></div>
@@ -1373,38 +1379,39 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Timeline Steps Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
+              {/* Timeline Steps Grid - Mobile: Single row, Desktop: 4 columns */}
+              <div className="grid grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-12">
                 {/* Step 1 */}
                 <div className="text-center">
-                  <div className="relative mb-4 sm:mb-6">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                  <div className="relative mb-3 sm:mb-4 lg:mb-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
                         src={
                           selectedServiceType === "construction"
-                            ? "/icons/planning-drawing.png"
+                            ? "/icons/consult.png"
                             : selectedServiceType === "architecture"
-                            ? "/icons/planning-drawing.png"
-                            : "/icons/planning-drawing.png"
+                            ? "/icons/consult.png"
+                            : "/icons/consult.png"
                         }
                         alt="Planning"
-                        width={32}
-                        height={32}
-                        className="object-contain sm:w-10 sm:h-10"
+                        width={24}
+                        height={24}
+                        className="object-contain sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                       />
                     </div>
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full">
+                    <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-1 sm:px-2 lg:px-3 py-0.5 sm:py-1 rounded-full">
                       1
                     </div>
                   </div>
-                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-amber-900 mb-2">
+                  <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2 whitespace-pre-line">
                     {selectedServiceType === "construction"
-                      ? "Plan & Consult"
+                      ? "Plan &\nConsult"
                       : selectedServiceType === "architecture"
                       ? "Initial Consultation"
                       : "Design Consultation"}
                   </h3>
-                  <p className="text-xs sm:text-sm text-amber-700 leading-relaxed">
+                  {/* Hide description on mobile, show on larger screens */}
+                  <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
                     {selectedServiceType === "construction"
                       ? "Meet our experts to discuss your vision, budget, and requirements for your dream home."
                       : selectedServiceType === "architecture"
@@ -1415,8 +1422,8 @@ export default function Home() {
 
                 {/* Step 2 */}
                 <div className="text-center">
-                  <div className="relative mb-4 sm:mb-6">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                  <div className="relative mb-3 sm:mb-4 lg:mb-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
                         src={
                           selectedServiceType === "construction"
@@ -1426,23 +1433,24 @@ export default function Home() {
                             : "/icons/planning-drawing.png"
                         }
                         alt="Design"
-                        width={32}
-                        height={32}
-                        className="object-contain sm:w-10 sm:h-10"
+                        width={24}
+                        height={24}
+                        className="object-contain sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                       />
                     </div>
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full">
+                    <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-1 sm:px-2 lg:px-3 py-0.5 sm:py-1 rounded-full">
                       2
                     </div>
                   </div>
-                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-amber-900 mb-2">
+                  <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2">
                     {selectedServiceType === "construction"
                       ? "Design & Approve"
                       : selectedServiceType === "architecture"
                       ? "Concept Design"
                       : "Space Planning"}
                   </h3>
-                  <p className="text-xs sm:text-sm text-amber-700 leading-relaxed">
+                  {/* Hide description on mobile, show on larger screens */}
+                  <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
                     {selectedServiceType === "construction"
                       ? "Review detailed 3D designs, floor plans, and make final approvals before construction."
                       : selectedServiceType === "architecture"
@@ -1453,8 +1461,8 @@ export default function Home() {
 
                 {/* Step 3 */}
                 <div className="text-center">
-                  <div className="relative mb-4 sm:mb-6">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                  <div className="relative mb-3 sm:mb-4 lg:mb-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
                         src={
                           selectedServiceType === "construction"
@@ -1464,23 +1472,24 @@ export default function Home() {
                             : "/icons/brick-layering.png"
                         }
                         alt="Build/Execute"
-                        width={32}
-                        height={32}
-                        className="object-contain sm:w-10 sm:h-10"
+                        width={24}
+                        height={24}
+                        className="object-contain sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                       />
                     </div>
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full">
+                    <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-1 sm:px-2 lg:px-3 py-0.5 sm:py-1 rounded-full">
                       3
                     </div>
                   </div>
-                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-amber-900 mb-2">
+                  <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2">
                     {selectedServiceType === "construction"
                       ? "Build & Monitor"
                       : selectedServiceType === "architecture"
                       ? "Detailed Design"
                       : "Execute & Install"}
                   </h3>
-                  <p className="text-xs sm:text-sm text-amber-700 leading-relaxed">
+                  {/* Hide description on mobile, show on larger screens */}
+                  <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
                     {selectedServiceType === "construction"
                       ? "Professional construction with regular quality checks and progress updates."
                       : selectedServiceType === "architecture"
@@ -1491,8 +1500,8 @@ export default function Home() {
 
                 {/* Step 4 */}
                 <div className="text-center">
-                  <div className="relative mb-4 sm:mb-6">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                  <div className="relative mb-3 sm:mb-4 lg:mb-6">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
                         src={
                           selectedServiceType === "construction"
@@ -1502,23 +1511,24 @@ export default function Home() {
                             : "/icons/built-homes.png"
                         }
                         alt="Complete"
-                        width={32}
-                        height={32}
-                        className="object-contain sm:w-10 sm:h-10"
+                        width={24}
+                        height={24}
+                        className="object-contain sm:w-8 sm:h-8 lg:w-10 lg:h-10"
                       />
                     </div>
-                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full">
+                    <div className="absolute -bottom-1 sm:-bottom-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-1 sm:px-2 lg:px-3 py-0.5 sm:py-1 rounded-full">
                       4
                     </div>
                   </div>
-                  <h3 className="text-sm sm:text-base lg:text-lg font-bold text-amber-900 mb-2">
+                  <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2 whitespace-pre-line">
                     {selectedServiceType === "construction"
                       ? "Handover & Move In"
                       : selectedServiceType === "architecture"
-                      ? "Final Delivery"
+                      ? "Final\nDelivery"
                       : "Final Styling & Handover"}
                   </h3>
-                  <p className="text-xs sm:text-sm text-amber-700 leading-relaxed">
+                  {/* Hide description on mobile, show on larger screens */}
+                  <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
                     {selectedServiceType === "construction"
                       ? "Final inspection, documentation handover, and keys to your dream home."
                       : selectedServiceType === "architecture"
@@ -1654,6 +1664,18 @@ export default function Home() {
                           ></iframe>
                         </div>
                         <div className="p-4 sm:p-6 bg-white">
+                          <div className="flex items-center justify-center mb-4">
+                            <svg
+                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                            </svg>
+                          </div>
+                          <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                            {testimonial.quote}
+                          </p>
                           <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                             {testimonial.name}
                           </div>
@@ -1680,6 +1702,20 @@ export default function Home() {
                   ></iframe>
                 </div>
                 <div className="p-4 sm:p-6 bg-white">
+                  <div className="flex items-center justify-center mb-4">
+                    <svg
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                    Most people struggle with delays, finances, or contractors.
+                    I didn&apos;t face even 1% of that. Sunbrix made my home
+                    journey smooth and hassle-free.
+                  </p>
                   <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                     Mr. Suryanarayanan Karthikeyan
                   </div>
@@ -1699,6 +1735,19 @@ export default function Home() {
                   ></iframe>
                 </div>
                 <div className="p-4 sm:p-6 bg-white">
+                  <div className="flex items-center justify-center mb-4">
+                    <svg
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                    Sunbrix&apos;s expert team guided me at every step. Their
+                    quality gave me total confidence throughout the journey.
+                  </p>
                   <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                     Mr. Gururaj Naik
                   </div>
@@ -1718,6 +1767,20 @@ export default function Home() {
                   ></iframe>
                 </div>
                 <div className="p-4 sm:p-6 bg-white">
+                  <div className="flex items-center justify-center mb-4">
+                    <svg
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                    Sunbrix Homes exceeded our expectations! The construction
+                    quality and timely delivery were remarkable. Truly a dream
+                    home.
+                  </p>
                   <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
                     Mr. Hariharasudan
                   </div>
