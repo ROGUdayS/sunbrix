@@ -104,14 +104,11 @@ export default function ImageModal({
               </svg>
             </button>
 
-            {/* Title and Counter - Overlay on image */}
-            <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm text-white rounded-lg px-3 py-2">
-              <h3 className="text-lg font-semibold">{title}</h3>
-              {images.length > 1 && (
-                <p className="text-sm opacity-90">
-                  {currentIndex + 1} of {images.length}
-                </p>
-              )}
+            {/* Title - Overlay on image (mobile-friendly) */}
+            <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm text-white rounded-lg px-2 py-1 sm:px-3 sm:py-2 max-w-[calc(100%-8rem)]">
+              <h3 className="text-sm sm:text-lg font-semibold truncate">
+                {title}
+              </h3>
             </div>
 
             {/* Navigation Arrows - Only show if more than 1 image */}
