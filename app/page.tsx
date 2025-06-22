@@ -370,8 +370,9 @@ export default function Home() {
     const deltaX = Math.abs(packageTouchStart.x - touch.clientX);
     const deltaY = Math.abs(packageTouchStart.y - touch.clientY);
 
-    // Only prevent default if horizontal movement is significantly more than vertical
-    if (deltaX > deltaY && deltaX > 15) {
+    // Much stricter conditions: horizontal must be at least 2x vertical movement
+    // and minimum 30px horizontal movement before preventing scroll
+    if (deltaX > deltaY * 2 && deltaX > 30) {
       e.preventDefault();
     }
   };
@@ -382,10 +383,13 @@ export default function Home() {
     const deltaX = packageTouchStart.x - packageTouchEnd.x;
     const deltaY = Math.abs(packageTouchStart.y - packageTouchEnd.y);
 
-    // Only trigger swipe if horizontal movement is greater than vertical movement
-    if (Math.abs(deltaX) > deltaY && Math.abs(deltaX) > 50) {
-      const isLeftSwipe = deltaX > 50;
-      const isRightSwipe = deltaX < -50;
+    // Much stricter conditions for triggering swipe:
+    // 1. Horizontal movement must be at least 3x vertical movement
+    // 2. Minimum 80px horizontal movement
+    // 3. Maximum 40px vertical movement allowed
+    if (Math.abs(deltaX) > deltaY * 3 && Math.abs(deltaX) > 80 && deltaY < 40) {
+      const isLeftSwipe = deltaX > 80;
+      const isRightSwipe = deltaX < -80;
 
       if (isLeftSwipe) {
         nextPackage();
@@ -414,8 +418,9 @@ export default function Home() {
     const deltaX = Math.abs(galleryTouchStart.x - touch.clientX);
     const deltaY = Math.abs(galleryTouchStart.y - touch.clientY);
 
-    // Only prevent default if horizontal movement is significantly more than vertical
-    if (deltaX > deltaY && deltaX > 15) {
+    // Much stricter conditions: horizontal must be at least 2x vertical movement
+    // and minimum 30px horizontal movement before preventing scroll
+    if (deltaX > deltaY * 2 && deltaX > 30) {
       e.preventDefault();
     }
   };
@@ -427,12 +432,15 @@ export default function Home() {
     const deltaX = galleryTouchStart.x - galleryTouchEnd.x;
     const deltaY = Math.abs(galleryTouchStart.y - galleryTouchEnd.y);
 
-    // Only trigger swipe if horizontal movement is greater than vertical movement
-    if (Math.abs(deltaX) > deltaY && Math.abs(deltaX) > 50) {
+    // Much stricter conditions for triggering swipe:
+    // 1. Horizontal movement must be at least 3x vertical movement
+    // 2. Minimum 80px horizontal movement
+    // 3. Maximum 40px vertical movement allowed
+    if (Math.abs(deltaX) > deltaY * 3 && Math.abs(deltaX) > 80 && deltaY < 40) {
       setIsGalleryTransitioning(true);
 
-      const isLeftSwipe = deltaX > 50;
-      const isRightSwipe = deltaX < -50;
+      const isLeftSwipe = deltaX > 80;
+      const isRightSwipe = deltaX < -80;
 
       if (isLeftSwipe) {
         nextSlide();
@@ -466,8 +474,9 @@ export default function Home() {
     const deltaX = Math.abs(testimonialTouchStart.x - touch.clientX);
     const deltaY = Math.abs(testimonialTouchStart.y - touch.clientY);
 
-    // Only prevent default if horizontal movement is significantly more than vertical
-    if (deltaX > deltaY && deltaX > 15) {
+    // Much stricter conditions: horizontal must be at least 2x vertical movement
+    // and minimum 30px horizontal movement before preventing scroll
+    if (deltaX > deltaY * 2 && deltaX > 30) {
       e.preventDefault();
     }
   };
@@ -478,10 +487,13 @@ export default function Home() {
     const deltaX = testimonialTouchStart.x - testimonialTouchEnd.x;
     const deltaY = Math.abs(testimonialTouchStart.y - testimonialTouchEnd.y);
 
-    // Only trigger swipe if horizontal movement is greater than vertical movement
-    if (Math.abs(deltaX) > deltaY && Math.abs(deltaX) > 50) {
-      const isLeftSwipe = deltaX > 50;
-      const isRightSwipe = deltaX < -50;
+    // Much stricter conditions for triggering swipe:
+    // 1. Horizontal movement must be at least 3x vertical movement
+    // 2. Minimum 80px horizontal movement
+    // 3. Maximum 40px vertical movement allowed
+    if (Math.abs(deltaX) > deltaY * 3 && Math.abs(deltaX) > 80 && deltaY < 40) {
+      const isLeftSwipe = deltaX > 80;
+      const isRightSwipe = deltaX < -80;
 
       if (isLeftSwipe) {
         nextTestimonial();
