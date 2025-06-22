@@ -81,6 +81,9 @@ export default function Home() {
     }[]
   >([]);
 
+  // Add video ref for auto-play functionality
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   // Project gallery data - get random images from project data
   const getAllProjectImages = () => {
     const allImages: {
@@ -132,6 +135,39 @@ export default function Home() {
     const allImages = getAllProjectImages();
     const shuffledProjects = shuffleArray(allImages).slice(0, 6);
     setProjects(shuffledProjects);
+  }, []);
+
+  // Auto-play video when in view, pause when out of view
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Video is in view, play it
+            video.play().catch((error) => {
+              console.log("Auto-play was prevented:", error);
+            });
+          } else {
+            // Video is out of view, pause it
+            video.pause();
+          }
+        });
+      },
+      {
+        threshold: 0.5, // Play when 50% of video is visible
+        rootMargin: "0px 0px -100px 0px", // Add some margin to trigger earlier
+      }
+    );
+
+    observer.observe(video);
+
+    // Cleanup observer on component unmount
+    return () => {
+      observer.unobserve(video);
+    };
   }, []);
 
   const nextSlide = () => {
@@ -754,10 +790,13 @@ export default function Home() {
             <div className="relative bg-gradient-to-br from-orange-100 to-orange-50 rounded-2xl overflow-hidden shadow-xl">
               {/* Video Element */}
               <video
+                ref={videoRef}
                 className="w-full h-auto rounded-2xl"
                 controls
+                muted
                 poster="/images/video-poster.jpg" // You can add a poster image if you have one
                 preload="metadata"
+                playsInline
               >
                 <source src="/videos/video_demo.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
