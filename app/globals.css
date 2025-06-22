@@ -38,7 +38,7 @@ html {
 
 /* Optimize carousel containers for touch */
 .carousel-container {
-  touch-action: pan-x;
+  touch-action: pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
 }
 
