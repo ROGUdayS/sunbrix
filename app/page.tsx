@@ -45,25 +45,35 @@ export default function Home() {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Touch state for packages carousel
-  const [packageTouchStart, setPackageTouchStart] = useState<number | null>(
-    null
-  );
-  const [packageTouchEnd, setPackageTouchEnd] = useState<number | null>(null);
+  const [packageTouchStart, setPackageTouchStart] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [packageTouchEnd, setPackageTouchEnd] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   // Touch state for gallery carousel
-  const [galleryTouchStart, setGalleryTouchStart] = useState<number | null>(
-    null
-  );
-  const [galleryTouchEnd, setGalleryTouchEnd] = useState<number | null>(null);
+  const [galleryTouchStart, setGalleryTouchStart] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [galleryTouchEnd, setGalleryTouchEnd] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
 
   // Touch state for testimonials carousel
-  const [testimonialTouchStart, setTestimonialTouchStart] = useState<
-    number | null
-  >(null);
-  const [testimonialTouchEnd, setTestimonialTouchEnd] = useState<number | null>(
-    null
-  );
+  const [testimonialTouchStart, setTestimonialTouchStart] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [testimonialTouchEnd, setTestimonialTouchEnd] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
 
   // Modal state for gallery images
   const [modalOpen, setModalOpen] = useState(false);
@@ -347,32 +357,41 @@ export default function Home() {
   // Touch handlers for packages carousel
   const handlePackageTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
-    setPackageTouchStart(touch.clientX);
+    setPackageTouchStart({ x: touch.clientX, y: touch.clientY });
     setPackageTouchEnd(null);
   };
 
   const handlePackageTouchMove = (e: React.TouchEvent) => {
     if (!packageTouchStart) return;
     const touch = e.touches[0];
-    setPackageTouchEnd(touch.clientX);
+    setPackageTouchEnd({ x: touch.clientX, y: touch.clientY });
 
-    // Prevent default scrolling if we're swiping horizontally
-    const distance = Math.abs(packageTouchStart - touch.clientX);
-    if (distance > 10) {
+    // Calculate horizontal and vertical distances
+    const deltaX = Math.abs(packageTouchStart.x - touch.clientX);
+    const deltaY = Math.abs(packageTouchStart.y - touch.clientY);
+
+    // Only prevent default if horizontal movement is significantly more than vertical
+    if (deltaX > deltaY && deltaX > 15) {
       e.preventDefault();
     }
   };
 
   const handlePackageTouchEnd = () => {
     if (!packageTouchStart || !packageTouchEnd) return;
-    const distance = packageTouchStart - packageTouchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe) {
-      nextPackage();
-    } else if (isRightSwipe) {
-      prevPackage();
+    const deltaX = packageTouchStart.x - packageTouchEnd.x;
+    const deltaY = Math.abs(packageTouchStart.y - packageTouchEnd.y);
+
+    // Only trigger swipe if horizontal movement is greater than vertical movement
+    if (Math.abs(deltaX) > deltaY && Math.abs(deltaX) > 50) {
+      const isLeftSwipe = deltaX > 50;
+      const isRightSwipe = deltaX < -50;
+
+      if (isLeftSwipe) {
+        nextPackage();
+      } else if (isRightSwipe) {
+        prevPackage();
+      }
     }
 
     setPackageTouchStart(null);
@@ -382,18 +401,21 @@ export default function Home() {
   // Touch handlers for gallery carousel
   const handleGalleryTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
-    setGalleryTouchStart(touch.clientX);
+    setGalleryTouchStart({ x: touch.clientX, y: touch.clientY });
     setGalleryTouchEnd(null);
   };
 
   const handleGalleryTouchMove = (e: React.TouchEvent) => {
     if (!galleryTouchStart) return;
     const touch = e.touches[0];
-    setGalleryTouchEnd(touch.clientX);
+    setGalleryTouchEnd({ x: touch.clientX, y: touch.clientY });
 
-    // Prevent default scrolling if we're swiping horizontally
-    const distance = Math.abs(galleryTouchStart - touch.clientX);
-    if (distance > 10) {
+    // Calculate horizontal and vertical distances
+    const deltaX = Math.abs(galleryTouchStart.x - touch.clientX);
+    const deltaY = Math.abs(galleryTouchStart.y - touch.clientY);
+
+    // Only prevent default if horizontal movement is significantly more than vertical
+    if (deltaX > deltaY && deltaX > 15) {
       e.preventDefault();
     }
   };
@@ -401,15 +423,20 @@ export default function Home() {
   const handleGalleryTouchEnd = () => {
     if (!galleryTouchStart || !galleryTouchEnd || isGalleryTransitioning)
       return;
-    const distance = galleryTouchStart - galleryTouchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe || isRightSwipe) {
+    const deltaX = galleryTouchStart.x - galleryTouchEnd.x;
+    const deltaY = Math.abs(galleryTouchStart.y - galleryTouchEnd.y);
+
+    // Only trigger swipe if horizontal movement is greater than vertical movement
+    if (Math.abs(deltaX) > deltaY && Math.abs(deltaX) > 50) {
       setIsGalleryTransitioning(true);
+
+      const isLeftSwipe = deltaX > 50;
+      const isRightSwipe = deltaX < -50;
+
       if (isLeftSwipe) {
         nextSlide();
-      } else {
+      } else if (isRightSwipe) {
         prevSlide();
       }
 
@@ -426,32 +453,41 @@ export default function Home() {
   // Touch handlers for testimonials carousel
   const handleTestimonialTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
-    setTestimonialTouchStart(touch.clientX);
+    setTestimonialTouchStart({ x: touch.clientX, y: touch.clientY });
     setTestimonialTouchEnd(null);
   };
 
   const handleTestimonialTouchMove = (e: React.TouchEvent) => {
     if (!testimonialTouchStart) return;
     const touch = e.touches[0];
-    setTestimonialTouchEnd(touch.clientX);
+    setTestimonialTouchEnd({ x: touch.clientX, y: touch.clientY });
 
-    // Prevent default scrolling if we're swiping horizontally
-    const distance = Math.abs(testimonialTouchStart - touch.clientX);
-    if (distance > 10) {
+    // Calculate horizontal and vertical distances
+    const deltaX = Math.abs(testimonialTouchStart.x - touch.clientX);
+    const deltaY = Math.abs(testimonialTouchStart.y - touch.clientY);
+
+    // Only prevent default if horizontal movement is significantly more than vertical
+    if (deltaX > deltaY && deltaX > 15) {
       e.preventDefault();
     }
   };
 
   const handleTestimonialTouchEnd = () => {
     if (!testimonialTouchStart || !testimonialTouchEnd) return;
-    const distance = testimonialTouchStart - testimonialTouchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe) {
-      nextTestimonial();
-    } else if (isRightSwipe) {
-      prevTestimonial();
+    const deltaX = testimonialTouchStart.x - testimonialTouchEnd.x;
+    const deltaY = Math.abs(testimonialTouchStart.y - testimonialTouchEnd.y);
+
+    // Only trigger swipe if horizontal movement is greater than vertical movement
+    if (Math.abs(deltaX) > deltaY && Math.abs(deltaX) > 50) {
+      const isLeftSwipe = deltaX > 50;
+      const isRightSwipe = deltaX < -50;
+
+      if (isLeftSwipe) {
+        nextTestimonial();
+      } else if (isRightSwipe) {
+        prevTestimonial();
+      }
     }
 
     setTestimonialTouchStart(null);
