@@ -24,3 +24,39 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Touch optimization for mobile devices */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Improve scrolling performance */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimize carousel containers for touch */
+.carousel-container {
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text selection during touch interactions */
+.select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Improve button touch targets */
+button {
+  touch-action: manipulation;
+}
+
+/* Optimize transforms for better performance */
+.transform {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}

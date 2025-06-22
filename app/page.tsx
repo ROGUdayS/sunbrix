@@ -55,6 +55,7 @@ export default function Home() {
     null
   );
   const [galleryTouchEnd, setGalleryTouchEnd] = useState<number | null>(null);
+  const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
 
   // Touch state for testimonials carousel
   const [testimonialTouchStart, setTestimonialTouchStart] = useState<
@@ -69,6 +70,16 @@ export default function Home() {
   const [modalImages, setModalImages] = useState<string[]>([]);
   const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
+
+  // Add state for projects to fix hydration issue
+  const [projects, setProjects] = useState<
+    {
+      image: string;
+      title: string;
+      description: string;
+      id: number;
+    }[]
+  >([]);
 
   // Project gallery data - get random images from project data
   const getAllProjectImages = () => {
@@ -116,14 +127,20 @@ export default function Home() {
     return shuffled;
   };
 
-  // Get 6 random images for the gallery
-  const projects = shuffleArray(getAllProjectImages()).slice(0, 6);
+  // Initialize projects on client side to avoid hydration mismatch
+  useEffect(() => {
+    const allImages = getAllProjectImages();
+    const shuffledProjects = shuffleArray(allImages).slice(0, 6);
+    setProjects(shuffledProjects);
+  }, []);
 
   const nextSlide = () => {
+    if (projects.length === 0) return;
     setCurrentSlide((prev) => (prev + 1) % projects.length);
   };
 
   const prevSlide = () => {
+    if (projects.length === 0) return;
     setCurrentSlide((prev) => (prev - 1 + projects.length) % projects.length);
   };
 
@@ -302,6 +319,12 @@ export default function Home() {
     if (!packageTouchStart) return;
     const touch = e.touches[0];
     setPackageTouchEnd(touch.clientX);
+
+    // Prevent default scrolling if we're swiping horizontally
+    const distance = Math.abs(packageTouchStart - touch.clientX);
+    if (distance > 10) {
+      e.preventDefault();
+    }
   };
 
   const handlePackageTouchEnd = () => {
@@ -331,18 +354,33 @@ export default function Home() {
     if (!galleryTouchStart) return;
     const touch = e.touches[0];
     setGalleryTouchEnd(touch.clientX);
+
+    // Prevent default scrolling if we're swiping horizontally
+    const distance = Math.abs(galleryTouchStart - touch.clientX);
+    if (distance > 10) {
+      e.preventDefault();
+    }
   };
 
   const handleGalleryTouchEnd = () => {
-    if (!galleryTouchStart || !galleryTouchEnd) return;
+    if (!galleryTouchStart || !galleryTouchEnd || isGalleryTransitioning)
+      return;
     const distance = galleryTouchStart - galleryTouchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe) {
-      nextSlide();
-    } else if (isRightSwipe) {
-      prevSlide();
+    if (isLeftSwipe || isRightSwipe) {
+      setIsGalleryTransitioning(true);
+      if (isLeftSwipe) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+
+      // Reset transition state after animation completes
+      setTimeout(() => {
+        setIsGalleryTransitioning(false);
+      }, 500);
     }
 
     setGalleryTouchStart(null);
@@ -360,6 +398,12 @@ export default function Home() {
     if (!testimonialTouchStart) return;
     const touch = e.touches[0];
     setTestimonialTouchEnd(touch.clientX);
+
+    // Prevent default scrolling if we're swiping horizontally
+    const distance = Math.abs(testimonialTouchStart - touch.clientX);
+    if (distance > 10) {
+      e.preventDefault();
+    }
   };
 
   const handleTestimonialTouchEnd = () => {
@@ -562,127 +606,143 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Carousel Container */}
-          <div className="relative max-w-6xl mx-auto">
-            {/* Main Image Container */}
-            <div
-              className="relative overflow-hidden rounded-2xl select-none"
-              onTouchStart={handleGalleryTouchStart}
-              onTouchMove={handleGalleryTouchMove}
-              onTouchEnd={handleGalleryTouchEnd}
-            >
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {projects.map((project) => (
-                  <div key={project.id} className="w-full flex-shrink-0">
-                    <div
-                      className="relative cursor-pointer"
-                      onClick={() =>
-                        openModal([project.image], project.title, 0)
-                      }
-                    >
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        width={1200}
-                        height={600}
-                        className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
-                      />
-                      {/* Navigation Arrows for main carousel */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          prevSlide();
-                        }}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                      >
-                        <svg
-                          className="w-6 h-6"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          nextSlide();
-                        }}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                      >
-                        <svg
-                          className="w-6 h-6"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Project Description */}
-            <div className="text-center mt-4 sm:mt-6 lg:mt-8 px-4">
-              <div className="flex justify-center mb-4">
-                <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
+          {/* Only render carousel if projects are loaded */}
+          {projects.length > 0 && (
+            <>
+              {/* Carousel Container */}
+              <div className="relative max-w-6xl mx-auto">
+                {/* Main Image Container */}
+                <div
+                  className="relative overflow-hidden rounded-2xl select-none carousel-container"
+                  onTouchStart={handleGalleryTouchStart}
+                  onTouchMove={handleGalleryTouchMove}
+                  onTouchEnd={handleGalleryTouchEnd}
                 >
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                </svg>
+                  <div
+                    className="flex transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  >
+                    {projects.map((project) => (
+                      <div key={project.id} className="w-full flex-shrink-0">
+                        <div
+                          className="relative cursor-pointer"
+                          onClick={() =>
+                            openModal([project.image], project.title, 0)
+                          }
+                        >
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            width={1200}
+                            height={600}
+                            className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
+                          />
+                          {/* Navigation Arrows for main carousel */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              prevSlide();
+                            }}
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                          >
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 19l-7-7 7-7"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              nextSlide();
+                            }}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                          >
+                            <svg
+                              className="w-6 h-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Project Description */}
+                <div className="text-center mt-4 sm:mt-6 lg:mt-8 px-4">
+                  <div className="flex justify-center mb-4">
+                    <svg
+                      className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed max-w-4xl mx-auto">
+                    {projects[currentSlide]?.description || "Loading..."}
+                  </p>
+                </div>
+
+                {/* Pagination Dots */}
+                <div className="flex justify-center mt-4 sm:mt-6 lg:mt-8 space-x-2">
+                  {projects.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToSlide(index);
+                      }}
+                      className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                        index === currentSlide
+                          ? "bg-gray-800"
+                          : "bg-gray-300 hover:bg-gray-400"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                {/* Explore More Button */}
+                <div className="text-center mt-6 sm:mt-8 lg:mt-12">
+                  <Link
+                    href="/projects"
+                    className="bg-amber-600 hover:bg-amber-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
+                  >
+                    Explore more projects
+                  </Link>
+                </div>
               </div>
-              <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed max-w-4xl mx-auto">
-                {projects[currentSlide].description}
-              </p>
-            </div>
+            </>
+          )}
 
-            {/* Pagination Dots */}
-            <div className="flex justify-center mt-4 sm:mt-6 lg:mt-8 space-x-2">
-              {projects.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    goToSlide(index);
-                  }}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === currentSlide
-                      ? "bg-gray-800"
-                      : "bg-gray-300 hover:bg-gray-400"
-                  }`}
-                />
-              ))}
+          {/* Loading state while projects are being loaded */}
+          {projects.length === 0 && (
+            <div className="text-center py-12">
+              <div className="animate-pulse">
+                <div className="bg-gray-200 rounded-2xl h-[400px] md:h-[500px] lg:h-[600px] mb-6"></div>
+                <div className="bg-gray-200 h-4 rounded w-3/4 mx-auto mb-4"></div>
+                <div className="bg-gray-200 h-4 rounded w-1/2 mx-auto"></div>
+              </div>
             </div>
-
-            {/* Explore More Button */}
-            <div className="text-center mt-6 sm:mt-8 lg:mt-12">
-              <Link
-                href="/projects"
-                className="bg-amber-600 hover:bg-amber-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
-              >
-                Explore more projects
-              </Link>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -908,7 +968,7 @@ export default function Home() {
                     <>
                       {/* Carousel Container */}
                       <div
-                        className="relative overflow-hidden select-none"
+                        className="relative overflow-hidden select-none carousel-container"
                         onTouchStart={handlePackageTouchStart}
                         onTouchMove={handlePackageTouchMove}
                         onTouchEnd={handlePackageTouchEnd}
@@ -1729,7 +1789,7 @@ export default function Home() {
             <div className="block md:hidden">
               {/* Mobile: Single testimonial carousel */}
               <div
-                className="relative overflow-hidden rounded-2xl select-none"
+                className="relative overflow-hidden rounded-2xl select-none carousel-container"
                 onTouchStart={handleTestimonialTouchStart}
                 onTouchMove={handleTestimonialTouchMove}
                 onTouchEnd={handleTestimonialTouchEnd}
