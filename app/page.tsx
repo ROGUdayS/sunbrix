@@ -144,6 +144,17 @@ export default function Home() {
     setProjects(shuffledProjects);
   }, []);
 
+  // Auto-cycle gallery every 3 seconds
+  useEffect(() => {
+    if (projects.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % projects.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [projects.length]);
+
   // Auto-play video when in view, pause when out of view
   useEffect(() => {
     const video = videoRef.current;
@@ -687,75 +698,154 @@ export default function Home() {
           {/* Only render carousel if projects are loaded */}
           {projects.length > 0 && (
             <>
-              {/* Carousel Container */}
-              <div className="relative max-w-5xl mx-auto">
-                {/* Main Image Container */}
-                <div
-                  className="relative overflow-hidden rounded-xl select-none carousel-container"
-                  onTouchStart={handleGalleryTouchStart}
-                  onTouchMove={handleGalleryTouchMove}
-                  onTouchEnd={handleGalleryTouchEnd}
-                >
-                  <div
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                  >
-                    {projects.map((project) => (
-                      <div key={project.id} className="w-full flex-shrink-0">
-                        <div className="relative">
-                          <Image
-                            src={project.image}
-                            alt={project.title}
-                            width={1200}
-                            height={400}
-                            className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] object-cover"
-                          />
-                          {/* Navigation Arrows for main carousel */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              prevSlide();
-                            }}
-                            className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 sm:p-2.5 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                          >
-                            <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 19l-7-7 7-7"
-                              />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              nextSlide();
-                            }}
-                            className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 sm:p-2.5 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                          >
-                            <svg
-                              className="w-4 h-4 sm:w-5 sm:h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </button>
-                        </div>
+              {/* Carousel Container with Side Previews */}
+              <div className="relative max-w-7xl mx-auto">
+                {/* Gallery with Side Previews */}
+                <div className="flex items-center justify-center gap-4 lg:gap-6">
+                  {/* Previous Image Preview - Show right edge only */}
+                  <div className="hidden lg:block flex-shrink-0 relative">
+                    <div
+                      className="relative w-16 lg:w-20 xl:w-24 h-[400px] xl:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-l-xl"
+                      onClick={prevSlide}
+                    >
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={
+                            projects[
+                              (currentSlide - 1 + projects.length) %
+                                projects.length
+                            ]?.image
+                          }
+                          alt="Previous"
+                          fill
+                          className="object-cover object-right"
+                        />
                       </div>
-                    ))}
+                      <div className="absolute inset-0 bg-black/20"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4 text-white opacity-70"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 19l-7-7 7-7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Main Image Container */}
+                  <div
+                    className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none"
+                    onTouchStart={handleGalleryTouchStart}
+                    onTouchMove={handleGalleryTouchMove}
+                    onTouchEnd={handleGalleryTouchEnd}
+                  >
+                    <div
+                      className="flex transition-transform duration-500 ease-in-out"
+                      style={{
+                        transform: `translateX(-${currentSlide * 100}%)`,
+                      }}
+                    >
+                      {projects.map((project) => (
+                        <div key={project.id} className="w-full flex-shrink-0">
+                          <div className="relative">
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              width={900}
+                              height={600}
+                              className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                            />
+                            {/* Navigation Arrows for main carousel - Mobile and Tablet only */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                prevSlide();
+                              }}
+                              className="lg:hidden absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                            >
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M15 19l-7-7 7-7"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                nextSlide();
+                              }}
+                              className="lg:hidden absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                            >
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Next Image Preview - Show left edge only */}
+                  <div className="hidden lg:block flex-shrink-0 relative">
+                    <div
+                      className="relative w-16 lg:w-20 xl:w-24 h-[400px] xl:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-r-xl"
+                      onClick={nextSlide}
+                    >
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={
+                            projects[(currentSlide + 1) % projects.length]
+                              ?.image
+                          }
+                          alt="Next"
+                          fill
+                          className="object-cover object-left"
+                        />
+                      </div>
+                      <div className="absolute inset-0 bg-black/20"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <svg
+                          className="w-4 h-4 text-white opacity-70"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
