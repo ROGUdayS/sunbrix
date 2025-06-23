@@ -38,7 +38,7 @@ html {
 
 /* Optimize carousel containers for touch */
 .carousel-container {
-  touch-action: pan-y pinch-zoom;
+  touch-action: auto;
   -webkit-overflow-scrolling: touch;
   /* Add subtle visual cue for swipeable areas */
   position: relative;

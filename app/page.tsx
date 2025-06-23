@@ -48,8 +48,9 @@ export default function Home() {
   const [packageTouchStart, setPackageTouchStart] = useState<{
     x: number;
     y: number;
+    time: number;
   } | null>(null);
-  const [packageTouchEnd, setPackageTouchEnd] = useState<{
+  const [packageTouchCurrent, setPackageTouchCurrent] = useState<{
     x: number;
     y: number;
   } | null>(null);
@@ -58,8 +59,9 @@ export default function Home() {
   const [galleryTouchStart, setGalleryTouchStart] = useState<{
     x: number;
     y: number;
+    time: number;
   } | null>(null);
-  const [galleryTouchEnd, setGalleryTouchEnd] = useState<{
+  const [galleryTouchCurrent, setGalleryTouchCurrent] = useState<{
     x: number;
     y: number;
   } | null>(null);
@@ -69,8 +71,9 @@ export default function Home() {
   const [testimonialTouchStart, setTestimonialTouchStart] = useState<{
     x: number;
     y: number;
+    time: number;
   } | null>(null);
-  const [testimonialTouchEnd, setTestimonialTouchEnd] = useState<{
+  const [testimonialTouchCurrent, setTestimonialTouchCurrent] = useState<{
     x: number;
     y: number;
   } | null>(null);
@@ -357,39 +360,48 @@ export default function Home() {
   // Touch handlers for packages carousel
   const handlePackageTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
-    setPackageTouchStart({ x: touch.clientX, y: touch.clientY });
-    setPackageTouchEnd(null);
+    setPackageTouchStart({
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    });
+    setPackageTouchCurrent(null);
   };
 
   const handlePackageTouchMove = (e: React.TouchEvent) => {
     if (!packageTouchStart) return;
     const touch = e.touches[0];
-    setPackageTouchEnd({ x: touch.clientX, y: touch.clientY });
+    setPackageTouchCurrent({ x: touch.clientX, y: touch.clientY });
 
-    // Calculate horizontal and vertical distances
-    const deltaX = Math.abs(packageTouchStart.x - touch.clientX);
-    const deltaY = Math.abs(packageTouchStart.y - touch.clientY);
-
-    // Much stricter conditions: horizontal must be at least 2x vertical movement
-    // and minimum 30px horizontal movement before preventing scroll
-    if (deltaX > deltaY * 2 && deltaX > 30) {
-      e.preventDefault();
-    }
+    // Don't prevent default during move - let the browser handle scrolling naturally
+    // We'll decide the action only at the end
   };
 
   const handlePackageTouchEnd = () => {
-    if (!packageTouchStart || !packageTouchEnd) return;
+    if (!packageTouchStart || !packageTouchCurrent) return;
 
-    const deltaX = packageTouchStart.x - packageTouchEnd.x;
-    const deltaY = Math.abs(packageTouchStart.y - packageTouchEnd.y);
+    const deltaX = packageTouchStart.x - packageTouchCurrent.x;
+    const deltaY = packageTouchStart.y - packageTouchCurrent.y;
+    const timeDiff = Date.now() - packageTouchStart.time;
 
-    // Much stricter conditions for triggering swipe:
-    // 1. Horizontal movement must be at least 3x vertical movement
-    // 2. Minimum 80px horizontal movement
-    // 3. Maximum 40px vertical movement allowed
-    if (Math.abs(deltaX) > deltaY * 3 && Math.abs(deltaX) > 80 && deltaY < 40) {
-      const isLeftSwipe = deltaX > 80;
-      const isRightSwipe = deltaX < -80;
+    // Calculate the angle of the swipe
+    const angle = Math.abs(
+      (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
+    );
+
+    // Only trigger horizontal swipe if:
+    // 1. Angle is less than 30 degrees (mostly horizontal)
+    // 2. Horizontal distance is at least 60px
+    // 3. Gesture took less than 300ms (quick swipe)
+    // 4. Vertical movement is less than 30px
+    if (
+      angle < 30 &&
+      Math.abs(deltaX) > 60 &&
+      timeDiff < 300 &&
+      Math.abs(deltaY) < 30
+    ) {
+      const isLeftSwipe = deltaX > 60;
+      const isRightSwipe = deltaX < -60;
 
       if (isLeftSwipe) {
         nextPackage();
@@ -399,48 +411,57 @@ export default function Home() {
     }
 
     setPackageTouchStart(null);
-    setPackageTouchEnd(null);
+    setPackageTouchCurrent(null);
   };
 
   // Touch handlers for gallery carousel
   const handleGalleryTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
-    setGalleryTouchStart({ x: touch.clientX, y: touch.clientY });
-    setGalleryTouchEnd(null);
+    setGalleryTouchStart({
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    });
+    setGalleryTouchCurrent(null);
   };
 
   const handleGalleryTouchMove = (e: React.TouchEvent) => {
     if (!galleryTouchStart) return;
     const touch = e.touches[0];
-    setGalleryTouchEnd({ x: touch.clientX, y: touch.clientY });
+    setGalleryTouchCurrent({ x: touch.clientX, y: touch.clientY });
 
-    // Calculate horizontal and vertical distances
-    const deltaX = Math.abs(galleryTouchStart.x - touch.clientX);
-    const deltaY = Math.abs(galleryTouchStart.y - touch.clientY);
-
-    // Much stricter conditions: horizontal must be at least 2x vertical movement
-    // and minimum 30px horizontal movement before preventing scroll
-    if (deltaX > deltaY * 2 && deltaX > 30) {
-      e.preventDefault();
-    }
+    // Don't prevent default during move - let the browser handle scrolling naturally
+    // We'll decide the action only at the end
   };
 
   const handleGalleryTouchEnd = () => {
-    if (!galleryTouchStart || !galleryTouchEnd || isGalleryTransitioning)
+    if (!galleryTouchStart || !galleryTouchCurrent || isGalleryTransitioning)
       return;
 
-    const deltaX = galleryTouchStart.x - galleryTouchEnd.x;
-    const deltaY = Math.abs(galleryTouchStart.y - galleryTouchEnd.y);
+    const deltaX = galleryTouchStart.x - galleryTouchCurrent.x;
+    const deltaY = galleryTouchStart.y - galleryTouchCurrent.y;
+    const timeDiff = Date.now() - galleryTouchStart.time;
 
-    // Much stricter conditions for triggering swipe:
-    // 1. Horizontal movement must be at least 3x vertical movement
-    // 2. Minimum 80px horizontal movement
-    // 3. Maximum 40px vertical movement allowed
-    if (Math.abs(deltaX) > deltaY * 3 && Math.abs(deltaX) > 80 && deltaY < 40) {
+    // Calculate the angle of the swipe
+    const angle = Math.abs(
+      (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
+    );
+
+    // Only trigger horizontal swipe if:
+    // 1. Angle is less than 30 degrees (mostly horizontal)
+    // 2. Horizontal distance is at least 60px
+    // 3. Gesture took less than 300ms (quick swipe)
+    // 4. Vertical movement is less than 30px
+    if (
+      angle < 30 &&
+      Math.abs(deltaX) > 60 &&
+      timeDiff < 300 &&
+      Math.abs(deltaY) < 30
+    ) {
       setIsGalleryTransitioning(true);
 
-      const isLeftSwipe = deltaX > 80;
-      const isRightSwipe = deltaX < -80;
+      const isLeftSwipe = deltaX > 60;
+      const isRightSwipe = deltaX < -60;
 
       if (isLeftSwipe) {
         nextSlide();
@@ -455,45 +476,54 @@ export default function Home() {
     }
 
     setGalleryTouchStart(null);
-    setGalleryTouchEnd(null);
+    setGalleryTouchCurrent(null);
   };
 
   // Touch handlers for testimonials carousel
   const handleTestimonialTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
-    setTestimonialTouchStart({ x: touch.clientX, y: touch.clientY });
-    setTestimonialTouchEnd(null);
+    setTestimonialTouchStart({
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+    });
+    setTestimonialTouchCurrent(null);
   };
 
   const handleTestimonialTouchMove = (e: React.TouchEvent) => {
     if (!testimonialTouchStart) return;
     const touch = e.touches[0];
-    setTestimonialTouchEnd({ x: touch.clientX, y: touch.clientY });
+    setTestimonialTouchCurrent({ x: touch.clientX, y: touch.clientY });
 
-    // Calculate horizontal and vertical distances
-    const deltaX = Math.abs(testimonialTouchStart.x - touch.clientX);
-    const deltaY = Math.abs(testimonialTouchStart.y - touch.clientY);
-
-    // Much stricter conditions: horizontal must be at least 2x vertical movement
-    // and minimum 30px horizontal movement before preventing scroll
-    if (deltaX > deltaY * 2 && deltaX > 30) {
-      e.preventDefault();
-    }
+    // Don't prevent default during move - let the browser handle scrolling naturally
+    // We'll decide the action only at the end
   };
 
   const handleTestimonialTouchEnd = () => {
-    if (!testimonialTouchStart || !testimonialTouchEnd) return;
+    if (!testimonialTouchStart || !testimonialTouchCurrent) return;
 
-    const deltaX = testimonialTouchStart.x - testimonialTouchEnd.x;
-    const deltaY = Math.abs(testimonialTouchStart.y - testimonialTouchEnd.y);
+    const deltaX = testimonialTouchStart.x - testimonialTouchCurrent.x;
+    const deltaY = testimonialTouchStart.y - testimonialTouchCurrent.y;
+    const timeDiff = Date.now() - testimonialTouchStart.time;
 
-    // Much stricter conditions for triggering swipe:
-    // 1. Horizontal movement must be at least 3x vertical movement
-    // 2. Minimum 80px horizontal movement
-    // 3. Maximum 40px vertical movement allowed
-    if (Math.abs(deltaX) > deltaY * 3 && Math.abs(deltaX) > 80 && deltaY < 40) {
-      const isLeftSwipe = deltaX > 80;
-      const isRightSwipe = deltaX < -80;
+    // Calculate the angle of the swipe
+    const angle = Math.abs(
+      (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
+    );
+
+    // Only trigger horizontal swipe if:
+    // 1. Angle is less than 30 degrees (mostly horizontal)
+    // 2. Horizontal distance is at least 60px
+    // 3. Gesture took less than 300ms (quick swipe)
+    // 4. Vertical movement is less than 30px
+    if (
+      angle < 30 &&
+      Math.abs(deltaX) > 60 &&
+      timeDiff < 300 &&
+      Math.abs(deltaY) < 30
+    ) {
+      const isLeftSwipe = deltaX > 60;
+      const isRightSwipe = deltaX < -60;
 
       if (isLeftSwipe) {
         nextTestimonial();
@@ -503,7 +533,7 @@ export default function Home() {
     }
 
     setTestimonialTouchStart(null);
-    setTestimonialTouchEnd(null);
+    setTestimonialTouchCurrent(null);
   };
 
   return (
