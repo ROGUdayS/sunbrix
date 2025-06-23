@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
-import ImageModal from "./components/ImageModal";
+
 import { useCity } from "./contexts/CityContext";
 import packagesData from "../data/packages.json";
 import projectsData from "../data/projects.json";
@@ -77,12 +77,6 @@ export default function Home() {
     x: number;
     y: number;
   } | null>(null);
-
-  // Modal state for gallery images
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalImages, setModalImages] = useState<string[]>([]);
-  const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
-  const [modalTitle, setModalTitle] = useState("");
 
   // Add state for projects to fix hydration issue
   const [projects, setProjects] = useState<
@@ -234,36 +228,6 @@ export default function Home() {
 
   const goToTestimonial = (index: number) => {
     setCurrentTestimonial(index);
-  };
-
-  // Modal functions for gallery
-  const openModal = (
-    images: string[],
-    title: string,
-    startIndex: number = 0
-  ) => {
-    setModalImages(images);
-    setModalTitle(title);
-    setModalCurrentIndex(startIndex);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  const nextModalImage = () => {
-    setModalCurrentIndex((prev) => (prev + 1) % modalImages.length);
-  };
-
-  const prevModalImage = () => {
-    setModalCurrentIndex(
-      (prev) => (prev - 1 + modalImages.length) % modalImages.length
-    );
-  };
-
-  const goToModalImage = (index: number) => {
-    setModalCurrentIndex(index);
   };
 
   const toggleSection = (section: string) => {
@@ -712,10 +676,10 @@ export default function Home() {
       </section>
 
       {/* Project Gallery */}
-      <section className="py-8 sm:py-10 lg:py-12 bg-white">
+      <section className="py-6 sm:py-8 lg:py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
+          <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-2 sm:mb-3">
               Gallery
             </h2>
           </div>
@@ -724,10 +688,10 @@ export default function Home() {
           {projects.length > 0 && (
             <>
               {/* Carousel Container */}
-              <div className="relative max-w-6xl mx-auto">
+              <div className="relative max-w-5xl mx-auto">
                 {/* Main Image Container */}
                 <div
-                  className="relative overflow-hidden rounded-2xl select-none carousel-container"
+                  className="relative overflow-hidden rounded-xl select-none carousel-container"
                   onTouchStart={handleGalleryTouchStart}
                   onTouchMove={handleGalleryTouchMove}
                   onTouchEnd={handleGalleryTouchEnd}
@@ -738,18 +702,13 @@ export default function Home() {
                   >
                     {projects.map((project) => (
                       <div key={project.id} className="w-full flex-shrink-0">
-                        <div
-                          className="relative cursor-pointer"
-                          onClick={() =>
-                            openModal([project.image], project.title, 0)
-                          }
-                        >
+                        <div className="relative">
                           <Image
                             src={project.image}
                             alt={project.title}
                             width={1200}
-                            height={600}
-                            className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
+                            height={400}
+                            className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] object-cover"
                           />
                           {/* Navigation Arrows for main carousel */}
                           <button
@@ -757,10 +716,10 @@ export default function Home() {
                               e.stopPropagation();
                               prevSlide();
                             }}
-                            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                            className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 sm:p-2.5 shadow-lg transition-all duration-200 hover:scale-110 z-10"
                           >
                             <svg
-                              className="w-6 h-6"
+                              className="w-4 h-4 sm:w-5 sm:h-5"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -778,10 +737,10 @@ export default function Home() {
                               e.stopPropagation();
                               nextSlide();
                             }}
-                            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                            className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 sm:p-2.5 shadow-lg transition-all duration-200 hover:scale-110 z-10"
                           >
                             <svg
-                              className="w-6 h-6"
+                              className="w-4 h-4 sm:w-5 sm:h-5"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -801,23 +760,23 @@ export default function Home() {
                 </div>
 
                 {/* Project Description */}
-                <div className="text-center mt-4 sm:mt-6 lg:mt-8 px-4">
-                  <div className="flex justify-center mb-4">
+                <div className="text-center mt-3 sm:mt-4 lg:mt-5 px-4">
+                  <div className="flex justify-center mb-2 sm:mb-3">
                     <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                     </svg>
                   </div>
-                  <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed max-w-4xl mx-auto">
+                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
                     {projects[currentSlide]?.description || "Loading..."}
                   </p>
                 </div>
 
                 {/* Pagination Dots */}
-                <div className="flex justify-center mt-4 sm:mt-6 lg:mt-8 space-x-2">
+                <div className="flex justify-center mt-3 sm:mt-4 lg:mt-5 space-x-2">
                   {projects.map((_, index) => (
                     <button
                       key={index}
@@ -825,7 +784,7 @@ export default function Home() {
                         e.stopPropagation();
                         goToSlide(index);
                       }}
-                      className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                      className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
                         index === currentSlide
                           ? "bg-gray-800"
                           : "bg-gray-300 hover:bg-gray-400"
@@ -835,10 +794,10 @@ export default function Home() {
                 </div>
 
                 {/* Explore More Button */}
-                <div className="text-center mt-6 sm:mt-8 lg:mt-12">
+                <div className="text-center mt-4 sm:mt-6 lg:mt-8">
                   <Link
                     href="/projects"
-                    className="bg-amber-600 hover:bg-amber-700 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
+                    className="bg-amber-600 hover:bg-amber-700 text-white px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
                   >
                     Explore more projects
                   </Link>
@@ -849,11 +808,11 @@ export default function Home() {
 
           {/* Loading state while projects are being loaded */}
           {projects.length === 0 && (
-            <div className="text-center py-12">
-              <div className="animate-pulse">
-                <div className="bg-gray-200 rounded-2xl h-[400px] md:h-[500px] lg:h-[600px] mb-6"></div>
-                <div className="bg-gray-200 h-4 rounded w-3/4 mx-auto mb-4"></div>
-                <div className="bg-gray-200 h-4 rounded w-1/2 mx-auto"></div>
+            <div className="text-center py-8">
+              <div className="animate-pulse max-w-5xl mx-auto">
+                <div className="bg-gray-200 rounded-xl h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] mb-4"></div>
+                <div className="bg-gray-200 h-3 rounded w-3/4 mx-auto mb-3"></div>
+                <div className="bg-gray-200 h-3 rounded w-1/2 mx-auto"></div>
               </div>
             </div>
           )}
@@ -885,14 +844,14 @@ export default function Home() {
       </section>
 
       {/* Packages */}
-      <section className="py-8 sm:py-10 lg:py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
+      <section className="py-6 sm:py-8 lg:py-10 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-3">
               Packages
             </h2>
             {/* City + Service Type Selector - Responsive Layout */}
-            <div className="mt-6 sm:mt-8 space-y-4 lg:space-y-0 lg:grid lg:grid-cols-3 lg:items-center lg:gap-4 px-4">
+            <div className="mt-4 sm:mt-5 space-y-3 lg:space-y-0 lg:grid lg:grid-cols-3 lg:items-center lg:gap-4 px-4">
               {/* Left spacer on desktop */}
               <div className="hidden lg:block" />
 
@@ -944,7 +903,7 @@ export default function Home() {
           {selectedCity && selectedServiceType && (
             <>
               {/* Desktop View - All packages visible */}
-              <div className="hidden lg:grid lg:grid-cols-3 gap-8">
+              <div className="hidden lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
                 {Object.entries(
                   packagesData.packages[
                     selectedServiceType as keyof typeof packagesData.packages
@@ -958,7 +917,7 @@ export default function Home() {
                   return (
                     <div
                       key={packageKey}
-                      className={`relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
+                      className={`relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
                         packageInfo.popular
                           ? "ring-2 ring-amber-500 scale-105 z-10"
                           : "border border-gray-100 hover:border-amber-200"
@@ -967,7 +926,7 @@ export default function Home() {
                       {/* Popular Badge */}
                       {packageInfo.popular && (
                         <div className="absolute -top-0 left-0 right-0">
-                          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
                             ⭐ Most Popular
                           </div>
                         </div>
@@ -975,24 +934,26 @@ export default function Home() {
 
                       {/* Card Content */}
                       <div
-                        className={`p-8 ${packageInfo.popular ? "pt-12" : ""}`}
+                        className={`p-4 lg:p-5 ${
+                          packageInfo.popular ? "pt-7 lg:pt-8" : ""
+                        }`}
                       >
                         {/* Package Title */}
-                        <div className="text-center mb-6">
-                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        <div className="text-center mb-4">
+                          <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
                             {packageInfo.title}
                           </h3>
 
                           {/* Price Display */}
-                          <div className="mb-4">
-                            <div className="text-4xl font-bold text-amber-600 mb-1">
+                          <div className="mb-3">
+                            <div className="text-2xl lg:text-3xl font-bold text-amber-600 mb-1">
                               {selectedCity
                                 ? currentCityPricing?.price
                                 : "X,XXX"}
                             </div>
                             {selectedCity &&
                               !currentCityPricing?.startingAt && (
-                                <div className="text-sm text-gray-500">
+                                <div className="text-xs text-gray-500">
                                   per sq. ft (Ex GST)
                                 </div>
                               )}
@@ -1000,26 +961,26 @@ export default function Home() {
                         </div>
 
                         {/* Divider */}
-                        <div className="border-t border-gray-100 mb-4"></div>
+                        <div className="border-t border-gray-100 mb-3"></div>
 
                         {/* Expandable Sections */}
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           {Object.entries(packageInfo.sections).map(
                             ([sectionKey, section]) => (
                               <div
                                 key={sectionKey}
-                                className="border border-gray-100 rounded-lg overflow-hidden"
+                                className="border border-gray-100 rounded-md overflow-hidden"
                               >
                                 <button
                                   onClick={() => toggleSection(sectionKey)}
-                                  className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                                  className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
                                 >
-                                  <span className="font-semibold text-gray-900 text-sm">
+                                  <span className="font-semibold text-gray-900 text-xs lg:text-sm">
                                     {section.title}
                                   </span>
                                   <div className="flex items-center space-x-2">
                                     <svg
-                                      className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+                                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                                         expandedSection === sectionKey
                                           ? "rotate-180"
                                           : ""
@@ -1041,19 +1002,19 @@ export default function Home() {
                                     transition-all duration-300 ease-in-out overflow-hidden
                                     ${
                                       expandedSection === sectionKey
-                                        ? "max-h-96 opacity-100"
+                                        ? "max-h-64 opacity-100"
                                         : "max-h-0 opacity-0"
                                     }
                                   `}
                                 >
-                                  <div className="px-4 pb-4 bg-gray-50">
-                                    <ul className="space-y-2">
+                                  <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
+                                    <ul className="space-y-1.5">
                                       {section.items.map((item, index) => (
                                         <li
                                           key={index}
-                                          className="flex items-start text-sm text-gray-700"
+                                          className="flex items-start text-xs lg:text-sm text-gray-700"
                                         >
-                                          <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                          <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
                                           <span className="leading-relaxed">
                                             {item}
                                           </span>
@@ -1114,14 +1075,14 @@ export default function Home() {
                               return (
                                 <div
                                   key={`prev-${packageKey}`}
-                                  className={`w-full flex-shrink-0 px-4 ${
+                                  className={`w-full flex-shrink-0 px-3 ${
                                     actualIndex === currentPackage
                                       ? "z-10"
                                       : "z-0"
                                   }`}
                                 >
                                   <div
-                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
+                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
                                       packageInfo.popular
                                         ? "ring-2 ring-amber-500"
                                         : "border border-gray-100"
@@ -1134,57 +1095,57 @@ export default function Home() {
                                     {/* Package content - same as original */}
                                     {packageInfo.popular && (
                                       <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
                                           ⭐ Most Popular
                                         </div>
                                       </div>
                                     )}
                                     <div
-                                      className={`p-4 sm:p-6 ${
+                                      className={`p-3 sm:p-4 ${
                                         packageInfo.popular
-                                          ? "pt-8 sm:pt-10"
+                                          ? "pt-6 sm:pt-7"
                                           : ""
                                       }`}
                                     >
-                                      <div className="text-center mb-4 sm:mb-6">
-                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                      <div className="text-center mb-3 sm:mb-4">
+                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                                           {packageInfo.title}
                                         </h3>
-                                        <div className="mb-4">
-                                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">
+                                        <div className="mb-3">
+                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
                                             {selectedCity
                                               ? currentCityPricing?.price
                                               : "X,XXX"}
                                           </div>
                                           {selectedCity &&
                                             !currentCityPricing?.startingAt && (
-                                              <div className="text-sm text-gray-500">
+                                              <div className="text-xs text-gray-500">
                                                 per sq. ft (Ex GST)
                                               </div>
                                             )}
                                         </div>
                                       </div>
-                                      <div className="border-t border-gray-100 mb-4"></div>
-                                      <div className="space-y-2">
+                                      <div className="border-t border-gray-100 mb-3"></div>
+                                      <div className="space-y-1.5">
                                         {Object.entries(
                                           packageInfo.sections
                                         ).map(([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
-                                            className="border border-gray-100 rounded-lg overflow-hidden"
+                                            className="border border-gray-100 rounded-md overflow-hidden"
                                           >
                                             <button
                                               onClick={() =>
                                                 toggleSection(sectionKey)
                                               }
-                                              className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors"
+                                              className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                             >
-                                              <span className="font-semibold text-gray-900 text-sm">
+                                              <span className="font-semibold text-gray-900 text-xs sm:text-sm">
                                                 {section.title}
                                               </span>
                                               <div className="flex items-center space-x-2">
                                                 <svg
-                                                  className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-200 ${
+                                                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                                                     expandedSection ===
                                                     sectionKey
                                                       ? "rotate-180"
@@ -1207,20 +1168,20 @@ export default function Home() {
                                                   ${
                                                     expandedSection ===
                                                     sectionKey
-                                                      ? "max-h-96 opacity-100"
+                                                      ? "max-h-48 opacity-100"
                                                       : "max-h-0 opacity-0"
                                                   }
                                                 `}
                                             >
-                                              <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-gray-50">
-                                                <ul className="space-y-2">
+                                              <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
+                                                <ul className="space-y-1.5">
                                                   {section.items.map(
                                                     (item, itemIndex) => (
                                                       <li
                                                         key={itemIndex}
-                                                        className="flex items-start text-sm text-gray-700"
+                                                        className="flex items-start text-xs sm:text-sm text-gray-700"
                                                       >
-                                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
                                                         <span className="leading-relaxed">
                                                           {item}
                                                         </span>
@@ -1251,12 +1212,12 @@ export default function Home() {
                               return (
                                 <div
                                   key={packageKey}
-                                  className={`w-full flex-shrink-0 px-4 ${
+                                  className={`w-full flex-shrink-0 px-3 ${
                                     index === currentPackage ? "z-10" : "z-0"
                                   }`}
                                 >
                                   <div
-                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
+                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
                                       packageInfo.popular
                                         ? "ring-2 ring-amber-500"
                                         : "border border-gray-100"
@@ -1269,7 +1230,7 @@ export default function Home() {
                                     {/* Popular Badge */}
                                     {packageInfo.popular && (
                                       <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
                                           ⭐ Most Popular
                                         </div>
                                       </div>
@@ -1277,28 +1238,28 @@ export default function Home() {
 
                                     {/* Card Content */}
                                     <div
-                                      className={`p-4 sm:p-6 ${
+                                      className={`p-3 sm:p-4 ${
                                         packageInfo.popular
-                                          ? "pt-8 sm:pt-10"
+                                          ? "pt-6 sm:pt-7"
                                           : ""
                                       }`}
                                     >
                                       {/* Package Title */}
-                                      <div className="text-center mb-4 sm:mb-6">
-                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                      <div className="text-center mb-3 sm:mb-4">
+                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                                           {packageInfo.title}
                                         </h3>
 
                                         {/* Price Display */}
-                                        <div className="mb-4">
-                                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">
+                                        <div className="mb-3">
+                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
                                             {selectedCity
                                               ? currentCityPricing?.price
                                               : "X,XXX"}
                                           </div>
                                           {selectedCity &&
                                             !currentCityPricing?.startingAt && (
-                                              <div className="text-sm text-gray-500">
+                                              <div className="text-xs text-gray-500">
                                                 per sq. ft (Ex GST)
                                               </div>
                                             )}
@@ -1306,29 +1267,29 @@ export default function Home() {
                                       </div>
 
                                       {/* Divider */}
-                                      <div className="border-t border-gray-100 mb-4"></div>
+                                      <div className="border-t border-gray-100 mb-3"></div>
 
                                       {/* Expandable Sections */}
-                                      <div className="space-y-2">
+                                      <div className="space-y-1.5">
                                         {Object.entries(
                                           packageInfo.sections
                                         ).map(([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
-                                            className="border border-gray-100 rounded-lg overflow-hidden"
+                                            className="border border-gray-100 rounded-md overflow-hidden"
                                           >
                                             <button
                                               onClick={() =>
                                                 toggleSection(sectionKey)
                                               }
-                                              className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors"
+                                              className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                             >
-                                              <span className="font-semibold text-gray-900 text-sm">
+                                              <span className="font-semibold text-gray-900 text-xs sm:text-sm">
                                                 {section.title}
                                               </span>
                                               <div className="flex items-center space-x-2">
                                                 <svg
-                                                  className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-200 ${
+                                                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                                                     expandedSection ===
                                                     sectionKey
                                                       ? "rotate-180"
@@ -1351,20 +1312,20 @@ export default function Home() {
                                                 transition-all duration-300 ease-in-out overflow-hidden
                                                 ${
                                                   expandedSection === sectionKey
-                                                    ? "max-h-96 opacity-100"
+                                                    ? "max-h-48 opacity-100"
                                                     : "max-h-0 opacity-0"
                                                 }
                                               `}
                                             >
-                                              <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-gray-50">
-                                                <ul className="space-y-2">
+                                              <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
+                                                <ul className="space-y-1.5">
                                                   {section.items.map(
                                                     (item, itemIndex) => (
                                                       <li
                                                         key={itemIndex}
-                                                        className="flex items-start text-sm text-gray-700"
+                                                        className="flex items-start text-xs sm:text-sm text-gray-700"
                                                       >
-                                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
                                                         <span className="leading-relaxed">
                                                           {item}
                                                         </span>
@@ -1396,14 +1357,14 @@ export default function Home() {
                               return (
                                 <div
                                   key={`next-${packageKey}`}
-                                  className={`w-full flex-shrink-0 px-4 ${
+                                  className={`w-full flex-shrink-0 px-3 ${
                                     actualIndex === currentPackage
                                       ? "z-10"
                                       : "z-0"
                                   }`}
                                 >
                                   <div
-                                    className={`relative bg-white rounded-2xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
+                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
                                       packageInfo.popular
                                         ? "ring-2 ring-amber-500"
                                         : "border border-gray-100"
@@ -1416,57 +1377,57 @@ export default function Home() {
                                     {/* Package content - same as original */}
                                     {packageInfo.popular && (
                                       <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-2 text-sm font-semibold">
+                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
                                           ⭐ Most Popular
                                         </div>
                                       </div>
                                     )}
                                     <div
-                                      className={`p-4 sm:p-6 ${
+                                      className={`p-3 sm:p-4 ${
                                         packageInfo.popular
-                                          ? "pt-8 sm:pt-10"
+                                          ? "pt-6 sm:pt-7"
                                           : ""
                                       }`}
                                     >
-                                      <div className="text-center mb-4 sm:mb-6">
-                                        <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                                      <div className="text-center mb-3 sm:mb-4">
+                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                                           {packageInfo.title}
                                         </h3>
-                                        <div className="mb-4">
-                                          <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">
+                                        <div className="mb-3">
+                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
                                             {selectedCity
                                               ? currentCityPricing?.price
                                               : "X,XXX"}
                                           </div>
                                           {selectedCity &&
                                             !currentCityPricing?.startingAt && (
-                                              <div className="text-sm text-gray-500">
+                                              <div className="text-xs text-gray-500">
                                                 per sq. ft (Ex GST)
                                               </div>
                                             )}
                                         </div>
                                       </div>
-                                      <div className="border-t border-gray-100 mb-4"></div>
-                                      <div className="space-y-2">
+                                      <div className="border-t border-gray-100 mb-3"></div>
+                                      <div className="space-y-1.5">
                                         {Object.entries(
                                           packageInfo.sections
                                         ).map(([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
-                                            className="border border-gray-100 rounded-lg overflow-hidden"
+                                            className="border border-gray-100 rounded-md overflow-hidden"
                                           >
                                             <button
                                               onClick={() =>
                                                 toggleSection(sectionKey)
                                               }
-                                              className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-gray-50 transition-colors"
+                                              className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                             >
-                                              <span className="font-semibold text-gray-900 text-sm">
+                                              <span className="font-semibold text-gray-900 text-xs sm:text-sm">
                                                 {section.title}
                                               </span>
                                               <div className="flex items-center space-x-2">
                                                 <svg
-                                                  className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-200 ${
+                                                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                                                     expandedSection ===
                                                     sectionKey
                                                       ? "rotate-180"
@@ -1489,20 +1450,20 @@ export default function Home() {
                                                   ${
                                                     expandedSection ===
                                                     sectionKey
-                                                      ? "max-h-96 opacity-100"
+                                                      ? "max-h-48 opacity-100"
                                                       : "max-h-0 opacity-0"
                                                   }
                                                 `}
                                             >
-                                              <div className="px-3 sm:px-4 pb-3 sm:pb-4 bg-gray-50">
-                                                <ul className="space-y-2">
+                                              <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
+                                                <ul className="space-y-1.5">
                                                   {section.items.map(
                                                     (item, itemIndex) => (
                                                       <li
                                                         key={itemIndex}
-                                                        className="flex items-start text-sm text-gray-700"
+                                                        className="flex items-start text-xs sm:text-sm text-gray-700"
                                                       >
-                                                        <div className="w-2 h-2 bg-amber-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
                                                         <span className="leading-relaxed">
                                                           {item}
                                                         </span>
@@ -1527,10 +1488,10 @@ export default function Home() {
                       {/* Navigation Arrows */}
                       <button
                         onClick={prevPackage}
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-20"
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-20"
                       >
                         <svg
-                          className="w-5 h-5"
+                          className="w-4 h-4"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -1545,10 +1506,10 @@ export default function Home() {
                       </button>
                       <button
                         onClick={nextPackage}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-20"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-20"
                       >
                         <svg
-                          className="w-5 h-5"
+                          className="w-4 h-4"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -1563,7 +1524,7 @@ export default function Home() {
                       </button>
 
                       {/* Pagination Dots */}
-                      <div className="flex justify-center mt-6 space-x-2">
+                      <div className="flex justify-center mt-4 space-x-1.5">
                         {packageEntries.map((_, index) => {
                           const actualCurrentPackage =
                             ((currentPackage % packageEntries.length) +
@@ -1573,7 +1534,7 @@ export default function Home() {
                             <button
                               key={index}
                               onClick={() => goToPackage(index)}
-                              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                              className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
                                 index === actualCurrentPackage
                                   ? "bg-amber-600"
                                   : "bg-gray-300 hover:bg-gray-400"
@@ -2088,18 +2049,6 @@ export default function Home() {
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />
-
-      {/* Image Modal */}
-      <ImageModal
-        isOpen={modalOpen}
-        onClose={closeModal}
-        images={modalImages}
-        currentIndex={modalCurrentIndex}
-        onNext={nextModalImage}
-        onPrev={prevModalImage}
-        onGoTo={goToModalImage}
-        title={modalTitle}
-      />
     </div>
   );
 }
