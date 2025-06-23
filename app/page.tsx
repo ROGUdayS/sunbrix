@@ -377,8 +377,18 @@ export default function Home() {
     // We'll decide the action only at the end
   };
 
-  const handlePackageTouchEnd = () => {
+  const handlePackageTouchEnd = (e: React.TouchEvent) => {
     if (!packageTouchStart || !packageTouchCurrent) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const elementCenter = rect.top + rect.height / 2;
+    const viewportCenter = viewportHeight / 2;
+    const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
+    const maxDistance = viewportHeight / 2;
+
+    // Calculate how far the element is from viewport center (0 = center, 1 = edge)
+    const positionFactor = Math.min(distanceFromCenter / maxDistance, 1);
 
     const deltaX = packageTouchStart.x - packageTouchCurrent.x;
     const deltaY = packageTouchStart.y - packageTouchCurrent.y;
@@ -389,19 +399,27 @@ export default function Home() {
       (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
     );
 
-    // Only trigger horizontal swipe if:
-    // 1. Angle is less than 30 degrees (mostly horizontal)
-    // 2. Horizontal distance is at least 60px
-    // 3. Gesture took less than 300ms (quick swipe)
-    // 4. Vertical movement is less than 30px
+    // Adjust sensitivity based on position - stricter when not centered
+    const baseAngleThreshold = 25;
+    const baseDistanceThreshold = 70;
+    const baseTimeThreshold = 300;
+    const baseVerticalThreshold = 25;
+
+    // Make thresholds stricter when element is not in center of viewport
+    const angleThreshold = baseAngleThreshold - positionFactor * 10; // 25° to 15°
+    const distanceThreshold = baseDistanceThreshold + positionFactor * 30; // 70px to 100px
+    const timeThreshold = baseTimeThreshold - positionFactor * 100; // 300ms to 200ms
+    const verticalThreshold = baseVerticalThreshold - positionFactor * 10; // 25px to 15px
+
+    // Only trigger horizontal swipe with position-adjusted thresholds
     if (
-      angle < 30 &&
-      Math.abs(deltaX) > 60 &&
-      timeDiff < 300 &&
-      Math.abs(deltaY) < 30
+      angle < angleThreshold &&
+      Math.abs(deltaX) > distanceThreshold &&
+      timeDiff < timeThreshold &&
+      Math.abs(deltaY) < verticalThreshold
     ) {
-      const isLeftSwipe = deltaX > 60;
-      const isRightSwipe = deltaX < -60;
+      const isLeftSwipe = deltaX > distanceThreshold;
+      const isRightSwipe = deltaX < -distanceThreshold;
 
       if (isLeftSwipe) {
         nextPackage();
@@ -434,9 +452,19 @@ export default function Home() {
     // We'll decide the action only at the end
   };
 
-  const handleGalleryTouchEnd = () => {
+  const handleGalleryTouchEnd = (e: React.TouchEvent) => {
     if (!galleryTouchStart || !galleryTouchCurrent || isGalleryTransitioning)
       return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const elementCenter = rect.top + rect.height / 2;
+    const viewportCenter = viewportHeight / 2;
+    const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
+    const maxDistance = viewportHeight / 2;
+
+    // Calculate how far the element is from viewport center (0 = center, 1 = edge)
+    const positionFactor = Math.min(distanceFromCenter / maxDistance, 1);
 
     const deltaX = galleryTouchStart.x - galleryTouchCurrent.x;
     const deltaY = galleryTouchStart.y - galleryTouchCurrent.y;
@@ -447,21 +475,29 @@ export default function Home() {
       (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
     );
 
-    // Only trigger horizontal swipe if:
-    // 1. Angle is less than 30 degrees (mostly horizontal)
-    // 2. Horizontal distance is at least 60px
-    // 3. Gesture took less than 300ms (quick swipe)
-    // 4. Vertical movement is less than 30px
+    // Adjust sensitivity based on position - stricter when not centered
+    const baseAngleThreshold = 25;
+    const baseDistanceThreshold = 70;
+    const baseTimeThreshold = 300;
+    const baseVerticalThreshold = 25;
+
+    // Make thresholds stricter when element is not in center of viewport
+    const angleThreshold = baseAngleThreshold - positionFactor * 10; // 25° to 15°
+    const distanceThreshold = baseDistanceThreshold + positionFactor * 30; // 70px to 100px
+    const timeThreshold = baseTimeThreshold - positionFactor * 100; // 300ms to 200ms
+    const verticalThreshold = baseVerticalThreshold - positionFactor * 10; // 25px to 15px
+
+    // Only trigger horizontal swipe with position-adjusted thresholds
     if (
-      angle < 30 &&
-      Math.abs(deltaX) > 60 &&
-      timeDiff < 300 &&
-      Math.abs(deltaY) < 30
+      angle < angleThreshold &&
+      Math.abs(deltaX) > distanceThreshold &&
+      timeDiff < timeThreshold &&
+      Math.abs(deltaY) < verticalThreshold
     ) {
       setIsGalleryTransitioning(true);
 
-      const isLeftSwipe = deltaX > 60;
-      const isRightSwipe = deltaX < -60;
+      const isLeftSwipe = deltaX > distanceThreshold;
+      const isRightSwipe = deltaX < -distanceThreshold;
 
       if (isLeftSwipe) {
         nextSlide();
@@ -499,8 +535,18 @@ export default function Home() {
     // We'll decide the action only at the end
   };
 
-  const handleTestimonialTouchEnd = () => {
+  const handleTestimonialTouchEnd = (e: React.TouchEvent) => {
     if (!testimonialTouchStart || !testimonialTouchCurrent) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const elementCenter = rect.top + rect.height / 2;
+    const viewportCenter = viewportHeight / 2;
+    const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
+    const maxDistance = viewportHeight / 2;
+
+    // Calculate how far the element is from viewport center (0 = center, 1 = edge)
+    const positionFactor = Math.min(distanceFromCenter / maxDistance, 1);
 
     const deltaX = testimonialTouchStart.x - testimonialTouchCurrent.x;
     const deltaY = testimonialTouchStart.y - testimonialTouchCurrent.y;
@@ -511,19 +557,27 @@ export default function Home() {
       (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
     );
 
-    // Only trigger horizontal swipe if:
-    // 1. Angle is less than 30 degrees (mostly horizontal)
-    // 2. Horizontal distance is at least 60px
-    // 3. Gesture took less than 300ms (quick swipe)
-    // 4. Vertical movement is less than 30px
+    // Adjust sensitivity based on position - stricter when not centered
+    const baseAngleThreshold = 25;
+    const baseDistanceThreshold = 70;
+    const baseTimeThreshold = 300;
+    const baseVerticalThreshold = 25;
+
+    // Make thresholds stricter when element is not in center of viewport
+    const angleThreshold = baseAngleThreshold - positionFactor * 10; // 25° to 15°
+    const distanceThreshold = baseDistanceThreshold + positionFactor * 30; // 70px to 100px
+    const timeThreshold = baseTimeThreshold - positionFactor * 100; // 300ms to 200ms
+    const verticalThreshold = baseVerticalThreshold - positionFactor * 10; // 25px to 15px
+
+    // Only trigger horizontal swipe with position-adjusted thresholds
     if (
-      angle < 30 &&
-      Math.abs(deltaX) > 60 &&
-      timeDiff < 300 &&
-      Math.abs(deltaY) < 30
+      angle < angleThreshold &&
+      Math.abs(deltaX) > distanceThreshold &&
+      timeDiff < timeThreshold &&
+      Math.abs(deltaY) < verticalThreshold
     ) {
-      const isLeftSwipe = deltaX > 60;
-      const isRightSwipe = deltaX < -60;
+      const isLeftSwipe = deltaX > distanceThreshold;
+      const isRightSwipe = deltaX < -distanceThreshold;
 
       if (isLeftSwipe) {
         nextTestimonial();
