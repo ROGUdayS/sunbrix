@@ -365,7 +365,7 @@ export default function Home() {
       y: touch.clientY,
       time: Date.now(),
     });
-    setPackageTouchCurrent(null);
+    setPackageTouchCurrent({ x: touch.clientX, y: touch.clientY });
   };
 
   const handlePackageTouchMove = (e: React.TouchEvent) => {
@@ -377,53 +377,35 @@ export default function Home() {
     // We'll decide the action only at the end
   };
 
-  const handlePackageTouchEnd = (e: React.TouchEvent) => {
+  const handlePackageTouchEnd = () => {
     if (!packageTouchStart || !packageTouchCurrent) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const elementCenter = rect.top + rect.height / 2;
-    const viewportCenter = viewportHeight / 2;
-    const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-    const maxDistance = viewportHeight / 2;
-
-    // Calculate how far the element is from viewport center (0 = center, 1 = edge)
-    const positionFactor = Math.min(distanceFromCenter / maxDistance, 1);
 
     const deltaX = packageTouchStart.x - packageTouchCurrent.x;
     const deltaY = packageTouchStart.y - packageTouchCurrent.y;
     const timeDiff = Date.now() - packageTouchStart.time;
 
-    // Calculate the angle of the swipe
-    const angle = Math.abs(
-      (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
-    );
+    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
+    const velocityX = Math.abs(deltaX) / timeDiff;
+    const velocityY = Math.abs(deltaY) / timeDiff;
 
-    // Adjust sensitivity based on position - stricter when not centered
-    const baseAngleThreshold = 25;
-    const baseDistanceThreshold = 70;
-    const baseTimeThreshold = 300;
-    const baseVerticalThreshold = 25;
+    // JSW-style detection: Focus on clear horizontal intent with good velocity
+    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
+    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
+    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
+    const isQuickGesture = timeDiff < 400; // Allow slightly more time
+    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
 
-    // Make thresholds stricter when element is not in center of viewport
-    const angleThreshold = baseAngleThreshold - positionFactor * 10; // 25° to 15°
-    const distanceThreshold = baseDistanceThreshold + positionFactor * 30; // 70px to 100px
-    const timeThreshold = baseTimeThreshold - positionFactor * 100; // 300ms to 200ms
-    const verticalThreshold = baseVerticalThreshold - positionFactor * 10; // 25px to 15px
-
-    // Only trigger horizontal swipe with position-adjusted thresholds
+    // Only trigger if it's clearly a horizontal swipe with good momentum
     if (
-      angle < angleThreshold &&
-      Math.abs(deltaX) > distanceThreshold &&
-      timeDiff < timeThreshold &&
-      Math.abs(deltaY) < verticalThreshold
+      isHorizontalDominant &&
+      hasGoodHorizontalVelocity &&
+      hasLowVerticalVelocity &&
+      isQuickGesture &&
+      isSignificantDistance
     ) {
-      const isLeftSwipe = deltaX > distanceThreshold;
-      const isRightSwipe = deltaX < -distanceThreshold;
-
-      if (isLeftSwipe) {
+      if (deltaX > 50) {
         nextPackage();
-      } else if (isRightSwipe) {
+      } else if (deltaX < -50) {
         prevPackage();
       }
     }
@@ -440,7 +422,7 @@ export default function Home() {
       y: touch.clientY,
       time: Date.now(),
     });
-    setGalleryTouchCurrent(null);
+    setGalleryTouchCurrent({ x: touch.clientX, y: touch.clientY });
   };
 
   const handleGalleryTouchMove = (e: React.TouchEvent) => {
@@ -452,56 +434,38 @@ export default function Home() {
     // We'll decide the action only at the end
   };
 
-  const handleGalleryTouchEnd = (e: React.TouchEvent) => {
+  const handleGalleryTouchEnd = () => {
     if (!galleryTouchStart || !galleryTouchCurrent || isGalleryTransitioning)
       return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const elementCenter = rect.top + rect.height / 2;
-    const viewportCenter = viewportHeight / 2;
-    const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-    const maxDistance = viewportHeight / 2;
-
-    // Calculate how far the element is from viewport center (0 = center, 1 = edge)
-    const positionFactor = Math.min(distanceFromCenter / maxDistance, 1);
 
     const deltaX = galleryTouchStart.x - galleryTouchCurrent.x;
     const deltaY = galleryTouchStart.y - galleryTouchCurrent.y;
     const timeDiff = Date.now() - galleryTouchStart.time;
 
-    // Calculate the angle of the swipe
-    const angle = Math.abs(
-      (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
-    );
+    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
+    const velocityX = Math.abs(deltaX) / timeDiff;
+    const velocityY = Math.abs(deltaY) / timeDiff;
 
-    // Adjust sensitivity based on position - stricter when not centered
-    const baseAngleThreshold = 25;
-    const baseDistanceThreshold = 70;
-    const baseTimeThreshold = 300;
-    const baseVerticalThreshold = 25;
+    // JSW-style detection: Focus on clear horizontal intent with good velocity
+    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
+    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
+    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
+    const isQuickGesture = timeDiff < 400; // Allow slightly more time
+    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
 
-    // Make thresholds stricter when element is not in center of viewport
-    const angleThreshold = baseAngleThreshold - positionFactor * 10; // 25° to 15°
-    const distanceThreshold = baseDistanceThreshold + positionFactor * 30; // 70px to 100px
-    const timeThreshold = baseTimeThreshold - positionFactor * 100; // 300ms to 200ms
-    const verticalThreshold = baseVerticalThreshold - positionFactor * 10; // 25px to 15px
-
-    // Only trigger horizontal swipe with position-adjusted thresholds
+    // Only trigger if it's clearly a horizontal swipe with good momentum
     if (
-      angle < angleThreshold &&
-      Math.abs(deltaX) > distanceThreshold &&
-      timeDiff < timeThreshold &&
-      Math.abs(deltaY) < verticalThreshold
+      isHorizontalDominant &&
+      hasGoodHorizontalVelocity &&
+      hasLowVerticalVelocity &&
+      isQuickGesture &&
+      isSignificantDistance
     ) {
       setIsGalleryTransitioning(true);
 
-      const isLeftSwipe = deltaX > distanceThreshold;
-      const isRightSwipe = deltaX < -distanceThreshold;
-
-      if (isLeftSwipe) {
+      if (deltaX > 50) {
         nextSlide();
-      } else if (isRightSwipe) {
+      } else if (deltaX < -50) {
         prevSlide();
       }
 
@@ -523,7 +487,7 @@ export default function Home() {
       y: touch.clientY,
       time: Date.now(),
     });
-    setTestimonialTouchCurrent(null);
+    setTestimonialTouchCurrent({ x: touch.clientX, y: touch.clientY });
   };
 
   const handleTestimonialTouchMove = (e: React.TouchEvent) => {
@@ -535,53 +499,35 @@ export default function Home() {
     // We'll decide the action only at the end
   };
 
-  const handleTestimonialTouchEnd = (e: React.TouchEvent) => {
+  const handleTestimonialTouchEnd = () => {
     if (!testimonialTouchStart || !testimonialTouchCurrent) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const elementCenter = rect.top + rect.height / 2;
-    const viewportCenter = viewportHeight / 2;
-    const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-    const maxDistance = viewportHeight / 2;
-
-    // Calculate how far the element is from viewport center (0 = center, 1 = edge)
-    const positionFactor = Math.min(distanceFromCenter / maxDistance, 1);
 
     const deltaX = testimonialTouchStart.x - testimonialTouchCurrent.x;
     const deltaY = testimonialTouchStart.y - testimonialTouchCurrent.y;
     const timeDiff = Date.now() - testimonialTouchStart.time;
 
-    // Calculate the angle of the swipe
-    const angle = Math.abs(
-      (Math.atan2(Math.abs(deltaY), Math.abs(deltaX)) * 180) / Math.PI
-    );
+    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
+    const velocityX = Math.abs(deltaX) / timeDiff;
+    const velocityY = Math.abs(deltaY) / timeDiff;
 
-    // Adjust sensitivity based on position - stricter when not centered
-    const baseAngleThreshold = 25;
-    const baseDistanceThreshold = 70;
-    const baseTimeThreshold = 300;
-    const baseVerticalThreshold = 25;
+    // JSW-style detection: Focus on clear horizontal intent with good velocity
+    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
+    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
+    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
+    const isQuickGesture = timeDiff < 400; // Allow slightly more time
+    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
 
-    // Make thresholds stricter when element is not in center of viewport
-    const angleThreshold = baseAngleThreshold - positionFactor * 10; // 25° to 15°
-    const distanceThreshold = baseDistanceThreshold + positionFactor * 30; // 70px to 100px
-    const timeThreshold = baseTimeThreshold - positionFactor * 100; // 300ms to 200ms
-    const verticalThreshold = baseVerticalThreshold - positionFactor * 10; // 25px to 15px
-
-    // Only trigger horizontal swipe with position-adjusted thresholds
+    // Only trigger if it's clearly a horizontal swipe with good momentum
     if (
-      angle < angleThreshold &&
-      Math.abs(deltaX) > distanceThreshold &&
-      timeDiff < timeThreshold &&
-      Math.abs(deltaY) < verticalThreshold
+      isHorizontalDominant &&
+      hasGoodHorizontalVelocity &&
+      hasLowVerticalVelocity &&
+      isQuickGesture &&
+      isSignificantDistance
     ) {
-      const isLeftSwipe = deltaX > distanceThreshold;
-      const isRightSwipe = deltaX < -distanceThreshold;
-
-      if (isLeftSwipe) {
+      if (deltaX > 50) {
         nextTestimonial();
-      } else if (isRightSwipe) {
+      } else if (deltaX < -50) {
         prevTestimonial();
       }
     }
