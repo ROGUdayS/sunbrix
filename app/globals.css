@@ -36,43 +36,41 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Optimize carousel containers for touch */
+/* JSW-style carousel containers for ultra-smooth touch */
 .carousel-container {
-  touch-action: auto;
+  touch-action: pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
-  /* Add subtle visual cue for swipeable areas */
   position: relative;
+  overscroll-behavior-x: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Hardware acceleration for smooth performance */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: auto;
+  /* Prevent momentum scrolling interference */
+  -webkit-overflow-scrolling: auto;
 }
 
-.carousel-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 1;
-  /* Very subtle gradient to indicate swipeable area */
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.02) 0%,
-    transparent 5%,
-    transparent 95%,
-    rgba(0, 0, 0, 0.02) 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Show subtle hint on hover/touch */
-.carousel-container:hover::before {
-  opacity: 1;
-}
-
-/* Improve touch feedback for carousel items */
+/* Ultra-smooth transitions with JSW-style easing */
 .carousel-container .transition-transform {
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Optimize all carousel children for 60fps */
+.carousel-container * {
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove any visual feedback that might interfere with smooth scrolling */
+.carousel-container::before {
+  display: none;
 }
 
 /* Prevent text selection during touch interactions */
