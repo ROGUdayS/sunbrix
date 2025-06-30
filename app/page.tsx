@@ -348,8 +348,15 @@ export default function Home() {
     const touch = e.touches[0];
     setPackageTouchCurrent({ x: touch.clientX, y: touch.clientY });
 
-    // Don't prevent default during move - let the browser handle scrolling naturally
-    // We'll decide the action only at the end
+    // Calculate deltas to determine scroll direction intent
+    const deltaX = Math.abs(packageTouchStart.x - touch.clientX);
+    const deltaY = Math.abs(packageTouchStart.y - touch.clientY);
+
+    // Only prevent default if it's clearly a horizontal swipe
+    // This allows vertical scrolling to work normally
+    if (deltaX > deltaY && deltaX > 30) {
+      e.preventDefault();
+    }
   };
 
   const handlePackageTouchEnd = () => {
@@ -359,28 +366,22 @@ export default function Home() {
     const deltaY = packageTouchStart.y - packageTouchCurrent.y;
     const timeDiff = Date.now() - packageTouchStart.time;
 
-    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
-    const velocityX = Math.abs(deltaX) / timeDiff;
-    const velocityY = Math.abs(deltaY) / timeDiff;
+    // Much more restrictive conditions to prevent accidental triggers
+    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 2; // Increased threshold
+    const isSignificantHorizontalDistance = Math.abs(deltaX) > 80; // Increased distance requirement
+    const isLimitedVerticalMovement = Math.abs(deltaY) < 40; // Stricter vertical limit
+    const isReasonableTime = timeDiff > 100 && timeDiff < 600; // Better time window
 
-    // JSW-style detection: Focus on clear horizontal intent with good velocity
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
-    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
-    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
-    const isQuickGesture = timeDiff < 400; // Allow slightly more time
-    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
-
-    // Only trigger if it's clearly a horizontal swipe with good momentum
+    // Only trigger if ALL conditions are met for a clear horizontal swipe
     if (
       isHorizontalDominant &&
-      hasGoodHorizontalVelocity &&
-      hasLowVerticalVelocity &&
-      isQuickGesture &&
-      isSignificantDistance
+      isSignificantHorizontalDistance &&
+      isLimitedVerticalMovement &&
+      isReasonableTime
     ) {
-      if (deltaX > 50) {
+      if (deltaX > 80) {
         nextPackage();
-      } else if (deltaX < -50) {
+      } else if (deltaX < -80) {
         prevPackage();
       }
     }
@@ -405,8 +406,15 @@ export default function Home() {
     const touch = e.touches[0];
     setGalleryTouchCurrent({ x: touch.clientX, y: touch.clientY });
 
-    // Don't prevent default during move - let the browser handle scrolling naturally
-    // We'll decide the action only at the end
+    // Calculate deltas to determine scroll direction intent
+    const deltaX = Math.abs(galleryTouchStart.x - touch.clientX);
+    const deltaY = Math.abs(galleryTouchStart.y - touch.clientY);
+
+    // Only prevent default if it's clearly a horizontal swipe
+    // This allows vertical scrolling to work normally
+    if (deltaX > deltaY && deltaX > 30) {
+      e.preventDefault();
+    }
   };
 
   const handleGalleryTouchEnd = () => {
@@ -417,30 +425,24 @@ export default function Home() {
     const deltaY = galleryTouchStart.y - galleryTouchCurrent.y;
     const timeDiff = Date.now() - galleryTouchStart.time;
 
-    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
-    const velocityX = Math.abs(deltaX) / timeDiff;
-    const velocityY = Math.abs(deltaY) / timeDiff;
+    // Much more restrictive conditions to prevent accidental triggers
+    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 2; // Increased threshold
+    const isSignificantHorizontalDistance = Math.abs(deltaX) > 80; // Increased distance requirement
+    const isLimitedVerticalMovement = Math.abs(deltaY) < 40; // Stricter vertical limit
+    const isReasonableTime = timeDiff > 100 && timeDiff < 600; // Better time window
 
-    // JSW-style detection: Focus on clear horizontal intent with good velocity
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
-    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
-    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
-    const isQuickGesture = timeDiff < 400; // Allow slightly more time
-    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
-
-    // Only trigger if it's clearly a horizontal swipe with good momentum
+    // Only trigger if ALL conditions are met for a clear horizontal swipe
     if (
       isHorizontalDominant &&
-      hasGoodHorizontalVelocity &&
-      hasLowVerticalVelocity &&
-      isQuickGesture &&
-      isSignificantDistance
+      isSignificantHorizontalDistance &&
+      isLimitedVerticalMovement &&
+      isReasonableTime
     ) {
       setIsGalleryTransitioning(true);
 
-      if (deltaX > 50) {
+      if (deltaX > 80) {
         nextSlide();
-      } else if (deltaX < -50) {
+      } else if (deltaX < -80) {
         prevSlide();
       }
 
@@ -470,8 +472,15 @@ export default function Home() {
     const touch = e.touches[0];
     setTestimonialTouchCurrent({ x: touch.clientX, y: touch.clientY });
 
-    // Don't prevent default during move - let the browser handle scrolling naturally
-    // We'll decide the action only at the end
+    // Calculate deltas to determine scroll direction intent
+    const deltaX = Math.abs(testimonialTouchStart.x - touch.clientX);
+    const deltaY = Math.abs(testimonialTouchStart.y - touch.clientY);
+
+    // Only prevent default if it's clearly a horizontal swipe
+    // This allows vertical scrolling to work normally
+    if (deltaX > deltaY && deltaX > 30) {
+      e.preventDefault();
+    }
   };
 
   const handleTestimonialTouchEnd = () => {
@@ -481,28 +490,22 @@ export default function Home() {
     const deltaY = testimonialTouchStart.y - testimonialTouchCurrent.y;
     const timeDiff = Date.now() - testimonialTouchStart.time;
 
-    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
-    const velocityX = Math.abs(deltaX) / timeDiff;
-    const velocityY = Math.abs(deltaY) / timeDiff;
+    // Much more restrictive conditions to prevent accidental triggers
+    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 2; // Increased threshold
+    const isSignificantHorizontalDistance = Math.abs(deltaX) > 80; // Increased distance requirement
+    const isLimitedVerticalMovement = Math.abs(deltaY) < 40; // Stricter vertical limit
+    const isReasonableTime = timeDiff > 100 && timeDiff < 600; // Better time window
 
-    // JSW-style detection: Focus on clear horizontal intent with good velocity
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
-    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
-    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
-    const isQuickGesture = timeDiff < 400; // Allow slightly more time
-    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
-
-    // Only trigger if it's clearly a horizontal swipe with good momentum
+    // Only trigger if ALL conditions are met for a clear horizontal swipe
     if (
       isHorizontalDominant &&
-      hasGoodHorizontalVelocity &&
-      hasLowVerticalVelocity &&
-      isQuickGesture &&
-      isSignificantDistance
+      isSignificantHorizontalDistance &&
+      isLimitedVerticalMovement &&
+      isReasonableTime
     ) {
-      if (deltaX > 50) {
+      if (deltaX > 80) {
         nextTestimonial();
-      } else if (deltaX < -50) {
+      } else if (deltaX < -80) {
         prevTestimonial();
       }
     }
