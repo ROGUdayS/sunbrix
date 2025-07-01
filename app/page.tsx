@@ -44,40 +44,6 @@ export default function Home() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Touch state for packages carousel
-  const [packageTouchStart, setPackageTouchStart] = useState<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const [packageTouchCurrent, setPackageTouchCurrent] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-
-  // Touch state for gallery carousel
-  const [galleryTouchStart, setGalleryTouchStart] = useState<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const [galleryTouchCurrent, setGalleryTouchCurrent] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
-
-  // Touch state for testimonials carousel
-  const [testimonialTouchStart, setTestimonialTouchStart] = useState<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const [testimonialTouchCurrent, setTestimonialTouchCurrent] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-
   // Add state for projects to fix hydration issue
   const [projects, setProjects] = useState<
     {
@@ -332,188 +298,6 @@ export default function Home() {
     setIsTransitioning(false);
   }, [selectedServiceType]);
 
-  // Touch handlers for packages carousel
-  const handlePackageTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setPackageTouchStart({
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    });
-    setPackageTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handlePackageTouchMove = (e: React.TouchEvent) => {
-    if (!packageTouchStart) return;
-    const touch = e.touches[0];
-    setPackageTouchCurrent({ x: touch.clientX, y: touch.clientY });
-
-    // Calculate deltas to determine scroll direction intent
-    const deltaX = Math.abs(packageTouchStart.x - touch.clientX);
-    const deltaY = Math.abs(packageTouchStart.y - touch.clientY);
-
-    // Only prevent default if it's clearly a horizontal swipe
-    // This allows vertical scrolling to work normally
-    if (deltaX > deltaY && deltaX > 30) {
-      e.preventDefault();
-    }
-  };
-
-  const handlePackageTouchEnd = () => {
-    if (!packageTouchStart || !packageTouchCurrent) return;
-
-    const deltaX = packageTouchStart.x - packageTouchCurrent.x;
-    const deltaY = packageTouchStart.y - packageTouchCurrent.y;
-    const timeDiff = Date.now() - packageTouchStart.time;
-
-    // Much more restrictive conditions to prevent accidental triggers
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 2; // Increased threshold
-    const isSignificantHorizontalDistance = Math.abs(deltaX) > 80; // Increased distance requirement
-    const isLimitedVerticalMovement = Math.abs(deltaY) < 40; // Stricter vertical limit
-    const isReasonableTime = timeDiff > 100 && timeDiff < 600; // Better time window
-
-    // Only trigger if ALL conditions are met for a clear horizontal swipe
-    if (
-      isHorizontalDominant &&
-      isSignificantHorizontalDistance &&
-      isLimitedVerticalMovement &&
-      isReasonableTime
-    ) {
-      if (deltaX > 80) {
-        nextPackage();
-      } else if (deltaX < -80) {
-        prevPackage();
-      }
-    }
-
-    setPackageTouchStart(null);
-    setPackageTouchCurrent(null);
-  };
-
-  // Touch handlers for gallery carousel
-  const handleGalleryTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setGalleryTouchStart({
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    });
-    setGalleryTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleGalleryTouchMove = (e: React.TouchEvent) => {
-    if (!galleryTouchStart) return;
-    const touch = e.touches[0];
-    setGalleryTouchCurrent({ x: touch.clientX, y: touch.clientY });
-
-    // Calculate deltas to determine scroll direction intent
-    const deltaX = Math.abs(galleryTouchStart.x - touch.clientX);
-    const deltaY = Math.abs(galleryTouchStart.y - touch.clientY);
-
-    // Only prevent default if it's clearly a horizontal swipe
-    // This allows vertical scrolling to work normally
-    if (deltaX > deltaY && deltaX > 30) {
-      e.preventDefault();
-    }
-  };
-
-  const handleGalleryTouchEnd = () => {
-    if (!galleryTouchStart || !galleryTouchCurrent || isGalleryTransitioning)
-      return;
-
-    const deltaX = galleryTouchStart.x - galleryTouchCurrent.x;
-    const deltaY = galleryTouchStart.y - galleryTouchCurrent.y;
-    const timeDiff = Date.now() - galleryTouchStart.time;
-
-    // Much more restrictive conditions to prevent accidental triggers
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 2; // Increased threshold
-    const isSignificantHorizontalDistance = Math.abs(deltaX) > 80; // Increased distance requirement
-    const isLimitedVerticalMovement = Math.abs(deltaY) < 40; // Stricter vertical limit
-    const isReasonableTime = timeDiff > 100 && timeDiff < 600; // Better time window
-
-    // Only trigger if ALL conditions are met for a clear horizontal swipe
-    if (
-      isHorizontalDominant &&
-      isSignificantHorizontalDistance &&
-      isLimitedVerticalMovement &&
-      isReasonableTime
-    ) {
-      setIsGalleryTransitioning(true);
-
-      if (deltaX > 80) {
-        nextSlide();
-      } else if (deltaX < -80) {
-        prevSlide();
-      }
-
-      // Reset transition state after animation completes
-      setTimeout(() => {
-        setIsGalleryTransitioning(false);
-      }, 500);
-    }
-
-    setGalleryTouchStart(null);
-    setGalleryTouchCurrent(null);
-  };
-
-  // Touch handlers for testimonials carousel
-  const handleTestimonialTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setTestimonialTouchStart({
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    });
-    setTestimonialTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleTestimonialTouchMove = (e: React.TouchEvent) => {
-    if (!testimonialTouchStart) return;
-    const touch = e.touches[0];
-    setTestimonialTouchCurrent({ x: touch.clientX, y: touch.clientY });
-
-    // Calculate deltas to determine scroll direction intent
-    const deltaX = Math.abs(testimonialTouchStart.x - touch.clientX);
-    const deltaY = Math.abs(testimonialTouchStart.y - touch.clientY);
-
-    // Only prevent default if it's clearly a horizontal swipe
-    // This allows vertical scrolling to work normally
-    if (deltaX > deltaY && deltaX > 30) {
-      e.preventDefault();
-    }
-  };
-
-  const handleTestimonialTouchEnd = () => {
-    if (!testimonialTouchStart || !testimonialTouchCurrent) return;
-
-    const deltaX = testimonialTouchStart.x - testimonialTouchCurrent.x;
-    const deltaY = testimonialTouchStart.y - testimonialTouchCurrent.y;
-    const timeDiff = Date.now() - testimonialTouchStart.time;
-
-    // Much more restrictive conditions to prevent accidental triggers
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 2; // Increased threshold
-    const isSignificantHorizontalDistance = Math.abs(deltaX) > 80; // Increased distance requirement
-    const isLimitedVerticalMovement = Math.abs(deltaY) < 40; // Stricter vertical limit
-    const isReasonableTime = timeDiff > 100 && timeDiff < 600; // Better time window
-
-    // Only trigger if ALL conditions are met for a clear horizontal swipe
-    if (
-      isHorizontalDominant &&
-      isSignificantHorizontalDistance &&
-      isLimitedVerticalMovement &&
-      isReasonableTime
-    ) {
-      if (deltaX > 80) {
-        nextTestimonial();
-      } else if (deltaX < -80) {
-        prevTestimonial();
-      }
-    }
-
-    setTestimonialTouchStart(null);
-    setTestimonialTouchCurrent(null);
-  };
-
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
       {/* Header - Now handled by the Header component itself */}
@@ -744,12 +528,7 @@ export default function Home() {
                   </div>
 
                   {/* Main Image Container */}
-                  <div
-                    className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none"
-                    onTouchStart={handleGalleryTouchStart}
-                    onTouchMove={handleGalleryTouchMove}
-                    onTouchEnd={handleGalleryTouchEnd}
-                  >
+                  <div className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none">
                     <div
                       className="flex transition-transform duration-500 ease-in-out"
                       style={{
@@ -1138,12 +917,7 @@ export default function Home() {
                   return (
                     <>
                       {/* Carousel Container */}
-                      <div
-                        className="relative overflow-hidden select-none carousel-container"
-                        onTouchStart={handlePackageTouchStart}
-                        onTouchMove={handlePackageTouchMove}
-                        onTouchEnd={handlePackageTouchEnd}
-                      >
+                      <div className="relative overflow-hidden select-none carousel-container">
                         <div
                           ref={carouselRef}
                           className={`flex transition-transform duration-500 ease-in-out ${
@@ -1959,12 +1733,7 @@ export default function Home() {
             {/* Video Testimonials - Single testimonial on mobile, 3 columns on desktop */}
             <div className="block md:hidden">
               {/* Mobile: Single testimonial carousel */}
-              <div
-                className="relative overflow-hidden rounded-2xl select-none carousel-container"
-                onTouchStart={handleTestimonialTouchStart}
-                onTouchMove={handleTestimonialTouchMove}
-                onTouchEnd={handleTestimonialTouchEnd}
-              >
+              <div className="relative overflow-hidden rounded-2xl select-none carousel-container">
                 <div
                   className="flex transition-transform duration-500 ease-in-out"
                   style={{
