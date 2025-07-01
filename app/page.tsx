@@ -44,40 +44,6 @@ export default function Home() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Touch state for packages carousel
-  const [packageTouchStart, setPackageTouchStart] = useState<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const [packageTouchCurrent, setPackageTouchCurrent] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-
-  // Touch state for gallery carousel
-  const [galleryTouchStart, setGalleryTouchStart] = useState<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const [galleryTouchCurrent, setGalleryTouchCurrent] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-  const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
-
-  // Touch state for testimonials carousel
-  const [testimonialTouchStart, setTestimonialTouchStart] = useState<{
-    x: number;
-    y: number;
-    time: number;
-  } | null>(null);
-  const [testimonialTouchCurrent, setTestimonialTouchCurrent] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-
   // Add state for projects to fix hydration issue
   const [projects, setProjects] = useState<
     {
@@ -332,185 +298,6 @@ export default function Home() {
     setIsTransitioning(false);
   }, [selectedServiceType]);
 
-  // Touch handlers for packages carousel
-  const handlePackageTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setPackageTouchStart({
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    });
-    setPackageTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handlePackageTouchMove = (e: React.TouchEvent) => {
-    if (!packageTouchStart) return;
-    const touch = e.touches[0];
-    setPackageTouchCurrent({ x: touch.clientX, y: touch.clientY });
-
-    // Don't prevent default during move - let the browser handle scrolling naturally
-    // We'll decide the action only at the end
-  };
-
-  const handlePackageTouchEnd = () => {
-    if (!packageTouchStart || !packageTouchCurrent) return;
-
-    const deltaX = packageTouchStart.x - packageTouchCurrent.x;
-    const deltaY = packageTouchStart.y - packageTouchCurrent.y;
-    const timeDiff = Date.now() - packageTouchStart.time;
-
-    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
-    const velocityX = Math.abs(deltaX) / timeDiff;
-    const velocityY = Math.abs(deltaY) / timeDiff;
-
-    // JSW-style detection: Focus on clear horizontal intent with good velocity
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
-    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
-    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
-    const isQuickGesture = timeDiff < 400; // Allow slightly more time
-    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
-
-    // Only trigger if it's clearly a horizontal swipe with good momentum
-    if (
-      isHorizontalDominant &&
-      hasGoodHorizontalVelocity &&
-      hasLowVerticalVelocity &&
-      isQuickGesture &&
-      isSignificantDistance
-    ) {
-      if (deltaX > 50) {
-        nextPackage();
-      } else if (deltaX < -50) {
-        prevPackage();
-      }
-    }
-
-    setPackageTouchStart(null);
-    setPackageTouchCurrent(null);
-  };
-
-  // Touch handlers for gallery carousel
-  const handleGalleryTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setGalleryTouchStart({
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    });
-    setGalleryTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleGalleryTouchMove = (e: React.TouchEvent) => {
-    if (!galleryTouchStart) return;
-    const touch = e.touches[0];
-    setGalleryTouchCurrent({ x: touch.clientX, y: touch.clientY });
-
-    // Don't prevent default during move - let the browser handle scrolling naturally
-    // We'll decide the action only at the end
-  };
-
-  const handleGalleryTouchEnd = () => {
-    if (!galleryTouchStart || !galleryTouchCurrent || isGalleryTransitioning)
-      return;
-
-    const deltaX = galleryTouchStart.x - galleryTouchCurrent.x;
-    const deltaY = galleryTouchStart.y - galleryTouchCurrent.y;
-    const timeDiff = Date.now() - galleryTouchStart.time;
-
-    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
-    const velocityX = Math.abs(deltaX) / timeDiff;
-    const velocityY = Math.abs(deltaY) / timeDiff;
-
-    // JSW-style detection: Focus on clear horizontal intent with good velocity
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
-    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
-    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
-    const isQuickGesture = timeDiff < 400; // Allow slightly more time
-    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
-
-    // Only trigger if it's clearly a horizontal swipe with good momentum
-    if (
-      isHorizontalDominant &&
-      hasGoodHorizontalVelocity &&
-      hasLowVerticalVelocity &&
-      isQuickGesture &&
-      isSignificantDistance
-    ) {
-      setIsGalleryTransitioning(true);
-
-      if (deltaX > 50) {
-        nextSlide();
-      } else if (deltaX < -50) {
-        prevSlide();
-      }
-
-      // Reset transition state after animation completes
-      setTimeout(() => {
-        setIsGalleryTransitioning(false);
-      }, 500);
-    }
-
-    setGalleryTouchStart(null);
-    setGalleryTouchCurrent(null);
-  };
-
-  // Touch handlers for testimonials carousel
-  const handleTestimonialTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setTestimonialTouchStart({
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    });
-    setTestimonialTouchCurrent({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleTestimonialTouchMove = (e: React.TouchEvent) => {
-    if (!testimonialTouchStart) return;
-    const touch = e.touches[0];
-    setTestimonialTouchCurrent({ x: touch.clientX, y: touch.clientY });
-
-    // Don't prevent default during move - let the browser handle scrolling naturally
-    // We'll decide the action only at the end
-  };
-
-  const handleTestimonialTouchEnd = () => {
-    if (!testimonialTouchStart || !testimonialTouchCurrent) return;
-
-    const deltaX = testimonialTouchStart.x - testimonialTouchCurrent.x;
-    const deltaY = testimonialTouchStart.y - testimonialTouchCurrent.y;
-    const timeDiff = Date.now() - testimonialTouchStart.time;
-
-    // Calculate velocity (pixels per millisecond) - JSW-style momentum detection
-    const velocityX = Math.abs(deltaX) / timeDiff;
-    const velocityY = Math.abs(deltaY) / timeDiff;
-
-    // JSW-style detection: Focus on clear horizontal intent with good velocity
-    const isHorizontalDominant = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
-    const hasGoodHorizontalVelocity = velocityX > 0.3; // Minimum horizontal speed
-    const hasLowVerticalVelocity = velocityY < 0.5; // Maximum vertical speed
-    const isQuickGesture = timeDiff < 400; // Allow slightly more time
-    const isSignificantDistance = Math.abs(deltaX) > 50; // Lower distance requirement
-
-    // Only trigger if it's clearly a horizontal swipe with good momentum
-    if (
-      isHorizontalDominant &&
-      hasGoodHorizontalVelocity &&
-      hasLowVerticalVelocity &&
-      isQuickGesture &&
-      isSignificantDistance
-    ) {
-      if (deltaX > 50) {
-        nextTestimonial();
-      } else if (deltaX < -50) {
-        prevTestimonial();
-      }
-    }
-
-    setTestimonialTouchStart(null);
-    setTestimonialTouchCurrent(null);
-  };
-
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
       {/* Header - Now handled by the Header component itself */}
@@ -741,12 +528,7 @@ export default function Home() {
                   </div>
 
                   {/* Main Image Container */}
-                  <div
-                    className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none"
-                    onTouchStart={handleGalleryTouchStart}
-                    onTouchMove={handleGalleryTouchMove}
-                    onTouchEnd={handleGalleryTouchEnd}
-                  >
+                  <div className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none">
                     <div
                       className="flex transition-transform duration-500 ease-in-out"
                       style={{
@@ -1135,12 +917,7 @@ export default function Home() {
                   return (
                     <>
                       {/* Carousel Container */}
-                      <div
-                        className="relative overflow-hidden select-none carousel-container"
-                        onTouchStart={handlePackageTouchStart}
-                        onTouchMove={handlePackageTouchMove}
-                        onTouchEnd={handlePackageTouchEnd}
-                      >
+                      <div className="relative overflow-hidden select-none carousel-container">
                         <div
                           ref={carouselRef}
                           className={`flex transition-transform duration-500 ease-in-out ${
@@ -1154,72 +931,59 @@ export default function Home() {
                         >
                           {/* Duplicate packages for infinite loop effect */}
                           {/* Previous set for seamless left scrolling */}
-                          {packageEntries.map(
-                            ([packageKey, packageInfo], index) => {
-                              const currentCityPricing =
-                                packageInfo.pricing[
-                                  selectedCity.id as keyof typeof packageInfo.pricing
-                                ];
-                              const actualIndex = index - packageEntries.length;
+                          {packageEntries.map(([packageKey, packageInfo]) => {
+                            const currentCityPricing =
+                              packageInfo.pricing[
+                                selectedCity.id as keyof typeof packageInfo.pricing
+                              ];
 
-                              return (
+                            return (
+                              <div
+                                key={`prev-${packageKey}`}
+                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                              >
                                 <div
-                                  key={`prev-${packageKey}`}
-                                  className={`w-full flex-shrink-0 px-3 ${
-                                    actualIndex === currentPackage
-                                      ? "z-10"
-                                      : "z-0"
+                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
+                                    packageInfo.popular
+                                      ? "ring-2 ring-amber-500"
+                                      : "border border-gray-100"
                                   }`}
                                 >
+                                  {/* Package content - same as original */}
+                                  {packageInfo.popular && (
+                                    <div className="absolute -top-0 left-0 right-0">
+                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
+                                        ⭐ Most Popular
+                                      </div>
+                                    </div>
+                                  )}
                                   <div
-                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
-                                      packageInfo.popular
-                                        ? "ring-2 ring-amber-500"
-                                        : "border border-gray-100"
-                                    } ${
-                                      actualIndex === currentPackage
-                                        ? "scale-100 opacity-100 shadow-xl"
-                                        : "scale-90 opacity-60 shadow-md"
+                                    className={`p-3 sm:p-4 ${
+                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
                                     }`}
                                   >
-                                    {/* Package content - same as original */}
-                                    {packageInfo.popular && (
-                                      <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                          ⭐ Most Popular
+                                    <div className="text-center mb-3 sm:mb-4">
+                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                        {packageInfo.title}
+                                      </h3>
+                                      <div className="mb-3">
+                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                          {selectedCity
+                                            ? currentCityPricing?.price
+                                            : "X,XXX"}
                                         </div>
+                                        {selectedCity &&
+                                          !currentCityPricing?.startingAt && (
+                                            <div className="text-xs text-gray-500">
+                                              per sq. ft (Ex GST)
+                                            </div>
+                                          )}
                                       </div>
-                                    )}
-                                    <div
-                                      className={`p-3 sm:p-4 ${
-                                        packageInfo.popular
-                                          ? "pt-6 sm:pt-7"
-                                          : ""
-                                      }`}
-                                    >
-                                      <div className="text-center mb-3 sm:mb-4">
-                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                          {packageInfo.title}
-                                        </h3>
-                                        <div className="mb-3">
-                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                            {selectedCity
-                                              ? currentCityPricing?.price
-                                              : "X,XXX"}
-                                          </div>
-                                          {selectedCity &&
-                                            !currentCityPricing?.startingAt && (
-                                              <div className="text-xs text-gray-500">
-                                                per sq. ft (Ex GST)
-                                              </div>
-                                            )}
-                                        </div>
-                                      </div>
-                                      <div className="border-t border-gray-100 mb-3"></div>
-                                      <div className="space-y-1.5">
-                                        {Object.entries(
-                                          packageInfo.sections
-                                        ).map(([sectionKey, section]) => (
+                                    </div>
+                                    <div className="border-t border-gray-100 mb-3"></div>
+                                    <div className="space-y-1.5">
+                                      {Object.entries(packageInfo.sections).map(
+                                        ([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
                                             className="border border-gray-100 rounded-md overflow-hidden"
@@ -1282,88 +1046,78 @@ export default function Home() {
                                               </div>
                                             </div>
                                           </div>
-                                        ))}
-                                      </div>
+                                        )
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            }
-                          )}
+                              </div>
+                            );
+                          })}
 
                           {/* Current set - main packages */}
-                          {packageEntries.map(
-                            ([packageKey, packageInfo], index) => {
-                              const currentCityPricing =
-                                packageInfo.pricing[
-                                  selectedCity.id as keyof typeof packageInfo.pricing
-                                ];
+                          {packageEntries.map(([packageKey, packageInfo]) => {
+                            const currentCityPricing =
+                              packageInfo.pricing[
+                                selectedCity.id as keyof typeof packageInfo.pricing
+                              ];
 
-                              return (
+                            return (
+                              <div
+                                key={packageKey}
+                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                              >
                                 <div
-                                  key={packageKey}
-                                  className={`w-full flex-shrink-0 px-3 ${
-                                    index === currentPackage ? "z-10" : "z-0"
+                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
+                                    packageInfo.popular
+                                      ? "ring-2 ring-amber-500"
+                                      : "border border-gray-100"
                                   }`}
                                 >
+                                  {/* Popular Badge */}
+                                  {packageInfo.popular && (
+                                    <div className="absolute -top-0 left-0 right-0">
+                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
+                                        ⭐ Most Popular
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Card Content */}
                                   <div
-                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
-                                      packageInfo.popular
-                                        ? "ring-2 ring-amber-500"
-                                        : "border border-gray-100"
-                                    } ${
-                                      index === currentPackage
-                                        ? "scale-100 opacity-100 shadow-xl"
-                                        : "scale-90 opacity-60 shadow-md"
+                                    className={`p-3 sm:p-4 ${
+                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
                                     }`}
                                   >
-                                    {/* Popular Badge */}
-                                    {packageInfo.popular && (
-                                      <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                          ⭐ Most Popular
+                                    {/* Package Title */}
+                                    <div className="text-center mb-3 sm:mb-4">
+                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                        {packageInfo.title}
+                                      </h3>
+
+                                      {/* Price Display */}
+                                      <div className="mb-3">
+                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                          {selectedCity
+                                            ? currentCityPricing?.price
+                                            : "X,XXX"}
                                         </div>
+                                        {selectedCity &&
+                                          !currentCityPricing?.startingAt && (
+                                            <div className="text-xs text-gray-500">
+                                              per sq. ft (Ex GST)
+                                            </div>
+                                          )}
                                       </div>
-                                    )}
+                                    </div>
 
-                                    {/* Card Content */}
-                                    <div
-                                      className={`p-3 sm:p-4 ${
-                                        packageInfo.popular
-                                          ? "pt-6 sm:pt-7"
-                                          : ""
-                                      }`}
-                                    >
-                                      {/* Package Title */}
-                                      <div className="text-center mb-3 sm:mb-4">
-                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                          {packageInfo.title}
-                                        </h3>
+                                    {/* Divider */}
+                                    <div className="border-t border-gray-100 mb-3"></div>
 
-                                        {/* Price Display */}
-                                        <div className="mb-3">
-                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                            {selectedCity
-                                              ? currentCityPricing?.price
-                                              : "X,XXX"}
-                                          </div>
-                                          {selectedCity &&
-                                            !currentCityPricing?.startingAt && (
-                                              <div className="text-xs text-gray-500">
-                                                per sq. ft (Ex GST)
-                                              </div>
-                                            )}
-                                        </div>
-                                      </div>
-
-                                      {/* Divider */}
-                                      <div className="border-t border-gray-100 mb-3"></div>
-
-                                      {/* Expandable Sections */}
-                                      <div className="space-y-1.5">
-                                        {Object.entries(
-                                          packageInfo.sections
-                                        ).map(([sectionKey, section]) => (
+                                    {/* Expandable Sections */}
+                                    <div className="space-y-1.5">
+                                      {Object.entries(packageInfo.sections).map(
+                                        ([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
                                             className="border border-gray-100 rounded-md overflow-hidden"
@@ -1426,82 +1180,69 @@ export default function Home() {
                                               </div>
                                             </div>
                                           </div>
-                                        ))}
-                                      </div>
+                                        )
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            }
-                          )}
+                              </div>
+                            );
+                          })}
 
                           {/* Next set for seamless right scrolling */}
-                          {packageEntries.map(
-                            ([packageKey, packageInfo], index) => {
-                              const currentCityPricing =
-                                packageInfo.pricing[
-                                  selectedCity.id as keyof typeof packageInfo.pricing
-                                ];
-                              const actualIndex = index + packageEntries.length;
+                          {packageEntries.map(([packageKey, packageInfo]) => {
+                            const currentCityPricing =
+                              packageInfo.pricing[
+                                selectedCity.id as keyof typeof packageInfo.pricing
+                              ];
 
-                              return (
+                            return (
+                              <div
+                                key={`next-${packageKey}`}
+                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                              >
                                 <div
-                                  key={`next-${packageKey}`}
-                                  className={`w-full flex-shrink-0 px-3 ${
-                                    actualIndex === currentPackage
-                                      ? "z-10"
-                                      : "z-0"
+                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
+                                    packageInfo.popular
+                                      ? "ring-2 ring-amber-500"
+                                      : "border border-gray-100"
                                   }`}
                                 >
+                                  {/* Package content - same as original */}
+                                  {packageInfo.popular && (
+                                    <div className="absolute -top-0 left-0 right-0">
+                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
+                                        ⭐ Most Popular
+                                      </div>
+                                    </div>
+                                  )}
                                   <div
-                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
-                                      packageInfo.popular
-                                        ? "ring-2 ring-amber-500"
-                                        : "border border-gray-100"
-                                    } ${
-                                      actualIndex === currentPackage
-                                        ? "scale-100 opacity-100 shadow-xl"
-                                        : "scale-90 opacity-60 shadow-md"
+                                    className={`p-3 sm:p-4 ${
+                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
                                     }`}
                                   >
-                                    {/* Package content - same as original */}
-                                    {packageInfo.popular && (
-                                      <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                          ⭐ Most Popular
+                                    <div className="text-center mb-3 sm:mb-4">
+                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                        {packageInfo.title}
+                                      </h3>
+                                      <div className="mb-3">
+                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                          {selectedCity
+                                            ? currentCityPricing?.price
+                                            : "X,XXX"}
                                         </div>
+                                        {selectedCity &&
+                                          !currentCityPricing?.startingAt && (
+                                            <div className="text-xs text-gray-500">
+                                              per sq. ft (Ex GST)
+                                            </div>
+                                          )}
                                       </div>
-                                    )}
-                                    <div
-                                      className={`p-3 sm:p-4 ${
-                                        packageInfo.popular
-                                          ? "pt-6 sm:pt-7"
-                                          : ""
-                                      }`}
-                                    >
-                                      <div className="text-center mb-3 sm:mb-4">
-                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                          {packageInfo.title}
-                                        </h3>
-                                        <div className="mb-3">
-                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                            {selectedCity
-                                              ? currentCityPricing?.price
-                                              : "X,XXX"}
-                                          </div>
-                                          {selectedCity &&
-                                            !currentCityPricing?.startingAt && (
-                                              <div className="text-xs text-gray-500">
-                                                per sq. ft (Ex GST)
-                                              </div>
-                                            )}
-                                        </div>
-                                      </div>
-                                      <div className="border-t border-gray-100 mb-3"></div>
-                                      <div className="space-y-1.5">
-                                        {Object.entries(
-                                          packageInfo.sections
-                                        ).map(([sectionKey, section]) => (
+                                    </div>
+                                    <div className="border-t border-gray-100 mb-3"></div>
+                                    <div className="space-y-1.5">
+                                      {Object.entries(packageInfo.sections).map(
+                                        ([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
                                             className="border border-gray-100 rounded-md overflow-hidden"
@@ -1564,14 +1305,14 @@ export default function Home() {
                                               </div>
                                             </div>
                                           </div>
-                                        ))}
-                                      </div>
+                                        )
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            }
-                          )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -1956,12 +1697,7 @@ export default function Home() {
             {/* Video Testimonials - Single testimonial on mobile, 3 columns on desktop */}
             <div className="block md:hidden">
               {/* Mobile: Single testimonial carousel */}
-              <div
-                className="relative overflow-hidden rounded-2xl select-none carousel-container"
-                onTouchStart={handleTestimonialTouchStart}
-                onTouchMove={handleTestimonialTouchMove}
-                onTouchEnd={handleTestimonialTouchEnd}
-              >
+              <div className="relative overflow-hidden rounded-2xl select-none carousel-container">
                 <div
                   className="flex transition-transform duration-500 ease-in-out"
                   style={{
