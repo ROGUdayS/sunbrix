@@ -931,72 +931,59 @@ export default function Home() {
                         >
                           {/* Duplicate packages for infinite loop effect */}
                           {/* Previous set for seamless left scrolling */}
-                          {packageEntries.map(
-                            ([packageKey, packageInfo], index) => {
-                              const currentCityPricing =
-                                packageInfo.pricing[
-                                  selectedCity.id as keyof typeof packageInfo.pricing
-                                ];
-                              const actualIndex = index - packageEntries.length;
+                          {packageEntries.map(([packageKey, packageInfo]) => {
+                            const currentCityPricing =
+                              packageInfo.pricing[
+                                selectedCity.id as keyof typeof packageInfo.pricing
+                              ];
 
-                              return (
+                            return (
+                              <div
+                                key={`prev-${packageKey}`}
+                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                              >
                                 <div
-                                  key={`prev-${packageKey}`}
-                                  className={`w-full flex-shrink-0 px-3 ${
-                                    actualIndex === currentPackage
-                                      ? "z-10"
-                                      : "z-0"
+                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
+                                    packageInfo.popular
+                                      ? "ring-2 ring-amber-500"
+                                      : "border border-gray-100"
                                   }`}
                                 >
+                                  {/* Package content - same as original */}
+                                  {packageInfo.popular && (
+                                    <div className="absolute -top-0 left-0 right-0">
+                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
+                                        ⭐ Most Popular
+                                      </div>
+                                    </div>
+                                  )}
                                   <div
-                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
-                                      packageInfo.popular
-                                        ? "ring-2 ring-amber-500"
-                                        : "border border-gray-100"
-                                    } ${
-                                      actualIndex === currentPackage
-                                        ? "scale-100 opacity-100 shadow-xl"
-                                        : "scale-90 opacity-60 shadow-md"
+                                    className={`p-3 sm:p-4 ${
+                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
                                     }`}
                                   >
-                                    {/* Package content - same as original */}
-                                    {packageInfo.popular && (
-                                      <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                          ⭐ Most Popular
+                                    <div className="text-center mb-3 sm:mb-4">
+                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                        {packageInfo.title}
+                                      </h3>
+                                      <div className="mb-3">
+                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                          {selectedCity
+                                            ? currentCityPricing?.price
+                                            : "X,XXX"}
                                         </div>
+                                        {selectedCity &&
+                                          !currentCityPricing?.startingAt && (
+                                            <div className="text-xs text-gray-500">
+                                              per sq. ft (Ex GST)
+                                            </div>
+                                          )}
                                       </div>
-                                    )}
-                                    <div
-                                      className={`p-3 sm:p-4 ${
-                                        packageInfo.popular
-                                          ? "pt-6 sm:pt-7"
-                                          : ""
-                                      }`}
-                                    >
-                                      <div className="text-center mb-3 sm:mb-4">
-                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                          {packageInfo.title}
-                                        </h3>
-                                        <div className="mb-3">
-                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                            {selectedCity
-                                              ? currentCityPricing?.price
-                                              : "X,XXX"}
-                                          </div>
-                                          {selectedCity &&
-                                            !currentCityPricing?.startingAt && (
-                                              <div className="text-xs text-gray-500">
-                                                per sq. ft (Ex GST)
-                                              </div>
-                                            )}
-                                        </div>
-                                      </div>
-                                      <div className="border-t border-gray-100 mb-3"></div>
-                                      <div className="space-y-1.5">
-                                        {Object.entries(
-                                          packageInfo.sections
-                                        ).map(([sectionKey, section]) => (
+                                    </div>
+                                    <div className="border-t border-gray-100 mb-3"></div>
+                                    <div className="space-y-1.5">
+                                      {Object.entries(packageInfo.sections).map(
+                                        ([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
                                             className="border border-gray-100 rounded-md overflow-hidden"
@@ -1059,88 +1046,78 @@ export default function Home() {
                                               </div>
                                             </div>
                                           </div>
-                                        ))}
-                                      </div>
+                                        )
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            }
-                          )}
+                              </div>
+                            );
+                          })}
 
                           {/* Current set - main packages */}
-                          {packageEntries.map(
-                            ([packageKey, packageInfo], index) => {
-                              const currentCityPricing =
-                                packageInfo.pricing[
-                                  selectedCity.id as keyof typeof packageInfo.pricing
-                                ];
+                          {packageEntries.map(([packageKey, packageInfo]) => {
+                            const currentCityPricing =
+                              packageInfo.pricing[
+                                selectedCity.id as keyof typeof packageInfo.pricing
+                              ];
 
-                              return (
+                            return (
+                              <div
+                                key={packageKey}
+                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                              >
                                 <div
-                                  key={packageKey}
-                                  className={`w-full flex-shrink-0 px-3 ${
-                                    index === currentPackage ? "z-10" : "z-0"
+                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
+                                    packageInfo.popular
+                                      ? "ring-2 ring-amber-500"
+                                      : "border border-gray-100"
                                   }`}
                                 >
+                                  {/* Popular Badge */}
+                                  {packageInfo.popular && (
+                                    <div className="absolute -top-0 left-0 right-0">
+                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
+                                        ⭐ Most Popular
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Card Content */}
                                   <div
-                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
-                                      packageInfo.popular
-                                        ? "ring-2 ring-amber-500"
-                                        : "border border-gray-100"
-                                    } ${
-                                      index === currentPackage
-                                        ? "scale-100 opacity-100 shadow-xl"
-                                        : "scale-90 opacity-60 shadow-md"
+                                    className={`p-3 sm:p-4 ${
+                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
                                     }`}
                                   >
-                                    {/* Popular Badge */}
-                                    {packageInfo.popular && (
-                                      <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                          ⭐ Most Popular
+                                    {/* Package Title */}
+                                    <div className="text-center mb-3 sm:mb-4">
+                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                        {packageInfo.title}
+                                      </h3>
+
+                                      {/* Price Display */}
+                                      <div className="mb-3">
+                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                          {selectedCity
+                                            ? currentCityPricing?.price
+                                            : "X,XXX"}
                                         </div>
+                                        {selectedCity &&
+                                          !currentCityPricing?.startingAt && (
+                                            <div className="text-xs text-gray-500">
+                                              per sq. ft (Ex GST)
+                                            </div>
+                                          )}
                                       </div>
-                                    )}
+                                    </div>
 
-                                    {/* Card Content */}
-                                    <div
-                                      className={`p-3 sm:p-4 ${
-                                        packageInfo.popular
-                                          ? "pt-6 sm:pt-7"
-                                          : ""
-                                      }`}
-                                    >
-                                      {/* Package Title */}
-                                      <div className="text-center mb-3 sm:mb-4">
-                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                          {packageInfo.title}
-                                        </h3>
+                                    {/* Divider */}
+                                    <div className="border-t border-gray-100 mb-3"></div>
 
-                                        {/* Price Display */}
-                                        <div className="mb-3">
-                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                            {selectedCity
-                                              ? currentCityPricing?.price
-                                              : "X,XXX"}
-                                          </div>
-                                          {selectedCity &&
-                                            !currentCityPricing?.startingAt && (
-                                              <div className="text-xs text-gray-500">
-                                                per sq. ft (Ex GST)
-                                              </div>
-                                            )}
-                                        </div>
-                                      </div>
-
-                                      {/* Divider */}
-                                      <div className="border-t border-gray-100 mb-3"></div>
-
-                                      {/* Expandable Sections */}
-                                      <div className="space-y-1.5">
-                                        {Object.entries(
-                                          packageInfo.sections
-                                        ).map(([sectionKey, section]) => (
+                                    {/* Expandable Sections */}
+                                    <div className="space-y-1.5">
+                                      {Object.entries(packageInfo.sections).map(
+                                        ([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
                                             className="border border-gray-100 rounded-md overflow-hidden"
@@ -1203,82 +1180,69 @@ export default function Home() {
                                               </div>
                                             </div>
                                           </div>
-                                        ))}
-                                      </div>
+                                        )
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            }
-                          )}
+                              </div>
+                            );
+                          })}
 
                           {/* Next set for seamless right scrolling */}
-                          {packageEntries.map(
-                            ([packageKey, packageInfo], index) => {
-                              const currentCityPricing =
-                                packageInfo.pricing[
-                                  selectedCity.id as keyof typeof packageInfo.pricing
-                                ];
-                              const actualIndex = index + packageEntries.length;
+                          {packageEntries.map(([packageKey, packageInfo]) => {
+                            const currentCityPricing =
+                              packageInfo.pricing[
+                                selectedCity.id as keyof typeof packageInfo.pricing
+                              ];
 
-                              return (
+                            return (
+                              <div
+                                key={`next-${packageKey}`}
+                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                              >
                                 <div
-                                  key={`next-${packageKey}`}
-                                  className={`w-full flex-shrink-0 px-3 ${
-                                    actualIndex === currentPackage
-                                      ? "z-10"
-                                      : "z-0"
+                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
+                                    packageInfo.popular
+                                      ? "ring-2 ring-amber-500"
+                                      : "border border-gray-100"
                                   }`}
                                 >
+                                  {/* Package content - same as original */}
+                                  {packageInfo.popular && (
+                                    <div className="absolute -top-0 left-0 right-0">
+                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
+                                        ⭐ Most Popular
+                                      </div>
+                                    </div>
+                                  )}
                                   <div
-                                    className={`relative bg-white rounded-xl shadow-lg transition-all duration-300 overflow-hidden mx-auto ${
-                                      packageInfo.popular
-                                        ? "ring-2 ring-amber-500"
-                                        : "border border-gray-100"
-                                    } ${
-                                      actualIndex === currentPackage
-                                        ? "scale-100 opacity-100 shadow-xl"
-                                        : "scale-90 opacity-60 shadow-md"
+                                    className={`p-3 sm:p-4 ${
+                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
                                     }`}
                                   >
-                                    {/* Package content - same as original */}
-                                    {packageInfo.popular && (
-                                      <div className="absolute -top-0 left-0 right-0">
-                                        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                          ⭐ Most Popular
+                                    <div className="text-center mb-3 sm:mb-4">
+                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                        {packageInfo.title}
+                                      </h3>
+                                      <div className="mb-3">
+                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                          {selectedCity
+                                            ? currentCityPricing?.price
+                                            : "X,XXX"}
                                         </div>
+                                        {selectedCity &&
+                                          !currentCityPricing?.startingAt && (
+                                            <div className="text-xs text-gray-500">
+                                              per sq. ft (Ex GST)
+                                            </div>
+                                          )}
                                       </div>
-                                    )}
-                                    <div
-                                      className={`p-3 sm:p-4 ${
-                                        packageInfo.popular
-                                          ? "pt-6 sm:pt-7"
-                                          : ""
-                                      }`}
-                                    >
-                                      <div className="text-center mb-3 sm:mb-4">
-                                        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                          {packageInfo.title}
-                                        </h3>
-                                        <div className="mb-3">
-                                          <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                            {selectedCity
-                                              ? currentCityPricing?.price
-                                              : "X,XXX"}
-                                          </div>
-                                          {selectedCity &&
-                                            !currentCityPricing?.startingAt && (
-                                              <div className="text-xs text-gray-500">
-                                                per sq. ft (Ex GST)
-                                              </div>
-                                            )}
-                                        </div>
-                                      </div>
-                                      <div className="border-t border-gray-100 mb-3"></div>
-                                      <div className="space-y-1.5">
-                                        {Object.entries(
-                                          packageInfo.sections
-                                        ).map(([sectionKey, section]) => (
+                                    </div>
+                                    <div className="border-t border-gray-100 mb-3"></div>
+                                    <div className="space-y-1.5">
+                                      {Object.entries(packageInfo.sections).map(
+                                        ([sectionKey, section]) => (
                                           <div
                                             key={sectionKey}
                                             className="border border-gray-100 rounded-md overflow-hidden"
@@ -1341,14 +1305,14 @@ export default function Home() {
                                               </div>
                                             </div>
                                           </div>
-                                        ))}
-                                      </div>
+                                        )
+                                      )}
                                     </div>
                                   </div>
                                 </div>
-                              );
-                            }
-                          )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
 
