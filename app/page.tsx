@@ -254,13 +254,54 @@ export default function Home() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
+  // Enhanced package swipe state
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [packageTransition, setPackageTransition] = useState(true);
+
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
+
+    // For packages, enable dragging
+    if (e.currentTarget.getAttribute("data-carousel-type") === "package") {
+      setIsDragging(true);
+      setPackageTransition(false);
+      setDragOffset(0);
+    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX);
+
+    // For packages, update drag offset in real-time
+    if (
+      isDragging &&
+      touchStart &&
+      e.currentTarget.getAttribute("data-carousel-type") === "package"
+    ) {
+      e.preventDefault(); // Prevent page scroll during package swipe
+
+      const currentX = e.targetTouches[0].clientX;
+      const diff = currentX - touchStart;
+
+      // Add resistance at the edges for better UX
+      const containerWidth = window.innerWidth;
+      const resistance = 0.3; // Resistance factor
+      let adjustedDiff = diff;
+
+      // Apply resistance when dragging beyond reasonable bounds
+      if (Math.abs(diff) > containerWidth * 0.3) {
+        const excessDrag = Math.abs(diff) - containerWidth * 0.3;
+        const resistedExcess = excessDrag * resistance;
+        adjustedDiff =
+          diff > 0
+            ? containerWidth * 0.3 + resistedExcess
+            : -(containerWidth * 0.3 + resistedExcess);
+      }
+
+      setDragOffset(adjustedDiff);
+    }
   };
 
   const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
@@ -278,12 +319,25 @@ export default function Home() {
         prevSlide();
       }
     } else if (type === "package") {
-      if (isLeftSwipe) {
-        nextPackage();
+      setIsDragging(false);
+      setPackageTransition(true);
+
+      // More sensitive swipe detection for packages
+      const swipeThreshold = 80; // Reduced threshold for easier swiping
+      const velocity = Math.abs(distance) / 1; // Simple velocity calculation
+
+      if (Math.abs(distance) > swipeThreshold || velocity > 50) {
+        if (distance > 0) {
+          nextPackage();
+        } else {
+          prevPackage();
+        }
       }
-      if (isRightSwipe) {
-        prevPackage();
-      }
+
+      // Reset drag offset with smooth animation
+      setTimeout(() => {
+        setDragOffset(0);
+      }, 50); // Small delay to ensure transition is applied
     } else if (type === "testimonial") {
       if (isLeftSwipe) {
         nextTestimonial();
@@ -893,14 +947,19 @@ export default function Home() {
                       <div className="relative overflow-hidden select-none carousel-container">
                         <div
                           ref={carouselRef}
-                          className={`flex transition-transform duration-500 ease-in-out ${
-                            !isTransitioning ? "transition-none" : ""
-                          }`}
+                          className={`flex ${
+                            packageTransition && !isDragging
+                              ? "transition-all duration-500 ease-out"
+                              : "transition-none"
+                          } ${!isTransitioning ? "transition-none" : ""}`}
                           style={{
-                            transform: `translateX(-${
+                            transform: `translateX(calc(-${
                               (currentPackage + packageEntries.length) * 100
-                            }%)`,
+                            }% + ${dragOffset}px)) ${
+                              isDragging ? "scale(0.98)" : "scale(1)"
+                            }`,
                           }}
+                          data-carousel-type="package"
                           onTouchStart={handleTouchStart}
                           onTouchMove={handleTouchMove}
                           onTouchEnd={() => handleTouchEnd("package")}
@@ -1026,7 +1085,15 @@ export default function Home() {
                                 key={packageKey}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
+                                <div
+                                  className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100 transition-all duration-200"
+                                  style={{
+                                    opacity: isDragging ? 0.9 : 1,
+                                    filter: isDragging
+                                      ? "brightness(0.95)"
+                                      : "brightness(1)",
+                                  }}
+                                >
                                   {/* Card Content */}
                                   <div className="p-3 sm:p-4">
                                     {/* Package Title */}
