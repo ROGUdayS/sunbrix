@@ -129,17 +129,6 @@ export default function Home() {
     }
   }, []);
 
-  // Auto-cycle gallery every 3 seconds
-  useEffect(() => {
-    if (projects.length === 0) return;
-
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % projects.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [projects.length]);
-
   // Auto-play video when in view, pause when out of view
   useEffect(() => {
     const video = videoRef.current;
