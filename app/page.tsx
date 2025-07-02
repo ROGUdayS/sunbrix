@@ -253,18 +253,33 @@ export default function Home() {
   // Touch/swipe handlers for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
+    setTouchStartY(e.targetTouches[0].clientY);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    if (!touchStart || !touchStartY) return;
+
+    const currentX = e.targetTouches[0].clientX;
+    const currentY = e.targetTouches[0].clientY;
+
+    const deltaX = Math.abs(currentX - touchStart);
+    const deltaY = Math.abs(currentY - touchStartY);
+
+    // If horizontal swipe is more dominant, prevent vertical scrolling
+    if (deltaX > deltaY && deltaX > 10) {
+      e.preventDefault();
+    }
+
+    setTouchEnd(currentX);
   };
 
   const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStart || !touchEnd || !touchStartY) return;
 
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
