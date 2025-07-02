@@ -254,41 +254,13 @@ export default function Home() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Enhanced package swipe state
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState(0);
-
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
-
-    // For packages, enable dragging
-    if (e.currentTarget.getAttribute("data-carousel-type") === "package") {
-      setIsDragging(true);
-      setDragOffset(0);
-    }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX);
-
-    // For packages, update drag offset in real-time
-    if (
-      isDragging &&
-      touchStart &&
-      e.currentTarget.getAttribute("data-carousel-type") === "package"
-    ) {
-      e.preventDefault(); // Prevent page scroll during package swipe
-
-      const currentX = e.targetTouches[0].clientX;
-      const diff = currentX - touchStart;
-
-      // Simple drag offset with reasonable limits
-      const maxDrag = window.innerWidth * 0.5;
-      const clampedDiff = Math.max(-maxDrag, Math.min(maxDrag, diff));
-
-      setDragOffset(clampedDiff);
-    }
   };
 
   const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
@@ -306,18 +278,11 @@ export default function Home() {
         prevSlide();
       }
     } else if (type === "package") {
-      setIsDragging(false);
-      setDragOffset(0);
-
-      // More sensitive swipe detection for packages
-      const swipeThreshold = 80; // Reduced threshold for easier swiping
-
-      if (Math.abs(distance) > swipeThreshold) {
-        if (distance > 0) {
-          nextPackage();
-        } else {
-          prevPackage();
-        }
+      if (isLeftSwipe) {
+        nextPackage();
+      }
+      if (isRightSwipe) {
+        prevPackage();
       }
     } else if (type === "testimonial") {
       if (isLeftSwipe) {
@@ -928,17 +893,14 @@ export default function Home() {
                       <div className="relative overflow-hidden select-none carousel-container">
                         <div
                           ref={carouselRef}
-                          className={`flex ${
-                            !isDragging && !isTransitioning
-                              ? "transition-transform duration-500 ease-out"
-                              : "transition-none"
+                          className={`flex transition-transform duration-500 ease-in-out ${
+                            !isTransitioning ? "transition-none" : ""
                           }`}
                           style={{
-                            transform: `translateX(calc(-${
+                            transform: `translateX(-${
                               (currentPackage + packageEntries.length) * 100
-                            }% + ${dragOffset}px))`,
+                            }%)`,
                           }}
-                          data-carousel-type="package"
                           onTouchStart={handleTouchStart}
                           onTouchMove={handleTouchMove}
                           onTouchEnd={() => handleTouchEnd("package")}
