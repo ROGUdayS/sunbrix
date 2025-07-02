@@ -257,7 +257,6 @@ export default function Home() {
   // Enhanced package swipe state
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
-  const [packageTransition, setPackageTransition] = useState(true);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -266,7 +265,6 @@ export default function Home() {
     // For packages, enable dragging
     if (e.currentTarget.getAttribute("data-carousel-type") === "package") {
       setIsDragging(true);
-      setPackageTransition(false);
       setDragOffset(0);
     }
   };
@@ -285,22 +283,11 @@ export default function Home() {
       const currentX = e.targetTouches[0].clientX;
       const diff = currentX - touchStart;
 
-      // Add resistance at the edges for better UX
-      const containerWidth = window.innerWidth;
-      const resistance = 0.3; // Resistance factor
-      let adjustedDiff = diff;
+      // Simple drag offset with reasonable limits
+      const maxDrag = window.innerWidth * 0.5;
+      const clampedDiff = Math.max(-maxDrag, Math.min(maxDrag, diff));
 
-      // Apply resistance when dragging beyond reasonable bounds
-      if (Math.abs(diff) > containerWidth * 0.3) {
-        const excessDrag = Math.abs(diff) - containerWidth * 0.3;
-        const resistedExcess = excessDrag * resistance;
-        adjustedDiff =
-          diff > 0
-            ? containerWidth * 0.3 + resistedExcess
-            : -(containerWidth * 0.3 + resistedExcess);
-      }
-
-      setDragOffset(adjustedDiff);
+      setDragOffset(clampedDiff);
     }
   };
 
@@ -320,24 +307,18 @@ export default function Home() {
       }
     } else if (type === "package") {
       setIsDragging(false);
-      setPackageTransition(true);
+      setDragOffset(0);
 
       // More sensitive swipe detection for packages
       const swipeThreshold = 80; // Reduced threshold for easier swiping
-      const velocity = Math.abs(distance) / 1; // Simple velocity calculation
 
-      if (Math.abs(distance) > swipeThreshold || velocity > 50) {
+      if (Math.abs(distance) > swipeThreshold) {
         if (distance > 0) {
           nextPackage();
         } else {
           prevPackage();
         }
       }
-
-      // Reset drag offset with smooth animation
-      setTimeout(() => {
-        setDragOffset(0);
-      }, 50); // Small delay to ensure transition is applied
     } else if (type === "testimonial") {
       if (isLeftSwipe) {
         nextTestimonial();
@@ -948,16 +929,14 @@ export default function Home() {
                         <div
                           ref={carouselRef}
                           className={`flex ${
-                            packageTransition && !isDragging
-                              ? "transition-all duration-500 ease-out"
+                            !isDragging && !isTransitioning
+                              ? "transition-transform duration-500 ease-out"
                               : "transition-none"
-                          } ${!isTransitioning ? "transition-none" : ""}`}
+                          }`}
                           style={{
                             transform: `translateX(calc(-${
                               (currentPackage + packageEntries.length) * 100
-                            }% + ${dragOffset}px)) ${
-                              isDragging ? "scale(0.98)" : "scale(1)"
-                            }`,
+                            }% + ${dragOffset}px))`,
                           }}
                           data-carousel-type="package"
                           onTouchStart={handleTouchStart}
@@ -1085,15 +1064,7 @@ export default function Home() {
                                 key={packageKey}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div
-                                  className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100 transition-all duration-200"
-                                  style={{
-                                    opacity: isDragging ? 0.9 : 1,
-                                    filter: isDragging
-                                      ? "brightness(0.95)"
-                                      : "brightness(1)",
-                                  }}
-                                >
+                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Card Content */}
                                   <div className="p-3 sm:p-4">
                                     {/* Package Title */}
