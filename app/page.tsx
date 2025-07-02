@@ -219,9 +219,9 @@ export default function Home() {
     setExpandedSection((prev) => (prev === section ? null : section));
   };
 
-  // Package carousel navigation functions with infinite loop
+  // Package carousel navigation functions with infinite loop - Enhanced for smoother transitions
   const nextPackage = () => {
-    if (!selectedServiceType || isTransitioning) return;
+    if (!selectedServiceType || isTransitioning || isDragging) return;
 
     const packageKeys = Object.keys(
       packagesData.packages[
@@ -236,7 +236,7 @@ export default function Home() {
   };
 
   const prevPackage = () => {
-    if (!selectedServiceType || isTransitioning) return;
+    if (!selectedServiceType || isTransitioning || isDragging) return;
 
     const packageKeys = Object.keys(
       packagesData.packages[
@@ -250,25 +250,45 @@ export default function Home() {
     setCurrentPackage((prev) => prev - 1);
   };
 
-  // Touch/swipe handlers for mobile
+  // Touch/swipe handlers for mobile - Enhanced for smoother package transitions
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
+    setIsDragging(true);
+    setDragOffset(0);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    if (!touchStart || !isDragging) return;
+
+    const currentTouch = e.targetTouches[0].clientX;
+    const diff = touchStart - currentTouch;
+
+    setTouchEnd(currentTouch);
+    setDragOffset(diff);
   };
 
   const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStart || !touchEnd) {
+      setIsDragging(false);
+      setDragOffset(0);
+      return;
+    }
 
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
+    const velocity = Math.abs(distance);
+
+    // Enhanced swipe detection with velocity consideration
+    const isLeftSwipe = distance > 20 || (distance > 10 && velocity > 50);
+    const isRightSwipe = distance < -20 || (distance < -10 && velocity > 50);
+
+    setIsDragging(false);
+    setDragOffset(0);
 
     if (type === "gallery") {
       if (isLeftSwipe && projects.length > 0) {
@@ -339,7 +359,7 @@ export default function Home() {
         }
       }
       setIsTransitioning(false);
-    }, 500);
+    }, 700);
 
     return () => clearTimeout(timer);
   }, [currentPackage, isTransitioning, selectedServiceType]);
@@ -893,13 +913,23 @@ export default function Home() {
                       <div className="relative overflow-hidden select-none carousel-container">
                         <div
                           ref={carouselRef}
-                          className={`flex transition-transform duration-500 ease-in-out ${
-                            !isTransitioning ? "transition-none" : ""
+                          className={`flex transition-transform ${
+                            isDragging
+                              ? "duration-0"
+                              : isTransitioning
+                              ? "duration-700"
+                              : "duration-700"
                           }`}
                           style={{
                             transform: `translateX(-${
                               (currentPackage + packageEntries.length) * 100
-                            }%)`,
+                            }%) translateX(${
+                              isDragging ? -dragOffset * 0.3 : 0
+                            }px)`,
+                            ...(isTransitioning && {
+                              transitionTimingFunction:
+                                "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                            }),
                           }}
                           onTouchStart={handleTouchStart}
                           onTouchMove={handleTouchMove}
