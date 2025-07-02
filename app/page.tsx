@@ -1550,7 +1550,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
-              Happy customer to real stories - Testimonials
+              Testimonials
             </h2>
             <p className="text-lg sm:text-xl text-amber-800">
               See what our customers have to say.
@@ -1623,7 +1623,7 @@ export default function Home() {
                             allowFullScreen
                           ></iframe>
                         </div>
-                        <div className="p-4 sm:p-6 bg-white">
+                        <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                           <div className="flex items-center justify-center mb-4">
                             <svg
                               className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1633,10 +1633,10 @@ export default function Home() {
                               <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                             </svg>
                           </div>
-                          <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                          <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                             {testimonial.quote}
                           </p>
-                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                             {testimonial.name}
                           </div>
                         </div>
@@ -1648,9 +1648,9 @@ export default function Home() {
             </div>
 
             {/* Desktop: All testimonials visible */}
-            <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
               {/* Video Testimonial 1 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
                 <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                   <iframe
                     className="w-full h-full"
@@ -1661,7 +1661,7 @@ export default function Home() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <div className="p-4 sm:p-6 bg-white">
+                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                   <div className="flex items-center justify-center mb-4">
                     <svg
                       className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1671,19 +1671,19 @@ export default function Home() {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                     </svg>
                   </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                     Most people struggle with delays, finances, or contractors.
                     I didn&apos;t face even 1% of that. Sunbrix made my home
                     journey smooth and hassle-free.
                   </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                     Mr. Suryanarayanan Karthikeyan
                   </div>
                 </div>
               </div>
 
               {/* Video Testimonial 2 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
                 <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                   <iframe
                     className="w-full h-full"
@@ -1694,7 +1694,7 @@ export default function Home() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <div className="p-4 sm:p-6 bg-white">
+                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                   <div className="flex items-center justify-center mb-4">
                     <svg
                       className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1704,18 +1704,18 @@ export default function Home() {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                     </svg>
                   </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                     Sunbrix&apos;s expert team guided me at every step. Their
                     quality gave me total confidence throughout the journey.
                   </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                     Mr. Gururaj Naik
                   </div>
                 </div>
               </div>
 
               {/* Video Testimonial 3 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
                 <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                   <iframe
                     className="w-full h-full"
@@ -1726,7 +1726,7 @@ export default function Home() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <div className="p-4 sm:p-6 bg-white">
+                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                   <div className="flex items-center justify-center mb-4">
                     <svg
                       className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1736,12 +1736,12 @@ export default function Home() {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                     </svg>
                   </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                     Sunbrix Homes exceeded our expectations! The construction
                     quality and timely delivery were remarkable. Truly a dream
                     home.
                   </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                     Mr. Hariharasudan
                   </div>
                 </div>

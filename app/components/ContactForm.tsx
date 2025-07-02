@@ -7,7 +7,6 @@ import citiesData from "../../data/cities.json";
 
 interface ContactFormProps {
   title?: string;
-  subtitle?: string;
 }
 
 interface FormData {
@@ -23,7 +22,6 @@ interface FormData {
 
 export default function ContactForm({
   title = "Contact Us",
-  subtitle = "Ready to build your dream home? Schedule a free consultation to start your journey today.",
 }: ContactFormProps) {
   const { selectedCity, setSelectedCity } = useCity();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -106,7 +104,6 @@ export default function ContactForm({
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4 text-gray-900">{title}</h2>
-          <p className="text-lg text-gray-600">{subtitle}</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">

@@ -268,10 +268,7 @@ export default function Testimonials() {
       </section>
 
       {/* Contact Form */}
-      <ContactForm
-        title="Ready to Join Our Happy Customers?"
-        subtitle="Schedule a free consultation today and begin the journey of turning your dream into reality."
-      />
+      <ContactForm title="Ready to Join Our Happy Customers?" />
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />
