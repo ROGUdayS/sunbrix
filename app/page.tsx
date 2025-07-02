@@ -242,6 +242,50 @@ export default function Home() {
     setCurrentPackage((prev) => prev - 1);
   };
 
+  // Touch/swipe handlers for mobile
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (type === "gallery") {
+      if (isLeftSwipe && projects.length > 0) {
+        nextSlide();
+      }
+      if (isRightSwipe && projects.length > 0) {
+        prevSlide();
+      }
+    } else if (type === "package") {
+      if (isLeftSwipe) {
+        nextPackage();
+      }
+      if (isRightSwipe) {
+        prevPackage();
+      }
+    } else if (type === "testimonial") {
+      if (isLeftSwipe) {
+        nextTestimonial();
+      }
+      if (isRightSwipe) {
+        prevTestimonial();
+      }
+    }
+  };
+
   const goToPackage = (index: number) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
@@ -534,6 +578,9 @@ export default function Home() {
                       style={{
                         transform: `translateX(-${currentSlide * 100}%)`,
                       }}
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={() => handleTouchEnd("gallery")}
                     >
                       {projects.map((project) => (
                         <div key={project.id} className="w-full flex-shrink-0">
@@ -545,49 +592,6 @@ export default function Home() {
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
-                            {/* Navigation Arrows for main carousel - Mobile and Tablet only */}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                prevSlide();
-                              }}
-                              className="lg:hidden absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M15 19l-7-7 7-7"
-                                />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                nextSlide();
-                              }}
-                              className="lg:hidden absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M9 5l7 7-7 7"
-                                />
-                              </svg>
-                            </button>
                           </div>
                         </div>
                       ))}
@@ -722,53 +726,27 @@ export default function Home() {
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-3">
               Packages
             </h2>
-            {/* City + Service Type Selector - Responsive Layout */}
-            <div className="mt-4 sm:mt-5 space-y-3 lg:space-y-0 lg:grid lg:grid-cols-3 lg:items-center lg:gap-4 px-4">
-              {/* Left spacer on desktop */}
-              <div className="hidden lg:block" />
 
-              {/* Service Type Buttons */}
-              <div className="flex justify-center">
-                {selectedCity && (
-                  <div className="w-full sm:w-auto flex sm:inline-flex justify-center gap-2 sm:gap-2 rounded-lg bg-gray-50 border border-gray-200 p-2">
-                    {packagesData.serviceTypes.map((serviceType) => (
-                      <button
-                        key={serviceType.id}
-                        onClick={() => setSelectedServiceType(serviceType.id)}
-                        className={`flex-1 sm:flex-none px-4 sm:px-4 py-3 sm:py-2 text-sm sm:text-sm font-medium rounded-md transition ${
-                          selectedServiceType === serviceType.id
-                            ? "bg-amber-600 text-white shadow"
-                            : "text-gray-700 hover:bg-white hover:shadow-sm"
-                        }`}
-                      >
-                        {serviceType.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
+            {/* Service Type Tabs - Show only if city is selected from header */}
+            {selectedCity && (
+              <div className="flex justify-center px-4">
+                <div className="flex bg-gray-100 rounded-lg p-1 w-full max-w-sm lg:max-w-md">
+                  {packagesData.serviceTypes.map((serviceType) => (
+                    <button
+                      key={serviceType.id}
+                      onClick={() => setSelectedServiceType(serviceType.id)}
+                      className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                        selectedServiceType === serviceType.id
+                          ? "bg-white text-gray-900 shadow-sm"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      {serviceType.name}
+                    </button>
+                  ))}
+                </div>
               </div>
-
-              {/* City Selection */}
-              <div className="flex justify-center lg:justify-end">
-                <button
-                  onClick={() => setShowCityModal(true)}
-                  className="flex items-center space-x-2 rounded-lg border border-amber-300 bg-white px-3 sm:px-4 py-2 text-sm sm:text-base text-amber-700 shadow-sm transition hover:shadow-md"
-                >
-                  <span>{selectedCity?.displayName || "Select City"}</span>
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Package Cards - Desktop: All visible, Mobile: Carousel */}
@@ -928,6 +906,9 @@ export default function Home() {
                               (currentPackage + packageEntries.length) * 100
                             }%)`,
                           }}
+                          onTouchStart={handleTouchStart}
+                          onTouchMove={handleTouchMove}
+                          onTouchEnd={() => handleTouchEnd("package")}
                         >
                           {/* Duplicate packages for infinite loop effect */}
                           {/* Previous set for seamless left scrolling */}
@@ -1316,44 +1297,6 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* Navigation Arrows */}
-                      <button
-                        onClick={prevPackage}
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-20"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={nextPackage}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-20"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </button>
-
                       {/* Pagination Dots */}
                       <div className="flex justify-center mt-4 space-x-1.5">
                         {packageEntries.map((_, index) => {
@@ -1381,12 +1324,19 @@ export default function Home() {
             </>
           )}
 
-          {/* Message when no city or service type is selected */}
+          {/* Message when no city is selected */}
           {!selectedCity && (
             <div className="text-center py-12">
-              <div className="text-gray-500 text-lg">
-                Please select a city to view available packages
+              <div className="text-gray-500 text-lg mb-4">
+                Please select a city from the navigation to view available
+                packages
               </div>
+              <button
+                onClick={() => setShowCityModal(true)}
+                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              >
+                Select City
+              </button>
             </div>
           )}
 
@@ -1656,10 +1606,10 @@ export default function Home() {
 
           {/* Video Testimonials Carousel */}
           <div className="relative max-w-6xl mx-auto">
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - Desktop only */}
             <button
               onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
             >
               <svg
                 className="w-6 h-6"
@@ -1677,7 +1627,7 @@ export default function Home() {
             </button>
             <button
               onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
             >
               <svg
                 className="w-6 h-6"
@@ -1703,6 +1653,9 @@ export default function Home() {
                   style={{
                     transform: `translateX(-${currentTestimonial * 100}%)`,
                   }}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={() => handleTouchEnd("testimonial")}
                 >
                   {testimonials.map((testimonial) => (
                     <div key={testimonial.id} className="w-full flex-shrink-0">
