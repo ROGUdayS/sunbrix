@@ -104,7 +104,7 @@
       },
       "premium": {
         "title": "Premium",
-        "popular": true,
+        "popular": false,
         "pricing": {
           "bengaluru": { "price": "₹ 2,250", "startingAt": false },
           "hyderabad": { "price": "₹ 2,150", "startingAt": false },

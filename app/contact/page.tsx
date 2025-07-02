@@ -16,18 +16,11 @@ export default function Contact() {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
             Contact Us
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to build your dream home? Get in touch with our experts for
-            personalized assistance.
-          </p>
         </div>
       </section>
 
       {/* Contact Form */}
-      <ContactForm
-        title="Get in Touch"
-        subtitle="Fill out the form below and our team will get back to you within 24 hours."
-      />
+      <ContactForm title="Get in Touch" />
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />

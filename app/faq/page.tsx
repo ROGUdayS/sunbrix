@@ -369,10 +369,7 @@ export default function FAQ() {
       </section>
 
       {/* Contact Form */}
-      <ContactForm
-        title="Still have questions?"
-        subtitle="Get in touch with our experts for personalized assistance."
-      />
+      <ContactForm title="Still have questions?" />
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />

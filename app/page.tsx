@@ -110,6 +110,25 @@ export default function Home() {
     setProjects(shuffledProjects);
   }, []);
 
+  // Handle hash navigation for packages section
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === "#packages") {
+      // Small delay to ensure the page is fully rendered
+      setTimeout(() => {
+        const packagesSection = document.querySelector(
+          '[data-section="packages"]'
+        );
+        if (packagesSection) {
+          packagesSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
+    }
+  }, []);
+
   // Auto-cycle gallery every 3 seconds
   useEffect(() => {
     if (projects.length === 0) return;
@@ -240,6 +259,50 @@ export default function Home() {
 
     setIsTransitioning(true);
     setCurrentPackage((prev) => prev - 1);
+  };
+
+  // Touch/swipe handlers for mobile
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (type === "gallery") {
+      if (isLeftSwipe && projects.length > 0) {
+        nextSlide();
+      }
+      if (isRightSwipe && projects.length > 0) {
+        prevSlide();
+      }
+    } else if (type === "package") {
+      if (isLeftSwipe) {
+        nextPackage();
+      }
+      if (isRightSwipe) {
+        prevPackage();
+      }
+    } else if (type === "testimonial") {
+      if (isLeftSwipe) {
+        nextTestimonial();
+      }
+      if (isRightSwipe) {
+        prevTestimonial();
+      }
+    }
   };
 
   const goToPackage = (index: number) => {
@@ -534,6 +597,9 @@ export default function Home() {
                       style={{
                         transform: `translateX(-${currentSlide * 100}%)`,
                       }}
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={() => handleTouchEnd("gallery")}
                     >
                       {projects.map((project) => (
                         <div key={project.id} className="w-full flex-shrink-0">
@@ -545,49 +611,6 @@ export default function Home() {
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
-                            {/* Navigation Arrows for main carousel - Mobile and Tablet only */}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                prevSlide();
-                              }}
-                              className="lg:hidden absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M15 19l-7-7 7-7"
-                                />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                nextSlide();
-                              }}
-                              className="lg:hidden absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M9 5l7 7-7 7"
-                                />
-                              </svg>
-                            </button>
                           </div>
                         </div>
                       ))}
@@ -716,59 +739,37 @@ export default function Home() {
       </section>
 
       {/* Packages */}
-      <section className="py-6 sm:py-8 lg:py-10 bg-white">
+      <section
+        className="py-6 sm:py-8 lg:py-10 bg-white"
+        data-section="packages"
+        id="packages"
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-4 sm:mb-6 lg:mb-8">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-3">
               Packages
             </h2>
-            {/* City + Service Type Selector - Responsive Layout */}
-            <div className="mt-4 sm:mt-5 space-y-3 lg:space-y-0 lg:grid lg:grid-cols-3 lg:items-center lg:gap-4 px-4">
-              {/* Left spacer on desktop */}
-              <div className="hidden lg:block" />
 
-              {/* Service Type Buttons */}
-              <div className="flex justify-center">
-                {selectedCity && (
-                  <div className="w-full sm:w-auto flex sm:inline-flex justify-center gap-2 sm:gap-2 rounded-lg bg-gray-50 border border-gray-200 p-2">
-                    {packagesData.serviceTypes.map((serviceType) => (
-                      <button
-                        key={serviceType.id}
-                        onClick={() => setSelectedServiceType(serviceType.id)}
-                        className={`flex-1 sm:flex-none px-4 sm:px-4 py-3 sm:py-2 text-sm sm:text-sm font-medium rounded-md transition ${
-                          selectedServiceType === serviceType.id
-                            ? "bg-amber-600 text-white shadow"
-                            : "text-gray-700 hover:bg-white hover:shadow-sm"
-                        }`}
-                      >
-                        {serviceType.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
+            {/* Service Type Tabs - Show only if city is selected from header */}
+            {selectedCity && (
+              <div className="flex justify-center px-4">
+                <div className="flex bg-gray-100 rounded-lg p-1 w-full max-w-sm lg:max-w-md">
+                  {packagesData.serviceTypes.map((serviceType) => (
+                    <button
+                      key={serviceType.id}
+                      onClick={() => setSelectedServiceType(serviceType.id)}
+                      className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                        selectedServiceType === serviceType.id
+                          ? "bg-white text-gray-900 shadow-sm"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      {serviceType.name}
+                    </button>
+                  ))}
+                </div>
               </div>
-
-              {/* City Selection */}
-              <div className="flex justify-center lg:justify-end">
-                <button
-                  onClick={() => setShowCityModal(true)}
-                  className="flex items-center space-x-2 rounded-lg border border-amber-300 bg-white px-3 sm:px-4 py-2 text-sm sm:text-base text-amber-700 shadow-sm transition hover:shadow-md"
-                >
-                  <span>{selectedCity?.displayName || "Select City"}</span>
-                  <svg
-                    className="w-4 h-4"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Package Cards - Desktop: All visible, Mobile: Carousel */}
@@ -789,27 +790,10 @@ export default function Home() {
                   return (
                     <div
                       key={packageKey}
-                      className={`relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
-                        packageInfo.popular
-                          ? "ring-2 ring-amber-500 scale-105 z-10"
-                          : "border border-gray-100 hover:border-amber-200"
-                      }`}
+                      className="relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-amber-200"
                     >
-                      {/* Popular Badge */}
-                      {packageInfo.popular && (
-                        <div className="absolute -top-0 left-0 right-0">
-                          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                            ⭐ Most Popular
-                          </div>
-                        </div>
-                      )}
-
                       {/* Card Content */}
-                      <div
-                        className={`p-4 lg:p-5 ${
-                          packageInfo.popular ? "pt-7 lg:pt-8" : ""
-                        }`}
-                      >
+                      <div className="p-4 lg:p-5">
                         {/* Package Title */}
                         <div className="text-center mb-4">
                           <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
@@ -928,6 +912,9 @@ export default function Home() {
                               (currentPackage + packageEntries.length) * 100
                             }%)`,
                           }}
+                          onTouchStart={handleTouchStart}
+                          onTouchMove={handleTouchMove}
+                          onTouchEnd={() => handleTouchEnd("package")}
                         >
                           {/* Duplicate packages for infinite loop effect */}
                           {/* Previous set for seamless left scrolling */}
@@ -942,26 +929,9 @@ export default function Home() {
                                 key={`prev-${packageKey}`}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div
-                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
-                                    packageInfo.popular
-                                      ? "ring-2 ring-amber-500"
-                                      : "border border-gray-100"
-                                  }`}
-                                >
+                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Package content - same as original */}
-                                  {packageInfo.popular && (
-                                    <div className="absolute -top-0 left-0 right-0">
-                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                        ⭐ Most Popular
-                                      </div>
-                                    </div>
-                                  )}
-                                  <div
-                                    className={`p-3 sm:p-4 ${
-                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
-                                    }`}
-                                  >
+                                  <div className="p-3 sm:p-4">
                                     <div className="text-center mb-3 sm:mb-4">
                                       <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                                         {packageInfo.title}
@@ -1067,28 +1037,9 @@ export default function Home() {
                                 key={packageKey}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div
-                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
-                                    packageInfo.popular
-                                      ? "ring-2 ring-amber-500"
-                                      : "border border-gray-100"
-                                  }`}
-                                >
-                                  {/* Popular Badge */}
-                                  {packageInfo.popular && (
-                                    <div className="absolute -top-0 left-0 right-0">
-                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                        ⭐ Most Popular
-                                      </div>
-                                    </div>
-                                  )}
-
+                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Card Content */}
-                                  <div
-                                    className={`p-3 sm:p-4 ${
-                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
-                                    }`}
-                                  >
+                                  <div className="p-3 sm:p-4">
                                     {/* Package Title */}
                                     <div className="text-center mb-3 sm:mb-4">
                                       <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
@@ -1201,26 +1152,9 @@ export default function Home() {
                                 key={`next-${packageKey}`}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div
-                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
-                                    packageInfo.popular
-                                      ? "ring-2 ring-amber-500"
-                                      : "border border-gray-100"
-                                  }`}
-                                >
+                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Package content - same as original */}
-                                  {packageInfo.popular && (
-                                    <div className="absolute -top-0 left-0 right-0">
-                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                        ⭐ Most Popular
-                                      </div>
-                                    </div>
-                                  )}
-                                  <div
-                                    className={`p-3 sm:p-4 ${
-                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
-                                    }`}
-                                  >
+                                  <div className="p-3 sm:p-4">
                                     <div className="text-center mb-3 sm:mb-4">
                                       <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                                         {packageInfo.title}
@@ -1316,44 +1250,6 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* Navigation Arrows */}
-                      <button
-                        onClick={prevPackage}
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-20"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={nextPackage}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-20"
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </button>
-
                       {/* Pagination Dots */}
                       <div className="flex justify-center mt-4 space-x-1.5">
                         {packageEntries.map((_, index) => {
@@ -1381,12 +1277,19 @@ export default function Home() {
             </>
           )}
 
-          {/* Message when no city or service type is selected */}
+          {/* Message when no city is selected */}
           {!selectedCity && (
             <div className="text-center py-12">
-              <div className="text-gray-500 text-lg">
-                Please select a city to view available packages
+              <div className="text-gray-500 text-lg mb-4">
+                Please select a city from the navigation to view available
+                packages
               </div>
+              <button
+                onClick={() => setShowCityModal(true)}
+                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              >
+                Select City
+              </button>
             </div>
           )}
 
@@ -1647,7 +1550,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
-              Happy customer to real stories - Testimonials
+              Testimonials
             </h2>
             <p className="text-lg sm:text-xl text-amber-800">
               See what our customers have to say.
@@ -1656,10 +1559,10 @@ export default function Home() {
 
           {/* Video Testimonials Carousel */}
           <div className="relative max-w-6xl mx-auto">
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - Desktop only */}
             <button
               onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
             >
               <svg
                 className="w-6 h-6"
@@ -1677,7 +1580,7 @@ export default function Home() {
             </button>
             <button
               onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
             >
               <svg
                 className="w-6 h-6"
@@ -1703,6 +1606,9 @@ export default function Home() {
                   style={{
                     transform: `translateX(-${currentTestimonial * 100}%)`,
                   }}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={() => handleTouchEnd("testimonial")}
                 >
                   {testimonials.map((testimonial) => (
                     <div key={testimonial.id} className="w-full flex-shrink-0">
@@ -1717,7 +1623,7 @@ export default function Home() {
                             allowFullScreen
                           ></iframe>
                         </div>
-                        <div className="p-4 sm:p-6 bg-white">
+                        <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                           <div className="flex items-center justify-center mb-4">
                             <svg
                               className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1727,10 +1633,10 @@ export default function Home() {
                               <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                             </svg>
                           </div>
-                          <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                          <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                             {testimonial.quote}
                           </p>
-                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                             {testimonial.name}
                           </div>
                         </div>
@@ -1742,9 +1648,9 @@ export default function Home() {
             </div>
 
             {/* Desktop: All testimonials visible */}
-            <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
               {/* Video Testimonial 1 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
                 <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                   <iframe
                     className="w-full h-full"
@@ -1755,7 +1661,7 @@ export default function Home() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <div className="p-4 sm:p-6 bg-white">
+                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                   <div className="flex items-center justify-center mb-4">
                     <svg
                       className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1765,19 +1671,19 @@ export default function Home() {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                     </svg>
                   </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                     Most people struggle with delays, finances, or contractors.
                     I didn&apos;t face even 1% of that. Sunbrix made my home
                     journey smooth and hassle-free.
                   </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                     Mr. Suryanarayanan Karthikeyan
                   </div>
                 </div>
               </div>
 
               {/* Video Testimonial 2 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
                 <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                   <iframe
                     className="w-full h-full"
@@ -1788,7 +1694,7 @@ export default function Home() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <div className="p-4 sm:p-6 bg-white">
+                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                   <div className="flex items-center justify-center mb-4">
                     <svg
                       className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1798,18 +1704,18 @@ export default function Home() {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                     </svg>
                   </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                     Sunbrix&apos;s expert team guided me at every step. Their
                     quality gave me total confidence throughout the journey.
                   </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                     Mr. Gururaj Naik
                   </div>
                 </div>
               </div>
 
               {/* Video Testimonial 3 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100">
+              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
                 <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                   <iframe
                     className="w-full h-full"
@@ -1820,7 +1726,7 @@ export default function Home() {
                     allowFullScreen
                   ></iframe>
                 </div>
-                <div className="p-4 sm:p-6 bg-white">
+                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                   <div className="flex items-center justify-center mb-4">
                     <svg
                       className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -1830,12 +1736,12 @@ export default function Home() {
                       <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
                     </svg>
                   </div>
-                  <p className="text-gray-700 text-center mb-4 leading-relaxed text-sm sm:text-base">
+                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
                     Sunbrix Homes exceeded our expectations! The construction
                     quality and timely delivery were remarkable. Truly a dream
                     home.
                   </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base">
+                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
                     Mr. Hariharasudan
                   </div>
                 </div>

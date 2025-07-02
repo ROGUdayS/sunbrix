@@ -128,17 +128,37 @@ export default function Header({
             <Link href="/projects" className={getLinkClassName("/projects")}>
               Gallery
             </Link>
-            <Link
-              href="/testimonials"
-              className={getLinkClassName("/testimonials")}
+            <button
+              onClick={() => {
+                if (pathname === "/") {
+                  // If on home page, scroll to packages section
+                  const packagesSection = document.querySelector(
+                    '[data-section="packages"]'
+                  );
+                  if (packagesSection) {
+                    packagesSection.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }
+                } else {
+                  // If on other pages, navigate to home page with packages hash
+                  window.location.href = "/#packages";
+                }
+              }}
+              className={`border-b-2 pb-1 font-medium transition-colors cursor-pointer ${
+                isTransparent && !isScrolled
+                  ? "text-white/90 hover:text-white border-transparent hover:border-white/50"
+                  : "text-gray-700 hover:text-amber-900 border-transparent"
+              }`}
             >
-              Testimonials
+              Services
+            </button>
+            <Link href="/about" className={getLinkClassName("/about")}>
+              About us
             </Link>
             <Link href="/faq" className={getLinkClassName("/faq")}>
               FAQs
-            </Link>
-            <Link href="/about" className={getLinkClassName("/about")}>
-              About us
             </Link>
           </nav>
 
@@ -181,12 +201,35 @@ export default function Header({
               >
                 Gallery
               </Link>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  if (pathname === "/") {
+                    // If on home page, scroll to packages section
+                    const packagesSection = document.querySelector(
+                      '[data-section="packages"]'
+                    );
+                    if (packagesSection) {
+                      packagesSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }
+                  } else {
+                    // If on other pages, navigate to home page with packages hash
+                    window.location.href = "/#packages";
+                  }
+                }}
+                className="block px-3 py-2 text-base font-medium transition-colors text-gray-700 hover:text-amber-900 hover:bg-gray-50 w-full text-left"
+              >
+                Services
+              </button>
               <Link
-                href="/testimonials"
-                className={getMobileLinkClassName("/testimonials")}
+                href="/about"
+                className={getMobileLinkClassName("/about")}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Testimonials
+                About us
               </Link>
               <Link
                 href="/faq"
@@ -194,13 +237,6 @@ export default function Header({
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 FAQs
-              </Link>
-              <Link
-                href="/about"
-                className={getMobileLinkClassName("/about")}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                About us
               </Link>
             </div>
           </div>
