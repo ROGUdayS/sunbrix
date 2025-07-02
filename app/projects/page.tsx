@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import projectsData from "../../data/projects.json";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
@@ -28,18 +28,12 @@ interface Project {
 
 export default function ProjectGallery() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState<{
-    [key: string]: number;
-  }>({});
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImages, setModalImages] = useState<string[]>([]);
   const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
-
-  // Auto-cycling control
-  const [pauseAutoCycle, setPauseAutoCycle] = useState<string | null>(null);
 
   // Import project data from JSON - Add year built to each project for demo
   const allProjects = projectsData.projects.map((project) => ({
@@ -86,33 +80,6 @@ export default function ProjectGallery() {
   const goToModalImage = (index: number) => {
     setModalCurrentIndex(index);
   };
-
-  // Auto-cycling effect for project images
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => {
-        const newIndex = { ...prev };
-
-        // Cycle through images for each project that has multiple images
-        currentProjects.forEach((project) => {
-          const projectImages =
-            project.images && project.images.length > 0
-              ? project.images
-              : [project.image];
-
-          // Only cycle if not paused for this project
-          if (projectImages.length > 1 && pauseAutoCycle !== project.id) {
-            const currentIndex = newIndex[project.id] || 0;
-            newIndex[project.id] = (currentIndex + 1) % projectImages.length;
-          }
-        });
-
-        return newIndex;
-      });
-    }, 3000); // Change image every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [currentProjects, pauseAutoCycle]);
 
   // Function to get directional arrow based on facing direction
   const getDirectionalArrow = (facing: string) => {
@@ -287,14 +254,12 @@ export default function ProjectGallery() {
               project.images && project.images.length > 0
                 ? project.images
                 : [project.image];
-            const currentIndex = currentImageIndex[project.id] || 0;
+            const currentIndex = 0; // Always show first image since auto-cycling is removed
 
             return (
               <div
                 key={project.id}
                 className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow"
-                onMouseEnter={() => setPauseAutoCycle(project.id)}
-                onMouseLeave={() => setPauseAutoCycle(null)}
               >
                 {/* Project Photo with Carousel */}
                 <div
