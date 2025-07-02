@@ -253,60 +253,83 @@ export default function Home() {
   // Touch/swipe handlers for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    console.log("Touch start detected");
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
-    setTouchStartY(e.targetTouches[0].clientY);
+    setIsDragging(false);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart || !touchStartY) return;
+    if (!touchStart) return;
 
     const currentX = e.targetTouches[0].clientX;
-    const currentY = e.targetTouches[0].clientY;
+    setTouchEnd(currentX);
 
+    // Calculate horizontal movement
     const deltaX = Math.abs(currentX - touchStart);
-    const deltaY = Math.abs(currentY - touchStartY);
 
-    // If horizontal swipe is more dominant, prevent vertical scrolling
-    if (deltaX > deltaY && deltaX > 10) {
+    // If there's significant horizontal movement, prevent vertical scroll
+    if (deltaX > 10) {
+      console.log("Horizontal movement detected:", deltaX);
+      setIsDragging(true);
       e.preventDefault();
     }
-
-    setTouchEnd(currentX);
   };
 
   const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
-    if (!touchStart || !touchEnd || !touchStartY) return;
+    console.log("Touch end detected for:", type);
+    if (!touchStart || !touchEnd) {
+      console.log("No touch start or end data");
+      setIsDragging(false);
+      return;
+    }
 
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
+    console.log(
+      "Swipe distance:",
+      distance,
+      "Left:",
+      isLeftSwipe,
+      "Right:",
+      isRightSwipe
+    );
+
     if (type === "gallery") {
       if (isLeftSwipe && projects.length > 0) {
+        console.log("Gallery: next slide");
         nextSlide();
       }
       if (isRightSwipe && projects.length > 0) {
+        console.log("Gallery: prev slide");
         prevSlide();
       }
     } else if (type === "package") {
       if (isLeftSwipe) {
+        console.log("Package: next package");
         nextPackage();
       }
       if (isRightSwipe) {
+        console.log("Package: prev package");
         prevPackage();
       }
     } else if (type === "testimonial") {
       if (isLeftSwipe) {
+        console.log("Testimonial: next testimonial");
         nextTestimonial();
       }
       if (isRightSwipe) {
+        console.log("Testimonial: prev testimonial");
         prevTestimonial();
       }
     }
+
+    setIsDragging(false);
   };
 
   const goToPackage = (index: number) => {
@@ -354,7 +377,7 @@ export default function Home() {
         }
       }
       setIsTransitioning(false);
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [currentPackage, isTransitioning, selectedServiceType]);
@@ -597,9 +620,10 @@ export default function Home() {
                   {/* Main Image Container */}
                   <div className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none">
                     <div
-                      className="flex transition-transform duration-500 ease-in-out"
+                      className="flex transition-transform duration-300 ease-out"
                       style={{
                         transform: `translateX(-${currentSlide * 100}%)`,
+                        touchAction: "pan-y",
                       }}
                       onTouchStart={handleTouchStart}
                       onTouchMove={handleTouchMove}
@@ -905,16 +929,17 @@ export default function Home() {
                   return (
                     <>
                       {/* Carousel Container */}
-                      <div className="relative overflow-hidden select-none carousel-container">
+                      <div className="relative overflow-hidden carousel-container">
                         <div
                           ref={carouselRef}
-                          className={`flex transition-transform duration-500 ease-in-out ${
-                            !isTransitioning ? "transition-none" : ""
+                          className={`flex transition-transform duration-300 ease-out ${
+                            isDragging ? "transition-none" : ""
                           }`}
                           style={{
                             transform: `translateX(-${
                               (currentPackage + packageEntries.length) * 100
                             }%)`,
+                            touchAction: "pan-y",
                           }}
                           onTouchStart={handleTouchStart}
                           onTouchMove={handleTouchMove}
@@ -1604,11 +1629,12 @@ export default function Home() {
             {/* Video Testimonials - Single testimonial on mobile, 3 columns on desktop */}
             <div className="block md:hidden">
               {/* Mobile: Single testimonial carousel */}
-              <div className="relative overflow-hidden rounded-2xl select-none carousel-container">
+              <div className="relative overflow-hidden rounded-2xl carousel-container">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out"
+                  className="flex transition-transform duration-300 ease-out"
                   style={{
                     transform: `translateX(-${currentTestimonial * 100}%)`,
+                    touchAction: "pan-y",
                   }}
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
