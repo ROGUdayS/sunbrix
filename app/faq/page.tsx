@@ -369,7 +369,7 @@ export default function FAQ() {
       </section>
 
       {/* Contact Form */}
-      <ContactForm title="Still have questions?" />
+      <ContactForm title="Contact Us" />
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />

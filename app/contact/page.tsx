@@ -20,7 +20,7 @@ export default function Contact() {
       </section>
 
       {/* Contact Form */}
-      <ContactForm title="Get in Touch" />
+      <ContactForm title="Contact Us" />
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />
