@@ -110,6 +110,25 @@ export default function Home() {
     setProjects(shuffledProjects);
   }, []);
 
+  // Handle hash navigation for packages section
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === "#packages") {
+      // Small delay to ensure the page is fully rendered
+      setTimeout(() => {
+        const packagesSection = document.querySelector(
+          '[data-section="packages"]'
+        );
+        if (packagesSection) {
+          packagesSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }, 100);
+    }
+  }, []);
+
   // Auto-cycle gallery every 3 seconds
   useEffect(() => {
     if (projects.length === 0) return;
@@ -720,7 +739,11 @@ export default function Home() {
       </section>
 
       {/* Packages */}
-      <section className="py-6 sm:py-8 lg:py-10 bg-white">
+      <section
+        className="py-6 sm:py-8 lg:py-10 bg-white"
+        data-section="packages"
+        id="packages"
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-4 sm:mb-6 lg:mb-8">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-3">
@@ -767,27 +790,10 @@ export default function Home() {
                   return (
                     <div
                       key={packageKey}
-                      className={`relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
-                        packageInfo.popular
-                          ? "ring-2 ring-amber-500 scale-105 z-10"
-                          : "border border-gray-100 hover:border-amber-200"
-                      }`}
+                      className="relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-amber-200"
                     >
-                      {/* Popular Badge */}
-                      {packageInfo.popular && (
-                        <div className="absolute -top-0 left-0 right-0">
-                          <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                            ⭐ Most Popular
-                          </div>
-                        </div>
-                      )}
-
                       {/* Card Content */}
-                      <div
-                        className={`p-4 lg:p-5 ${
-                          packageInfo.popular ? "pt-7 lg:pt-8" : ""
-                        }`}
-                      >
+                      <div className="p-4 lg:p-5">
                         {/* Package Title */}
                         <div className="text-center mb-4">
                           <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
@@ -923,26 +929,9 @@ export default function Home() {
                                 key={`prev-${packageKey}`}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div
-                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
-                                    packageInfo.popular
-                                      ? "ring-2 ring-amber-500"
-                                      : "border border-gray-100"
-                                  }`}
-                                >
+                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Package content - same as original */}
-                                  {packageInfo.popular && (
-                                    <div className="absolute -top-0 left-0 right-0">
-                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                        ⭐ Most Popular
-                                      </div>
-                                    </div>
-                                  )}
-                                  <div
-                                    className={`p-3 sm:p-4 ${
-                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
-                                    }`}
-                                  >
+                                  <div className="p-3 sm:p-4">
                                     <div className="text-center mb-3 sm:mb-4">
                                       <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                                         {packageInfo.title}
@@ -1048,28 +1037,9 @@ export default function Home() {
                                 key={packageKey}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div
-                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
-                                    packageInfo.popular
-                                      ? "ring-2 ring-amber-500"
-                                      : "border border-gray-100"
-                                  }`}
-                                >
-                                  {/* Popular Badge */}
-                                  {packageInfo.popular && (
-                                    <div className="absolute -top-0 left-0 right-0">
-                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                        ⭐ Most Popular
-                                      </div>
-                                    </div>
-                                  )}
-
+                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Card Content */}
-                                  <div
-                                    className={`p-3 sm:p-4 ${
-                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
-                                    }`}
-                                  >
+                                  <div className="p-3 sm:p-4">
                                     {/* Package Title */}
                                     <div className="text-center mb-3 sm:mb-4">
                                       <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
@@ -1182,26 +1152,9 @@ export default function Home() {
                                 key={`next-${packageKey}`}
                                 className="w-full flex-shrink-0 px-1 sm:px-3"
                               >
-                                <div
-                                  className={`relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto ${
-                                    packageInfo.popular
-                                      ? "ring-2 ring-amber-500"
-                                      : "border border-gray-100"
-                                  }`}
-                                >
+                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Package content - same as original */}
-                                  {packageInfo.popular && (
-                                    <div className="absolute -top-0 left-0 right-0">
-                                      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center py-1.5 text-xs font-semibold">
-                                        ⭐ Most Popular
-                                      </div>
-                                    </div>
-                                  )}
-                                  <div
-                                    className={`p-3 sm:p-4 ${
-                                      packageInfo.popular ? "pt-6 sm:pt-7" : ""
-                                    }`}
-                                  >
+                                  <div className="p-3 sm:p-4">
                                     <div className="text-center mb-3 sm:mb-4">
                                       <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
                                         {packageInfo.title}
