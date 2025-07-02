@@ -300,10 +300,7 @@ export default function About() {
       </section>
 
       {/* Contact Form */}
-      <ContactForm
-        title="Ready to Build Your Dream Home?"
-        subtitle="Join hundreds of satisfied homeowners who chose Sunbrix for their construction journey."
-      />
+      <ContactForm title="Ready to Build Your Dream Home?" />
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />
