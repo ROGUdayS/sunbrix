@@ -54,6 +54,15 @@ export default function Home() {
     }[]
   >([]);
 
+  // Add gallery transition state
+  const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
+  const galleryRef = useRef<HTMLDivElement>(null);
+
+  // Add testimonial transition state
+  const [isTestimonialTransitioning, setIsTestimonialTransitioning] =
+    useState(false);
+  const testimonialRef = useRef<HTMLDivElement>(null);
+
   // Add video ref for auto-play functionality
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -163,13 +172,15 @@ export default function Home() {
   }, []);
 
   const nextSlide = () => {
-    if (projects.length === 0) return;
-    setCurrentSlide((prev) => (prev + 1) % projects.length);
+    if (projects.length === 0 || isGalleryTransitioning) return;
+    setIsGalleryTransitioning(true);
+    setCurrentSlide((prev) => prev + 1);
   };
 
   const prevSlide = () => {
-    if (projects.length === 0) return;
-    setCurrentSlide((prev) => (prev - 1 + projects.length) % projects.length);
+    if (projects.length === 0 || isGalleryTransitioning) return;
+    setIsGalleryTransitioning(true);
+    setCurrentSlide((prev) => prev - 1);
   };
 
   const goToSlide = (index: number) => {
@@ -202,13 +213,15 @@ export default function Home() {
   ];
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    if (isTestimonialTransitioning) return;
+    setIsTestimonialTransitioning(true);
+    setCurrentTestimonial((prev) => prev + 1);
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length
-    );
+    if (isTestimonialTransitioning) return;
+    setIsTestimonialTransitioning(true);
+    setCurrentTestimonial((prev) => prev - 1);
   };
 
   const goToTestimonial = (index: number) => {
@@ -256,7 +269,6 @@ export default function Home() {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    console.log("Touch start detected");
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
     setIsDragging(false);
@@ -273,16 +285,13 @@ export default function Home() {
 
     // If there's significant horizontal movement, prevent vertical scroll
     if (deltaX > 10) {
-      console.log("Horizontal movement detected:", deltaX);
       setIsDragging(true);
       e.preventDefault();
     }
   };
 
   const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
-    console.log("Touch end detected for:", type);
     if (!touchStart || !touchEnd) {
-      console.log("No touch start or end data");
       setIsDragging(false);
       return;
     }
@@ -291,40 +300,25 @@ export default function Home() {
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
-    console.log(
-      "Swipe distance:",
-      distance,
-      "Left:",
-      isLeftSwipe,
-      "Right:",
-      isRightSwipe
-    );
-
     if (type === "gallery") {
       if (isLeftSwipe && projects.length > 0) {
-        console.log("Gallery: next slide");
         nextSlide();
       }
       if (isRightSwipe && projects.length > 0) {
-        console.log("Gallery: prev slide");
         prevSlide();
       }
     } else if (type === "package") {
       if (isLeftSwipe) {
-        console.log("Package: next package");
         nextPackage();
       }
       if (isRightSwipe) {
-        console.log("Package: prev package");
         prevPackage();
       }
     } else if (type === "testimonial") {
       if (isLeftSwipe) {
-        console.log("Testimonial: next testimonial");
         nextTestimonial();
       }
       if (isRightSwipe) {
-        console.log("Testimonial: prev testimonial");
         prevTestimonial();
       }
     }
@@ -387,6 +381,76 @@ export default function Home() {
     setCurrentPackage(0);
     setIsTransitioning(false);
   }, [selectedServiceType]);
+
+  // Handle infinite loop transitions for gallery
+  useEffect(() => {
+    if (!isGalleryTransitioning || projects.length === 0) return;
+
+    const timer = setTimeout(() => {
+      // Handle infinite loop reset without animation
+      if (currentSlide >= projects.length) {
+        if (galleryRef.current) {
+          galleryRef.current.style.transition = "none";
+          setCurrentSlide(0);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (galleryRef.current) {
+              galleryRef.current.style.transition = "";
+            }
+          }, 50);
+        }
+      } else if (currentSlide < 0) {
+        if (galleryRef.current) {
+          galleryRef.current.style.transition = "none";
+          setCurrentSlide(projects.length - 1);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (galleryRef.current) {
+              galleryRef.current.style.transition = "";
+            }
+          }, 50);
+        }
+      }
+      setIsGalleryTransitioning(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [currentSlide, isGalleryTransitioning, projects.length]);
+
+  // Handle infinite loop transitions for testimonials
+  useEffect(() => {
+    if (!isTestimonialTransitioning) return;
+
+    const timer = setTimeout(() => {
+      // Handle infinite loop reset without animation
+      if (currentTestimonial >= testimonials.length) {
+        if (testimonialRef.current) {
+          testimonialRef.current.style.transition = "none";
+          setCurrentTestimonial(0);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (testimonialRef.current) {
+              testimonialRef.current.style.transition = "";
+            }
+          }, 50);
+        }
+      } else if (currentTestimonial < 0) {
+        if (testimonialRef.current) {
+          testimonialRef.current.style.transition = "none";
+          setCurrentTestimonial(testimonials.length - 1);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (testimonialRef.current) {
+              testimonialRef.current.style.transition = "";
+            }
+          }, 50);
+        }
+      }
+      setIsTestimonialTransitioning(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [currentTestimonial, isTestimonialTransitioning]);
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
@@ -620,17 +684,59 @@ export default function Home() {
                   {/* Main Image Container */}
                   <div className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none">
                     <div
-                      className="flex transition-transform duration-300 ease-out"
+                      ref={galleryRef}
+                      className={`flex transition-transform duration-300 ease-out ${
+                        isDragging ? "transition-none" : ""
+                      }`}
                       style={{
-                        transform: `translateX(-${currentSlide * 100}%)`,
+                        transform: `translateX(-${
+                          (currentSlide + projects.length) * 100
+                        }%)`,
                         touchAction: "pan-y",
                       }}
                       onTouchStart={handleTouchStart}
                       onTouchMove={handleTouchMove}
                       onTouchEnd={() => handleTouchEnd("gallery")}
                     >
+                      {/* Previous set for seamless left scrolling */}
+                      {projects.map((project) => (
+                        <div
+                          key={`prev-${project.id}`}
+                          className="w-full flex-shrink-0"
+                        >
+                          <div className="relative">
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              width={900}
+                              height={600}
+                              className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                            />
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Current set - main projects */}
                       {projects.map((project) => (
                         <div key={project.id} className="w-full flex-shrink-0">
+                          <div className="relative">
+                            <Image
+                              src={project.image}
+                              alt={project.title}
+                              width={900}
+                              height={600}
+                              className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                            />
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Next set for seamless right scrolling */}
+                      {projects.map((project) => (
+                        <div
+                          key={`next-${project.id}`}
+                          className="w-full flex-shrink-0"
+                        >
                           <div className="relative">
                             <Image
                               src={project.image}
@@ -694,26 +800,34 @@ export default function Home() {
                     </svg>
                   </div>
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
-                    {projects[currentSlide]?.description || "Loading..."}
+                    {projects[
+                      ((currentSlide % projects.length) + projects.length) %
+                        projects.length
+                    ]?.description || "Loading..."}
                   </p>
                 </div>
 
                 {/* Pagination Dots */}
                 <div className="flex justify-center mt-3 sm:mt-4 lg:mt-5 space-x-2">
-                  {projects.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToSlide(index);
-                      }}
-                      className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
-                        index === currentSlide
-                          ? "bg-gray-800"
-                          : "bg-gray-300 hover:bg-gray-400"
-                      }`}
-                    />
-                  ))}
+                  {projects.map((_, index) => {
+                    const actualCurrentSlide =
+                      ((currentSlide % projects.length) + projects.length) %
+                      projects.length;
+                    return (
+                      <button
+                        key={index}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToSlide(index);
+                        }}
+                        className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
+                          index === actualCurrentSlide
+                            ? "bg-gray-800"
+                            : "bg-gray-300 hover:bg-gray-400"
+                        }`}
+                      />
+                    );
+                  })}
                 </div>
 
                 {/* Explore More Button */}
@@ -1631,17 +1745,99 @@ export default function Home() {
               {/* Mobile: Single testimonial carousel */}
               <div className="relative overflow-hidden rounded-2xl carousel-container">
                 <div
-                  className="flex transition-transform duration-300 ease-out"
+                  ref={testimonialRef}
+                  className={`flex transition-transform duration-300 ease-out ${
+                    isDragging ? "transition-none" : ""
+                  }`}
                   style={{
-                    transform: `translateX(-${currentTestimonial * 100}%)`,
+                    transform: `translateX(-${
+                      (currentTestimonial + testimonials.length) * 100
+                    }%)`,
                     touchAction: "pan-y",
                   }}
                   onTouchStart={handleTouchStart}
                   onTouchMove={handleTouchMove}
                   onTouchEnd={() => handleTouchEnd("testimonial")}
                 >
+                  {/* Previous set for seamless left scrolling */}
+                  {testimonials.map((testimonial) => (
+                    <div
+                      key={`prev-${testimonial.id}`}
+                      className="w-full flex-shrink-0"
+                    >
+                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                        <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                          <iframe
+                            className="w-full h-full"
+                            src={testimonial.videoUrl}
+                            title={`Customer Testimonial ${testimonial.id}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+                        <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                          <div className="flex items-center justify-center mb-4">
+                            <svg
+                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                            </svg>
+                          </div>
+                          <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                            {testimonial.quote}
+                          </p>
+                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                            {testimonial.name}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Current set - main testimonials */}
                   {testimonials.map((testimonial) => (
                     <div key={testimonial.id} className="w-full flex-shrink-0">
+                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                        <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                          <iframe
+                            className="w-full h-full"
+                            src={testimonial.videoUrl}
+                            title={`Customer Testimonial ${testimonial.id}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+                        <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                          <div className="flex items-center justify-center mb-4">
+                            <svg
+                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                            </svg>
+                          </div>
+                          <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                            {testimonial.quote}
+                          </p>
+                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                            {testimonial.name}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Next set for seamless right scrolling */}
+                  {testimonials.map((testimonial) => (
+                    <div
+                      key={`next-${testimonial.id}`}
+                      className="w-full flex-shrink-0"
+                    >
                       <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                         <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                           <iframe
@@ -1780,17 +1976,23 @@ export default function Home() {
 
             {/* Mobile Pagination Dots */}
             <div className="flex justify-center mt-6 space-x-2 md:hidden">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === currentTestimonial
-                      ? "bg-gray-800"
-                      : "bg-gray-300 hover:bg-gray-400"
-                  }`}
-                />
-              ))}
+              {testimonials.map((_, index) => {
+                const actualCurrentTestimonial =
+                  ((currentTestimonial % testimonials.length) +
+                    testimonials.length) %
+                  testimonials.length;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => goToTestimonial(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                      index === actualCurrentTestimonial
+                        ? "bg-gray-800"
+                        : "bg-gray-300 hover:bg-gray-400"
+                    }`}
+                  />
+                );
+              })}
             </div>
 
             {/* Desktop Pagination Dots */}
