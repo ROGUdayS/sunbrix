@@ -349,25 +349,6 @@ export default function FAQ() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Building homes Since 1999
-          </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8">
-            Sunbrix is a venture by the Sunbrix Group, a leading name in steel,
-            cement, energy and other core sectors. We believe building a home
-            should put you firmly in control, with access to verified
-            professionals, quality products and a safe, transparent process -
-            the Sunbrix way.
-          </p>
-          <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg text-base sm:text-lg font-semibold transition-colors shadow-md">
-            Contact Us
-          </button>
-        </div>
-      </section>
-
       {/* Contact Form */}
       <ContactForm title="Contact Us" />
 

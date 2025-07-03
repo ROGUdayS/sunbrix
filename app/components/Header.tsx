@@ -155,7 +155,7 @@ export default function Header({
               Services
             </button>
             <Link href="/about" className={getLinkClassName("/about")}>
-              About us
+              About Us
             </Link>
             <Link href="/faq" className={getLinkClassName("/faq")}>
               FAQs
@@ -229,7 +229,7 @@ export default function Header({
                 className={getMobileLinkClassName("/about")}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                About us
+                About Us
               </Link>
               <Link
                 href="/faq"
