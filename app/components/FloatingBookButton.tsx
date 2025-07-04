@@ -6,6 +6,7 @@ import { scrollToContactForm } from "../utils/scrollToContactForm";
 
 export default function FloatingBookButton() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const [isContactFormVisible, setIsContactFormVisible] = useState(false);
   const pathname = usePathname();
   const isMainPage = pathname === "/";
 
@@ -27,7 +28,32 @@ export default function FloatingBookButton() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMainPage]);
 
-  if (!showFloatingButton) return null;
+  // Intersection Observer to detect when contact form is visible
+  useEffect(() => {
+    const contactForm = document.getElementById("contact-form");
+    if (!contactForm) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsContactFormVisible(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the contact form is visible
+        rootMargin: "0px 0px -50px 0px", // Add some margin to trigger slightly before
+      }
+    );
+
+    observer.observe(contactForm);
+
+    return () => {
+      observer.unobserve(contactForm);
+    };
+  }, []);
+
+  // Don't show the button if it shouldn't be shown or if contact form is visible
+  if (!showFloatingButton || isContactFormVisible) return null;
 
   return (
     <div className="fixed bottom-4 sm:bottom-6 left-4 right-4 sm:left-auto sm:right-6 z-50">
