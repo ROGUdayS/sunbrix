@@ -1,8 +1,6 @@
 "use client";
 
 import Header from "../components/Header";
-import Footer from "../components/Footer";
-import FloatingBookButton from "../components/FloatingBookButton";
 import Link from "next/link";
 
 export default function PrivacyPage() {
@@ -103,7 +101,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

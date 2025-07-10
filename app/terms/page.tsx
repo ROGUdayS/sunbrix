@@ -1,8 +1,6 @@
 "use client";
 
 import Header from "../components/Header";
-import Footer from "../components/Footer";
-import FloatingBookButton from "../components/FloatingBookButton";
 import Link from "next/link";
 
 export default function TermsPage() {
@@ -93,7 +91,6 @@ export default function TermsPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

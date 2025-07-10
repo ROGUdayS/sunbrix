@@ -427,7 +427,7 @@ export default function Home() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [currentTestimonial, isTestimonialTransitioning]);
+  }, [currentTestimonial, isTestimonialTransitioning, testimonials.length]);
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">

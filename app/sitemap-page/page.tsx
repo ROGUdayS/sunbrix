@@ -1,8 +1,6 @@
 "use client";
 
 import Header from "../components/Header";
-import ContactForm from "../components/ContactForm";
-import FloatingBookButton from "../components/FloatingBookButton";
 import Link from "next/link";
 import projectsData from "../../data/projects.json";
 

@@ -3,8 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import Header from "./components/Header";
-import ContactForm from "./components/ContactForm";
-import FloatingBookButton from "./components/FloatingBookButton";
 
 export default function NotFound() {
   return (
