@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test-sheets": "node scripts/test-sheets.mjs"
+    "test-sheets": "node scripts/test-sheets.mjs",
+    "update-sitemap": "node scripts/update-sitemap.mjs"
   },
   "dependencies": {
     "dotenv": "^16.5.0",

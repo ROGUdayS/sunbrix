@@ -34,11 +34,6 @@ export default function Home() {
   // Add accordion state for packages - simplified to track which section is open
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
-  // Add service type selection state - default to construction
-  const [selectedServiceType, setSelectedServiceType] = useState<string | null>(
-    "construction"
-  );
-
   // Add package carousel state
   const [currentPackage, setCurrentPackage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -234,13 +229,9 @@ export default function Home() {
 
   // Package carousel navigation functions with infinite loop
   const nextPackage = () => {
-    if (!selectedServiceType || isTransitioning) return;
+    if (isTransitioning) return;
 
-    const packageKeys = Object.keys(
-      packagesData.packages[
-        selectedServiceType as keyof typeof packagesData.packages
-      ] || {}
-    );
+    const packageKeys = Object.keys(packagesData.packages.construction || {});
 
     if (packageKeys.length === 0) return;
 
@@ -249,13 +240,9 @@ export default function Home() {
   };
 
   const prevPackage = () => {
-    if (!selectedServiceType || isTransitioning) return;
+    if (isTransitioning) return;
 
-    const packageKeys = Object.keys(
-      packagesData.packages[
-        selectedServiceType as keyof typeof packagesData.packages
-      ] || {}
-    );
+    const packageKeys = Object.keys(packagesData.packages.construction || {});
 
     if (packageKeys.length === 0) return;
 
@@ -334,13 +321,9 @@ export default function Home() {
 
   // Handle infinite loop transitions with smooth reset
   useEffect(() => {
-    if (!selectedServiceType || !isTransitioning) return;
+    if (!isTransitioning) return;
 
-    const packageKeys = Object.keys(
-      packagesData.packages[
-        selectedServiceType as keyof typeof packagesData.packages
-      ] || {}
-    );
+    const packageKeys = Object.keys(packagesData.packages.construction || {});
 
     const totalPackages = packageKeys.length;
     if (totalPackages === 0) return;
@@ -374,13 +357,7 @@ export default function Home() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [currentPackage, isTransitioning, selectedServiceType]);
-
-  // Reset carousel when service type changes
-  useEffect(() => {
-    setCurrentPackage(0);
-    setIsTransitioning(false);
-  }, [selectedServiceType]);
+  }, [currentPackage, isTransitioning]);
 
   // Handle infinite loop transitions for gallery
   useEffect(() => {
@@ -891,112 +868,88 @@ export default function Home() {
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-3">
               Packages
             </h2>
-
-            {/* Service Type Tabs - Show only if city is selected from header */}
-            {selectedCity && (
-              <div className="flex justify-center px-4">
-                <div className="flex bg-gray-100 rounded-lg p-1 w-full max-w-sm lg:max-w-md">
-                  {packagesData.serviceTypes.map((serviceType) => (
-                    <button
-                      key={serviceType.id}
-                      onClick={() => setSelectedServiceType(serviceType.id)}
-                      className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
-                        selectedServiceType === serviceType.id
-                          ? "bg-white text-gray-900 shadow-sm"
-                          : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      {serviceType.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Package Cards - Desktop: All visible, Mobile: Carousel */}
-          {selectedCity && selectedServiceType && (
+          {selectedCity && (
             <>
               {/* Desktop View - All packages visible */}
               <div className="hidden lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
-                {Object.entries(
-                  packagesData.packages[
-                    selectedServiceType as keyof typeof packagesData.packages
-                  ]
-                ).map(([packageKey, packageInfo]) => {
-                  const currentCityPricing =
-                    packageInfo.pricing[
-                      selectedCity.id as keyof typeof packageInfo.pricing
-                    ];
+                {Object.entries(packagesData.packages.construction).map(
+                  ([packageKey, packageInfo]) => {
+                    const currentCityPricing =
+                      packageInfo.pricing[
+                        selectedCity.id as keyof typeof packageInfo.pricing
+                      ];
 
-                  return (
-                    <div
-                      key={packageKey}
-                      className="relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-amber-200"
-                    >
-                      {/* Card Content */}
-                      <div className="p-4 lg:p-5">
-                        {/* Package Title */}
-                        <div className="text-center mb-4">
-                          <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
-                            {packageInfo.title}
-                          </h3>
+                    return (
+                      <div
+                        key={packageKey}
+                        className="relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-amber-200"
+                      >
+                        {/* Card Content */}
+                        <div className="p-4 lg:p-5">
+                          {/* Package Title */}
+                          <div className="text-center mb-4">
+                            <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
+                              {packageInfo.title}
+                            </h3>
 
-                          {/* Price Display */}
-                          <div className="mb-3">
-                            <div className="text-2xl lg:text-3xl font-bold text-amber-600 mb-1">
-                              {selectedCity
-                                ? currentCityPricing?.price
-                                : "X,XXX"}
-                            </div>
-                            {selectedCity &&
-                              !currentCityPricing?.startingAt && (
-                                <div className="text-xs text-gray-500">
-                                  per sq. ft (Ex GST)
-                                </div>
-                              )}
-                          </div>
-                        </div>
-
-                        {/* Divider */}
-                        <div className="border-t border-gray-100 mb-3"></div>
-
-                        {/* Expandable Sections */}
-                        <div className="space-y-1.5">
-                          {Object.entries(packageInfo.sections).map(
-                            ([sectionKey, section]) => (
-                              <div
-                                key={sectionKey}
-                                className="border border-gray-100 rounded-md overflow-hidden"
-                              >
-                                <button
-                                  onClick={() => toggleSection(sectionKey)}
-                                  className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
-                                >
-                                  <span className="font-semibold text-gray-900 text-xs lg:text-sm">
-                                    {section.title}
-                                  </span>
-                                  <div className="flex items-center space-x-2">
-                                    <svg
-                                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                                        expandedSection === sectionKey
-                                          ? "rotate-180"
-                                          : ""
-                                      }`}
-                                      fill="currentColor"
-                                      viewBox="0 0 20 20"
-                                    >
-                                      <path
-                                        fillRule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clipRule="evenodd"
-                                      />
-                                    </svg>
+                            {/* Price Display */}
+                            <div className="mb-3">
+                              <div className="text-2xl lg:text-3xl font-bold text-amber-600 mb-1">
+                                {selectedCity
+                                  ? currentCityPricing?.price
+                                  : "X,XXX"}
+                              </div>
+                              {selectedCity &&
+                                !currentCityPricing?.startingAt && (
+                                  <div className="text-xs text-gray-500">
+                                    per sq. ft (Ex GST)
                                   </div>
-                                </button>
+                                )}
+                            </div>
+                          </div>
 
+                          {/* Divider */}
+                          <div className="border-t border-gray-100 mb-3"></div>
+
+                          {/* Expandable Sections */}
+                          <div className="space-y-1.5">
+                            {Object.entries(packageInfo.sections).map(
+                              ([sectionKey, section]) => (
                                 <div
-                                  className={`
+                                  key={sectionKey}
+                                  className="border border-gray-100 rounded-md overflow-hidden"
+                                >
+                                  <button
+                                    onClick={() => toggleSection(sectionKey)}
+                                    className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
+                                  >
+                                    <span className="font-semibold text-gray-900 text-xs lg:text-sm">
+                                      {section.title}
+                                    </span>
+                                    <div className="flex items-center space-x-2">
+                                      <svg
+                                        className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                                          expandedSection === sectionKey
+                                            ? "rotate-180"
+                                            : ""
+                                        }`}
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                          clipRule="evenodd"
+                                        />
+                                      </svg>
+                                    </div>
+                                  </button>
+
+                                  <div
+                                    className={`
                                     transition-all duration-300 ease-in-out overflow-hidden
                                     ${
                                       expandedSection === sectionKey
@@ -1004,40 +957,39 @@ export default function Home() {
                                         : "max-h-0 opacity-0"
                                     }
                                   `}
-                                >
-                                  <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
-                                    <ul className="space-y-1.5">
-                                      {section.items.map((item, index) => (
-                                        <li
-                                          key={index}
-                                          className="flex items-start text-xs lg:text-sm text-gray-700"
-                                        >
-                                          <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                          <span className="leading-relaxed">
-                                            {item}
-                                          </span>
-                                        </li>
-                                      ))}
-                                    </ul>
+                                  >
+                                    <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
+                                      <ul className="space-y-1.5">
+                                        {section.items.map((item, index) => (
+                                          <li
+                                            key={index}
+                                            className="flex items-start text-xs lg:text-sm text-gray-700"
+                                          >
+                                            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                                            <span className="leading-relaxed">
+                                              {item}
+                                            </span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            )
-                          )}
+                              )
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  }
+                )}
               </div>
 
               {/* Mobile/Tablet Carousel View */}
               <div className="lg:hidden relative">
                 {(() => {
                   const packageEntries = Object.entries(
-                    packagesData.packages[
-                      selectedServiceType as keyof typeof packagesData.packages
-                    ]
+                    packagesData.packages.construction
                   );
 
                   return (
@@ -1435,30 +1387,16 @@ export default function Home() {
               </button>
             </div>
           )}
-
-          {selectedCity && !selectedServiceType && (
-            <div className="text-center py-12">
-              <div className="text-gray-500 text-lg">
-                Please select a service type to view packages
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
-      {/* Service Timeline - Dynamic based on selected service type */}
-      {selectedCity && selectedServiceType && (
+      {/* Service Timeline - Construction only */}
+      {selectedCity && (
         <section className="py-8 sm:py-10 lg:py-12 bg-gradient-to-br from-amber-50 to-orange-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-6 sm:mb-8 lg:mb-10">
               <h2 className="text-2xl sm:text-3xl font-bold text-amber-900 mb-4">
-                Your{" "}
-                {
-                  packagesData.serviceTypes.find(
-                    (type) => type.id === selectedServiceType
-                  )?.name
-                }{" "}
-                Journey
+                Your Construction Journey
               </h2>
               <p className="text-base sm:text-lg text-amber-800">
                 Follow our streamlined process from start to finish
@@ -1491,13 +1429,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src={
-                          selectedServiceType === "construction"
-                            ? "/icons/consult.png"
-                            : selectedServiceType === "architecture"
-                            ? "/icons/consult.png"
-                            : "/icons/consult.png"
-                        }
+                        src="/icons/consult.png"
                         alt="Planning"
                         width={24}
                         height={24}
@@ -1509,19 +1441,12 @@ export default function Home() {
                     </div>
                   </div>
                   <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2 whitespace-pre-line">
-                    {selectedServiceType === "construction"
-                      ? "Plan &\nConsult"
-                      : selectedServiceType === "architecture"
-                      ? "Initial Consultation"
-                      : "Design Consultation"}
+                    Plan & Consult
                   </h3>
                   {/* Hide description on mobile, show on larger screens */}
                   <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
-                    {selectedServiceType === "construction"
-                      ? "Meet our experts to discuss your vision, budget, and requirements for your dream home."
-                      : selectedServiceType === "architecture"
-                      ? "Understand your needs, site conditions, and architectural preferences."
-                      : "Explore your style preferences, space requirements, and design goals."}
+                    Meet our experts to discuss your vision, budget, and
+                    requirements for your dream home.
                   </p>
                 </div>
 
@@ -1530,13 +1455,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src={
-                          selectedServiceType === "construction"
-                            ? "/icons/planning-drawing.png"
-                            : selectedServiceType === "architecture"
-                            ? "/icons/planning-drawing.png"
-                            : "/icons/planning-drawing.png"
-                        }
+                        src="/icons/planning-drawing.png"
                         alt="Design"
                         width={24}
                         height={24}
@@ -1548,19 +1467,12 @@ export default function Home() {
                     </div>
                   </div>
                   <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2">
-                    {selectedServiceType === "construction"
-                      ? "Design & Approve"
-                      : selectedServiceType === "architecture"
-                      ? "Concept Design"
-                      : "Space Planning"}
+                    Design & Approve
                   </h3>
                   {/* Hide description on mobile, show on larger screens */}
                   <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
-                    {selectedServiceType === "construction"
-                      ? "Review detailed 3D designs, floor plans, and make final approvals before construction."
-                      : selectedServiceType === "architecture"
-                      ? "Develop initial concepts, sketches, and architectural layouts for your approval."
-                      : "Create detailed layouts, mood boards, and design concepts for your spaces."}
+                    Review detailed 3D designs, floor plans, and make final
+                    approvals before construction.
                   </p>
                 </div>
 
@@ -1569,13 +1481,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src={
-                          selectedServiceType === "construction"
-                            ? "/icons/building-under-construction.png"
-                            : selectedServiceType === "architecture"
-                            ? "/icons/planning-drawing.png"
-                            : "/icons/brick-layering.png"
-                        }
+                        src="/icons/building-under-construction.png"
                         alt="Build/Execute"
                         width={24}
                         height={24}
@@ -1587,19 +1493,12 @@ export default function Home() {
                     </div>
                   </div>
                   <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2">
-                    {selectedServiceType === "construction"
-                      ? "Build & Monitor"
-                      : selectedServiceType === "architecture"
-                      ? "Detailed Design"
-                      : "Execute & Install"}
+                    Build & Monitor
                   </h3>
                   {/* Hide description on mobile, show on larger screens */}
                   <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
-                    {selectedServiceType === "construction"
-                      ? "Professional construction with regular quality checks and progress updates."
-                      : selectedServiceType === "architecture"
-                      ? "Finalize detailed drawings, specifications, and technical documentation."
-                      : "Professional installation of furniture, fixtures, and decorative elements."}
+                    Professional construction with regular quality checks and
+                    progress updates.
                   </p>
                 </div>
 
@@ -1608,13 +1507,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src={
-                          selectedServiceType === "construction"
-                            ? "/icons/built-homes.png"
-                            : selectedServiceType === "architecture"
-                            ? "/icons/delivery-of-buildings.png"
-                            : "/icons/built-homes.png"
-                        }
+                        src="/icons/built-homes.png"
                         alt="Complete"
                         width={24}
                         height={24}
@@ -1626,19 +1519,12 @@ export default function Home() {
                     </div>
                   </div>
                   <h3 className="text-xs sm:text-sm lg:text-lg font-bold text-amber-900 mb-1 sm:mb-2 whitespace-pre-line">
-                    {selectedServiceType === "construction"
-                      ? "Handover & Move In"
-                      : selectedServiceType === "architecture"
-                      ? "Final\nDelivery"
-                      : "Final Styling & Handover"}
+                    Handover & Move In
                   </h3>
                   {/* Hide description on mobile, show on larger screens */}
                   <p className="hidden lg:block text-xs sm:text-xs lg:text-sm text-amber-700 leading-relaxed">
-                    {selectedServiceType === "construction"
-                      ? "Final inspection, documentation handover, and keys to your dream home."
-                      : selectedServiceType === "architecture"
-                      ? "Complete architectural package with all drawings and documentation."
-                      : "Final touches, styling, and handover of your beautifully designed spaces."}
+                    Final inspection, documentation handover, and keys to your
+                    dream home.
                   </p>
                 </div>
               </div>
