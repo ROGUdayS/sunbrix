@@ -254,25 +254,30 @@ export default function Home() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
     setIsDragging(false);
+    setDragOffset(0);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!touchStart) return;
 
     const currentX = e.targetTouches[0].clientX;
+    const deltaX = currentX - touchStart;
+
     setTouchEnd(currentX);
 
     // Calculate horizontal movement
-    const deltaX = Math.abs(currentX - touchStart);
+    const absDeltaX = Math.abs(deltaX);
 
-    // If there's significant horizontal movement, prevent vertical scroll
-    if (deltaX > 10) {
+    // If there's significant horizontal movement, prevent vertical scroll and track drag
+    if (absDeltaX > 10) {
       setIsDragging(true);
+      setDragOffset(deltaX);
       e.preventDefault();
     }
   };
@@ -280,12 +285,16 @@ export default function Home() {
   const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
     if (!touchStart || !touchEnd) {
       setIsDragging(false);
+      setDragOffset(0);
       return;
     }
 
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
+
+    // Reset drag offset
+    setDragOffset(0);
 
     if (type === "gallery") {
       if (isLeftSwipe && projects.length > 0) {
@@ -311,6 +320,7 @@ export default function Home() {
     }
 
     setIsDragging(false);
+    setDragOffset(0);
   };
 
   const goToPackage = (index: number) => {
@@ -666,9 +676,9 @@ export default function Home() {
                         isDragging ? "transition-none" : ""
                       }`}
                       style={{
-                        transform: `translateX(-${
+                        transform: `translateX(calc(-${
                           (currentSlide + projects.length) * 100
-                        }%)`,
+                        }% + ${dragOffset}px))`,
                         touchAction: "pan-y",
                       }}
                       onTouchStart={handleTouchStart}
@@ -1080,9 +1090,9 @@ export default function Home() {
                                 isDragging ? "transition-none" : ""
                               }`}
                               style={{
-                                transform: `translateX(-${
+                                transform: `translateX(calc(-${
                                   (currentPackage + packageEntries.length) * 100
-                                }%)`,
+                                }% + ${dragOffset}px))`,
                                 touchAction: "pan-y",
                               }}
                               onTouchStart={handleTouchStart}
@@ -1795,9 +1805,9 @@ export default function Home() {
                     isDragging ? "transition-none" : ""
                   }`}
                   style={{
-                    transform: `translateX(-${
+                    transform: `translateX(calc(-${
                       (currentTestimonial + testimonials.length) * 100
-                    }%)`,
+                    }% + ${dragOffset}px))`,
                     touchAction: "pan-y",
                   }}
                   onTouchStart={handleTouchStart}
