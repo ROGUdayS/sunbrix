@@ -985,7 +985,7 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Mobile/Tablet Carousel View */}
+              {/* Mobile/Tablet Carousel View with Instagram-style previews */}
               <div className="lg:hidden relative">
                 {(() => {
                   const packageEntries = Object.entries(
@@ -994,354 +994,513 @@ export default function Home() {
 
                   return (
                     <>
-                      {/* Carousel Container */}
-                      <div className="relative overflow-hidden carousel-container">
-                        <div
-                          ref={carouselRef}
-                          className={`flex transition-transform duration-300 ease-out ${
-                            isDragging ? "transition-none" : ""
-                          }`}
-                          style={{
-                            transform: `translateX(-${
-                              (currentPackage + packageEntries.length) * 100
-                            }%)`,
-                            touchAction: "pan-y",
-                          }}
-                          onTouchStart={handleTouchStart}
-                          onTouchMove={handleTouchMove}
-                          onTouchEnd={() => handleTouchEnd("package")}
-                        >
-                          {/* Duplicate packages for infinite loop effect */}
-                          {/* Previous set for seamless left scrolling */}
-                          {packageEntries.map(([packageKey, packageInfo]) => {
-                            const currentCityPricing =
-                              packageInfo.pricing[
-                                selectedCity.id as keyof typeof packageInfo.pricing
-                              ];
+                      {/* Carousel Container with Side Previews */}
+                      <div className="relative max-w-7xl mx-auto">
+                        {/* Packages with Side Previews */}
+                        <div className="flex items-center justify-center gap-2 sm:gap-3">
+                          {/* Previous Package Preview - Show right edge only */}
+                          <div className="hidden sm:block flex-shrink-0 relative">
+                            <div
+                              className="relative w-12 sm:w-16 h-[400px] sm:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-l-lg"
+                              onClick={prevPackage}
+                            >
+                              <div className="relative w-full h-full">
+                                {(() => {
+                                  const prevPackageIndex =
+                                    (currentPackage -
+                                      1 +
+                                      packageEntries.length) %
+                                    packageEntries.length;
+                                  const [, packageInfo] =
+                                    packageEntries[prevPackageIndex];
+                                  const currentCityPricing =
+                                    packageInfo.pricing[
+                                      selectedCity.id as keyof typeof packageInfo.pricing
+                                    ];
 
-                            return (
-                              <div
-                                key={`prev-${packageKey}`}
-                                className="w-full flex-shrink-0 px-1 sm:px-3"
-                              >
-                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
-                                  {/* Package content - same as original */}
-                                  <div className="p-3 sm:p-4">
-                                    <div className="text-center mb-3 sm:mb-4">
-                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                        {packageInfo.title}
-                                      </h3>
-                                      <div className="mb-3">
-                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                          {selectedCity
-                                            ? currentCityPricing?.price
-                                            : "X,XXX"}
+                                  return (
+                                    <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 h-full">
+                                      <div className="p-2 sm:p-3">
+                                        <div className="text-center mb-2">
+                                          <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1 truncate">
+                                            {packageInfo.title}
+                                          </h3>
+                                          <div className="text-sm sm:text-base font-bold text-amber-600">
+                                            {selectedCity
+                                              ? currentCityPricing?.price
+                                              : "X,XXX"}
+                                          </div>
                                         </div>
-                                        {selectedCity &&
-                                          !currentCityPricing?.startingAt && (
-                                            <div className="text-xs text-gray-500">
-                                              per sq. ft (Ex GST)
-                                            </div>
-                                          )}
+                                        <div className="border-t border-gray-100 mb-2"></div>
+                                        <div className="space-y-1">
+                                          {Object.entries(packageInfo.sections)
+                                            .slice(0, 2)
+                                            .map(([sectionKey, section]) => (
+                                              <div
+                                                key={sectionKey}
+                                                className="border border-gray-100 rounded overflow-hidden"
+                                              >
+                                                <div className="p-1.5 sm:p-2 text-left">
+                                                  <span className="font-semibold text-gray-900 text-xs">
+                                                    {section.title}
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            ))}
+                                        </div>
                                       </div>
                                     </div>
-                                    <div className="border-t border-gray-100 mb-3"></div>
-                                    <div className="space-y-1.5">
-                                      {Object.entries(packageInfo.sections).map(
-                                        ([sectionKey, section]) => (
-                                          <div
-                                            key={sectionKey}
-                                            className="border border-gray-100 rounded-md overflow-hidden"
-                                          >
-                                            <button
-                                              onClick={() =>
-                                                toggleSection(sectionKey)
-                                              }
-                                              className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
-                                            >
-                                              <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                {section.title}
-                                              </span>
-                                              <div className="flex items-center space-x-2">
-                                                <svg
-                                                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                                                    expandedSection ===
-                                                    sectionKey
-                                                      ? "rotate-180"
-                                                      : ""
-                                                  }`}
-                                                  fill="currentColor"
-                                                  viewBox="0 0 20 20"
-                                                >
-                                                  <path
-                                                    fillRule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                    clipRule="evenodd"
-                                                  />
-                                                </svg>
+                                  );
+                                })()}
+                              </div>
+                              <div className="absolute inset-0 bg-black/10"></div>
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <svg
+                                  className="w-3 h-3 text-white opacity-70"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 19l-7-7 7-7"
+                                  />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Main Package Container */}
+                          <div className="relative overflow-hidden select-none carousel-container flex-1 max-w-sm sm:max-w-md">
+                            <div
+                              ref={carouselRef}
+                              className={`flex transition-transform duration-300 ease-out ${
+                                isDragging ? "transition-none" : ""
+                              }`}
+                              style={{
+                                transform: `translateX(-${
+                                  (currentPackage + packageEntries.length) * 100
+                                }%)`,
+                                touchAction: "pan-y",
+                              }}
+                              onTouchStart={handleTouchStart}
+                              onTouchMove={handleTouchMove}
+                              onTouchEnd={() => handleTouchEnd("package")}
+                            >
+                              {/* Duplicate packages for infinite loop effect */}
+                              {/* Previous set for seamless left scrolling */}
+                              {packageEntries.map(
+                                ([packageKey, packageInfo]) => {
+                                  const currentCityPricing =
+                                    packageInfo.pricing[
+                                      selectedCity.id as keyof typeof packageInfo.pricing
+                                    ];
+
+                                  return (
+                                    <div
+                                      key={`prev-${packageKey}`}
+                                      className="w-full flex-shrink-0 px-1 sm:px-2"
+                                    >
+                                      <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
+                                        {/* Package content - same as original */}
+                                        <div className="p-3 sm:p-4">
+                                          <div className="text-center mb-3 sm:mb-4">
+                                            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                              {packageInfo.title}
+                                            </h3>
+                                            <div className="mb-3">
+                                              <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                                {selectedCity
+                                                  ? currentCityPricing?.price
+                                                  : "X,XXX"}
                                               </div>
-                                            </button>
-                                            <div
-                                              className={`
-                                                  transition-all duration-300 ease-in-out overflow-hidden
-                                                  ${
-                                                    expandedSection ===
-                                                    sectionKey
-                                                      ? "max-h-48 opacity-100"
-                                                      : "max-h-0 opacity-0"
+                                              {selectedCity &&
+                                                !currentCityPricing?.startingAt && (
+                                                  <div className="text-xs text-gray-500">
+                                                    per sq. ft (Ex GST)
+                                                  </div>
+                                                )}
+                                            </div>
+                                          </div>
+                                          <div className="border-t border-gray-100 mb-3"></div>
+                                          <div className="space-y-1.5">
+                                            {Object.entries(
+                                              packageInfo.sections
+                                            ).map(([sectionKey, section]) => (
+                                              <div
+                                                key={sectionKey}
+                                                className="border border-gray-100 rounded-md overflow-hidden"
+                                              >
+                                                <button
+                                                  onClick={() =>
+                                                    toggleSection(sectionKey)
                                                   }
-                                                `}
-                                            >
-                                              <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
-                                                <ul className="space-y-1.5">
-                                                  {section.items.map(
-                                                    (item, itemIndex) => (
-                                                      <li
-                                                        key={itemIndex}
-                                                        className="flex items-start text-xs sm:text-sm text-gray-700"
-                                                      >
-                                                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                                        <span className="leading-relaxed">
-                                                          {item}
-                                                        </span>
-                                                      </li>
-                                                    )
-                                                  )}
-                                                </ul>
+                                                  className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
+                                                >
+                                                  <span className="font-semibold text-gray-900 text-xs sm:text-sm">
+                                                    {section.title}
+                                                  </span>
+                                                  <div className="flex items-center space-x-2">
+                                                    <svg
+                                                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                                                        expandedSection ===
+                                                        sectionKey
+                                                          ? "rotate-180"
+                                                          : ""
+                                                      }`}
+                                                      fill="currentColor"
+                                                      viewBox="0 0 20 20"
+                                                    >
+                                                      <path
+                                                        fillRule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clipRule="evenodd"
+                                                      />
+                                                    </svg>
+                                                  </div>
+                                                </button>
+                                                <div
+                                                  className={`
+                                                      transition-all duration-300 ease-in-out overflow-hidden
+                                                      ${
+                                                        expandedSection ===
+                                                        sectionKey
+                                                          ? "max-h-48 opacity-100"
+                                                          : "max-h-0 opacity-0"
+                                                      }
+                                                    `}
+                                                >
+                                                  <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
+                                                    <ul className="space-y-1.5">
+                                                      {section.items.map(
+                                                        (item, itemIndex) => (
+                                                          <li
+                                                            key={itemIndex}
+                                                            className="flex items-start text-xs sm:text-sm text-gray-700"
+                                                          >
+                                                            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                                                            <span className="leading-relaxed">
+                                                              {item}
+                                                            </span>
+                                                          </li>
+                                                        )
+                                                      )}
+                                                    </ul>
+                                                  </div>
+                                                </div>
                                               </div>
-                                            </div>
+                                            ))}
                                           </div>
-                                        )
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-
-                          {/* Current set - main packages */}
-                          {packageEntries.map(([packageKey, packageInfo]) => {
-                            const currentCityPricing =
-                              packageInfo.pricing[
-                                selectedCity.id as keyof typeof packageInfo.pricing
-                              ];
-
-                            return (
-                              <div
-                                key={packageKey}
-                                className="w-full flex-shrink-0 px-1 sm:px-3"
-                              >
-                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
-                                  {/* Card Content */}
-                                  <div className="p-3 sm:p-4">
-                                    {/* Package Title */}
-                                    <div className="text-center mb-3 sm:mb-4">
-                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                        {packageInfo.title}
-                                      </h3>
-
-                                      {/* Price Display */}
-                                      <div className="mb-3">
-                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                          {selectedCity
-                                            ? currentCityPricing?.price
-                                            : "X,XXX"}
                                         </div>
-                                        {selectedCity &&
-                                          !currentCityPricing?.startingAt && (
-                                            <div className="text-xs text-gray-500">
-                                              per sq. ft (Ex GST)
-                                            </div>
-                                          )}
                                       </div>
                                     </div>
+                                  );
+                                }
+                              )}
 
-                                    {/* Divider */}
-                                    <div className="border-t border-gray-100 mb-3"></div>
+                              {/* Current set - main packages */}
+                              {packageEntries.map(
+                                ([packageKey, packageInfo]) => {
+                                  const currentCityPricing =
+                                    packageInfo.pricing[
+                                      selectedCity.id as keyof typeof packageInfo.pricing
+                                    ];
 
-                                    {/* Expandable Sections */}
-                                    <div className="space-y-1.5">
-                                      {Object.entries(packageInfo.sections).map(
-                                        ([sectionKey, section]) => (
-                                          <div
-                                            key={sectionKey}
-                                            className="border border-gray-100 rounded-md overflow-hidden"
-                                          >
-                                            <button
-                                              onClick={() =>
-                                                toggleSection(sectionKey)
-                                              }
-                                              className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
-                                            >
-                                              <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                {section.title}
-                                              </span>
-                                              <div className="flex items-center space-x-2">
-                                                <svg
-                                                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                                                    expandedSection ===
-                                                    sectionKey
-                                                      ? "rotate-180"
-                                                      : ""
-                                                  }`}
-                                                  fill="currentColor"
-                                                  viewBox="0 0 20 20"
-                                                >
-                                                  <path
-                                                    fillRule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                    clipRule="evenodd"
-                                                  />
-                                                </svg>
+                                  return (
+                                    <div
+                                      key={packageKey}
+                                      className="w-full flex-shrink-0 px-1 sm:px-2"
+                                    >
+                                      <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
+                                        {/* Card Content */}
+                                        <div className="p-3 sm:p-4">
+                                          {/* Package Title */}
+                                          <div className="text-center mb-3 sm:mb-4">
+                                            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                              {packageInfo.title}
+                                            </h3>
+
+                                            {/* Price Display */}
+                                            <div className="mb-3">
+                                              <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                                {selectedCity
+                                                  ? currentCityPricing?.price
+                                                  : "X,XXX"}
                                               </div>
-                                            </button>
-
-                                            <div
-                                              className={`
-                                                transition-all duration-300 ease-in-out overflow-hidden
-                                                ${
-                                                  expandedSection === sectionKey
-                                                    ? "max-h-48 opacity-100"
-                                                    : "max-h-0 opacity-0"
-                                                }
-                                              `}
-                                            >
-                                              <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
-                                                <ul className="space-y-1.5">
-                                                  {section.items.map(
-                                                    (item, itemIndex) => (
-                                                      <li
-                                                        key={itemIndex}
-                                                        className="flex items-start text-xs sm:text-sm text-gray-700"
-                                                      >
-                                                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                                        <span className="leading-relaxed">
-                                                          {item}
-                                                        </span>
-                                                      </li>
-                                                    )
-                                                  )}
-                                                </ul>
-                                              </div>
+                                              {selectedCity &&
+                                                !currentCityPricing?.startingAt && (
+                                                  <div className="text-xs text-gray-500">
+                                                    per sq. ft (Ex GST)
+                                                  </div>
+                                                )}
                                             </div>
                                           </div>
-                                        )
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
 
-                          {/* Next set for seamless right scrolling */}
-                          {packageEntries.map(([packageKey, packageInfo]) => {
-                            const currentCityPricing =
-                              packageInfo.pricing[
-                                selectedCity.id as keyof typeof packageInfo.pricing
-                              ];
+                                          {/* Divider */}
+                                          <div className="border-t border-gray-100 mb-3"></div>
 
-                            return (
-                              <div
-                                key={`next-${packageKey}`}
-                                className="w-full flex-shrink-0 px-1 sm:px-3"
-                              >
-                                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
-                                  {/* Package content - same as original */}
-                                  <div className="p-3 sm:p-4">
-                                    <div className="text-center mb-3 sm:mb-4">
-                                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                        {packageInfo.title}
-                                      </h3>
-                                      <div className="mb-3">
-                                        <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
-                                          {selectedCity
-                                            ? currentCityPricing?.price
-                                            : "X,XXX"}
-                                        </div>
-                                        {selectedCity &&
-                                          !currentCityPricing?.startingAt && (
-                                            <div className="text-xs text-gray-500">
-                                              per sq. ft (Ex GST)
-                                            </div>
-                                          )}
-                                      </div>
-                                    </div>
-                                    <div className="border-t border-gray-100 mb-3"></div>
-                                    <div className="space-y-1.5">
-                                      {Object.entries(packageInfo.sections).map(
-                                        ([sectionKey, section]) => (
-                                          <div
-                                            key={sectionKey}
-                                            className="border border-gray-100 rounded-md overflow-hidden"
-                                          >
-                                            <button
-                                              onClick={() =>
-                                                toggleSection(sectionKey)
-                                              }
-                                              className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
-                                            >
-                                              <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                {section.title}
-                                              </span>
-                                              <div className="flex items-center space-x-2">
-                                                <svg
-                                                  className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                                                    expandedSection ===
-                                                    sectionKey
-                                                      ? "rotate-180"
-                                                      : ""
-                                                  }`}
-                                                  fill="currentColor"
-                                                  viewBox="0 0 20 20"
-                                                >
-                                                  <path
-                                                    fillRule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                    clipRule="evenodd"
-                                                  />
-                                                </svg>
-                                              </div>
-                                            </button>
-                                            <div
-                                              className={`
-                                                  transition-all duration-300 ease-in-out overflow-hidden
-                                                  ${
-                                                    expandedSection ===
-                                                    sectionKey
-                                                      ? "max-h-48 opacity-100"
-                                                      : "max-h-0 opacity-0"
+                                          {/* Expandable Sections */}
+                                          <div className="space-y-1.5">
+                                            {Object.entries(
+                                              packageInfo.sections
+                                            ).map(([sectionKey, section]) => (
+                                              <div
+                                                key={sectionKey}
+                                                className="border border-gray-100 rounded-md overflow-hidden"
+                                              >
+                                                <button
+                                                  onClick={() =>
+                                                    toggleSection(sectionKey)
                                                   }
-                                                `}
-                                            >
-                                              <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
-                                                <ul className="space-y-1.5">
-                                                  {section.items.map(
-                                                    (item, itemIndex) => (
-                                                      <li
-                                                        key={itemIndex}
-                                                        className="flex items-start text-xs sm:text-sm text-gray-700"
-                                                      >
-                                                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                                        <span className="leading-relaxed">
-                                                          {item}
-                                                        </span>
-                                                      </li>
-                                                    )
-                                                  )}
-                                                </ul>
+                                                  className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
+                                                >
+                                                  <span className="font-semibold text-gray-900 text-xs sm:text-sm">
+                                                    {section.title}
+                                                  </span>
+                                                  <div className="flex items-center space-x-2">
+                                                    <svg
+                                                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                                                        expandedSection ===
+                                                        sectionKey
+                                                          ? "rotate-180"
+                                                          : ""
+                                                      }`}
+                                                      fill="currentColor"
+                                                      viewBox="0 0 20 20"
+                                                    >
+                                                      <path
+                                                        fillRule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clipRule="evenodd"
+                                                      />
+                                                    </svg>
+                                                  </div>
+                                                </button>
+
+                                                <div
+                                                  className={`
+                                                    transition-all duration-300 ease-in-out overflow-hidden
+                                                    ${
+                                                      expandedSection ===
+                                                      sectionKey
+                                                        ? "max-h-48 opacity-100"
+                                                        : "max-h-0 opacity-0"
+                                                    }
+                                                  `}
+                                                >
+                                                  <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
+                                                    <ul className="space-y-1.5">
+                                                      {section.items.map(
+                                                        (item, itemIndex) => (
+                                                          <li
+                                                            key={itemIndex}
+                                                            className="flex items-start text-xs sm:text-sm text-gray-700"
+                                                          >
+                                                            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                                                            <span className="leading-relaxed">
+                                                              {item}
+                                                            </span>
+                                                          </li>
+                                                        )
+                                                      )}
+                                                    </ul>
+                                                  </div>
+                                                </div>
                                               </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                }
+                              )}
+
+                              {/* Next set for seamless right scrolling */}
+                              {packageEntries.map(
+                                ([packageKey, packageInfo]) => {
+                                  const currentCityPricing =
+                                    packageInfo.pricing[
+                                      selectedCity.id as keyof typeof packageInfo.pricing
+                                    ];
+
+                                  return (
+                                    <div
+                                      key={`next-${packageKey}`}
+                                      className="w-full flex-shrink-0 px-1 sm:px-2"
+                                    >
+                                      <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
+                                        {/* Package content - same as original */}
+                                        <div className="p-3 sm:p-4">
+                                          <div className="text-center mb-3 sm:mb-4">
+                                            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
+                                              {packageInfo.title}
+                                            </h3>
+                                            <div className="mb-3">
+                                              <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
+                                                {selectedCity
+                                                  ? currentCityPricing?.price
+                                                  : "X,XXX"}
+                                              </div>
+                                              {selectedCity &&
+                                                !currentCityPricing?.startingAt && (
+                                                  <div className="text-xs text-gray-500">
+                                                    per sq. ft (Ex GST)
+                                                  </div>
+                                                )}
                                             </div>
                                           </div>
-                                        )
-                                      )}
+                                          <div className="border-t border-gray-100 mb-3"></div>
+                                          <div className="space-y-1.5">
+                                            {Object.entries(
+                                              packageInfo.sections
+                                            ).map(([sectionKey, section]) => (
+                                              <div
+                                                key={sectionKey}
+                                                className="border border-gray-100 rounded-md overflow-hidden"
+                                              >
+                                                <button
+                                                  onClick={() =>
+                                                    toggleSection(sectionKey)
+                                                  }
+                                                  className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
+                                                >
+                                                  <span className="font-semibold text-gray-900 text-xs sm:text-sm">
+                                                    {section.title}
+                                                  </span>
+                                                  <div className="flex items-center space-x-2">
+                                                    <svg
+                                                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                                                        expandedSection ===
+                                                        sectionKey
+                                                          ? "rotate-180"
+                                                          : ""
+                                                      }`}
+                                                      fill="currentColor"
+                                                      viewBox="0 0 20 20"
+                                                    >
+                                                      <path
+                                                        fillRule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clipRule="evenodd"
+                                                      />
+                                                    </svg>
+                                                  </div>
+                                                </button>
+                                                <div
+                                                  className={`
+                                                      transition-all duration-300 ease-in-out overflow-hidden
+                                                      ${
+                                                        expandedSection ===
+                                                        sectionKey
+                                                          ? "max-h-48 opacity-100"
+                                                          : "max-h-0 opacity-0"
+                                                      }
+                                                    `}
+                                                >
+                                                  <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
+                                                    <ul className="space-y-1.5">
+                                                      {section.items.map(
+                                                        (item, itemIndex) => (
+                                                          <li
+                                                            key={itemIndex}
+                                                            className="flex items-start text-xs sm:text-sm text-gray-700"
+                                                          >
+                                                            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                                                            <span className="leading-relaxed">
+                                                              {item}
+                                                            </span>
+                                                          </li>
+                                                        )
+                                                      )}
+                                                    </ul>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                </div>
+                                  );
+                                }
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Next Package Preview - Show left edge only */}
+                          <div className="hidden sm:block flex-shrink-0 relative">
+                            <div
+                              className="relative w-12 sm:w-16 h-[400px] sm:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-r-lg"
+                              onClick={nextPackage}
+                            >
+                              <div className="relative w-full h-full">
+                                {(() => {
+                                  const nextPackageIndex =
+                                    (currentPackage + 1) %
+                                    packageEntries.length;
+                                  const [, packageInfo] =
+                                    packageEntries[nextPackageIndex];
+                                  const currentCityPricing =
+                                    packageInfo.pricing[
+                                      selectedCity.id as keyof typeof packageInfo.pricing
+                                    ];
+
+                                  return (
+                                    <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 h-full">
+                                      <div className="p-2 sm:p-3">
+                                        <div className="text-center mb-2">
+                                          <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1 truncate">
+                                            {packageInfo.title}
+                                          </h3>
+                                          <div className="text-sm sm:text-base font-bold text-amber-600">
+                                            {selectedCity
+                                              ? currentCityPricing?.price
+                                              : "X,XXX"}
+                                          </div>
+                                        </div>
+                                        <div className="border-t border-gray-100 mb-2"></div>
+                                        <div className="space-y-1">
+                                          {Object.entries(packageInfo.sections)
+                                            .slice(0, 2)
+                                            .map(([sectionKey, section]) => (
+                                              <div
+                                                key={sectionKey}
+                                                className="border border-gray-100 rounded overflow-hidden"
+                                              >
+                                                <div className="p-1.5 sm:p-2 text-left">
+                                                  <span className="font-semibold text-gray-900 text-xs">
+                                                    {section.title}
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
                               </div>
-                            );
-                          })}
+                              <div className="absolute inset-0 bg-black/10"></div>
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <svg
+                                  className="w-3 h-3 text-white opacity-70"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                  />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
