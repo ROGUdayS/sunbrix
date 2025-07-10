@@ -37,8 +37,6 @@ export default function Home() {
   // Add package carousel state
   const [currentPackage, setCurrentPackage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Add state for projects to fix hydration issue
@@ -252,37 +250,6 @@ export default function Home() {
     setCurrentPackage((prev) => prev - 1);
   };
 
-  // Auto-advance package carousel for comparison
-  useEffect(() => {
-    if (!selectedCity || isPaused) return;
-
-    const packageKeys = Object.keys(packagesData.packages.construction || {});
-    if (packageKeys.length <= 1) return;
-
-    // Reset progress when package changes
-    setProgress(0);
-
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          return 0;
-        }
-        return prev + 2.5; // 2.5% every 100ms = 100% in 4 seconds
-      });
-    }, 100);
-
-    const advanceInterval = setInterval(() => {
-      if (!isTransitioning) {
-        nextPackage();
-      }
-    }, 4000); // 4 seconds per package for comparison
-
-    return () => {
-      clearInterval(progressInterval);
-      clearInterval(advanceInterval);
-    };
-  }, [selectedCity, isTransitioning, isPaused, currentPackage]);
-
   // Touch/swipe handlers for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -292,8 +259,6 @@ export default function Home() {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
     setIsDragging(false);
-    // Pause auto-advance when user interacts
-    setIsPaused(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -346,11 +311,6 @@ export default function Home() {
     }
 
     setIsDragging(false);
-
-    // Resume auto-advance after 3 seconds of no interaction
-    setTimeout(() => {
-      setIsPaused(false);
-    }, 3000);
   };
 
   const goToPackage = (index: number) => {
@@ -394,7 +354,7 @@ export default function Home() {
         }
       }
       setIsTransitioning(false);
-    }, 800);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [currentPackage, isTransitioning]);
@@ -1035,75 +995,22 @@ export default function Home() {
                   return (
                     <>
                       {/* Carousel Container */}
-                      <div className="relative overflow-hidden carousel-container">
-                        {/* Comparison indicator */}
-                        {isPaused && (
-                          <div className="absolute top-2 right-2 z-10 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-                            Comparing packages...
-                          </div>
-                        )}
-
-                        {/* Progress bar */}
-                        {!isPaused && selectedCity && (
-                          <div className="absolute bottom-2 left-2 right-2 z-10">
-                            <div className="bg-white/80 backdrop-blur-sm rounded-full h-1 overflow-hidden">
-                              <div
-                                className="bg-amber-500 h-full transition-all duration-100 ease-linear"
-                                style={{ width: `${progress}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Pause/Resume button */}
-                        {selectedCity && (
-                          <button
-                            onClick={() => setIsPaused(!isPaused)}
-                            className="absolute top-2 left-2 z-10 bg-white/80 backdrop-blur-sm text-gray-700 p-2 rounded-full shadow-sm hover:bg-white transition-colors"
-                          >
-                            {isPaused ? (
-                              <svg
-                                className="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            ) : (
-                              <svg
-                                className="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            )}
-                          </button>
-                        )}
+                      <div className="relative overflow-visible carousel-container px-4">
                         <div
                           ref={carouselRef}
-                          className={`flex transition-transform duration-800 ease-in-out ${
+                          className={`flex transition-transform duration-300 ease-out ${
                             isDragging ? "transition-none" : ""
                           }`}
                           style={{
-                            transform: `translateX(-${
-                              (currentPackage + packageEntries.length) * 100
-                            }%)`,
+                            transform: `translateX(-$${
+                              (currentPackage + packageEntries.length) * 80
+                            }vw)`,
                             touchAction: "pan-y",
                           }}
                           onTouchStart={handleTouchStart}
                           onTouchMove={handleTouchMove}
                           onTouchEnd={() => handleTouchEnd("package")}
                         >
-                          {/* Duplicate packages for infinite loop effect */}
                           {/* Previous set for seamless left scrolling */}
                           {packageEntries.map(([packageKey, packageInfo]) => {
                             const currentCityPricing =
@@ -1114,7 +1021,7 @@ export default function Home() {
                             return (
                               <div
                                 key={`prev-${packageKey}`}
-                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                                className="flex-shrink-0 w-[80vw] max-w-xs mx-2"
                               >
                                 <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Package content - same as original */}
@@ -1222,7 +1129,7 @@ export default function Home() {
                             return (
                               <div
                                 key={packageKey}
-                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                                className="flex-shrink-0 w-[80vw] max-w-xs mx-2"
                               >
                                 <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Card Content */}
@@ -1337,7 +1244,7 @@ export default function Home() {
                             return (
                               <div
                                 key={`next-${packageKey}`}
-                                className="w-full flex-shrink-0 px-1 sm:px-3"
+                                className="flex-shrink-0 w-[80vw] max-w-xs mx-2"
                               >
                                 <div className="relative bg-white rounded-xl shadow-lg overflow-hidden mx-auto border border-gray-100">
                                   {/* Package content - same as original */}
