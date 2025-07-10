@@ -91,3 +91,14 @@ button {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
 }
+
+/* Custom scale utilities for mobile menu */
+.scale-102 {
+  transform: scale(1.02);
+  -webkit-transform: scale(1.02);
+}
+
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+  -webkit-transform: scale(1.02);
+}

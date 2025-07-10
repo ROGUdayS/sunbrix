@@ -1,62 +1,58 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 import { scrollToContactForm } from "../utils/scrollToContactForm";
 
 export default function FloatingBookButton() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const [isContactFormVisible, setIsContactFormVisible] = useState(false);
-  const pathname = usePathname();
-  const isMainPage = pathname === "/";
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
+  // const isMainPage = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
-      if (isMainPage) {
-        // On main page, always show the button (visible even on hero section)
-        setShowFloatingButton(true);
-      } else {
-        // On other pages, show button immediately
-        setShowFloatingButton(true);
-      }
+      setShowFloatingButton(true); // Always show unless hidden by intersection
     };
-
-    // Initial check
     handleScroll();
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isMainPage]);
+  }, []);
 
-  // Intersection Observer to detect when contact form is visible
+  // Intersection Observer for contact form and footer
   useEffect(() => {
     const contactForm = document.getElementById("contact-form");
-    if (!contactForm) return;
+    const footer = document.querySelector("footer");
 
-    const observer = new IntersectionObserver(
+    const observer = new window.IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setIsContactFormVisible(entry.isIntersecting);
+          if (entry.target === contactForm) {
+            setIsContactFormVisible(entry.isIntersecting);
+          }
+          if (entry.target === footer) {
+            setIsFooterVisible(entry.isIntersecting);
+          }
         });
       },
       {
-        threshold: 0.1, // Trigger when 10% of the contact form is visible
-        rootMargin: "0px 0px -50px 0px", // Add some margin to trigger slightly before
+        threshold: 0.1,
+        rootMargin: "0px 0px -100px 0px",
       }
     );
-
-    observer.observe(contactForm);
-
+    if (contactForm) observer.observe(contactForm);
+    if (footer) observer.observe(footer);
     return () => {
-      observer.unobserve(contactForm);
+      if (contactForm) observer.unobserve(contactForm);
+      if (footer) observer.unobserve(footer);
     };
   }, []);
 
-  // Don't show the button if it shouldn't be shown or if contact form is visible
-  if (!showFloatingButton || isContactFormVisible) return null;
+  // Hide if contact form or footer is visible
+  if (!showFloatingButton || isContactFormVisible || isFooterVisible)
+    return null;
 
   return (
-    <div className="fixed bottom-4 sm:bottom-6 left-4 right-4 sm:left-auto sm:right-6 z-50">
+    <div className="fixed bottom-8 sm:bottom-10 left-4 right-4 sm:left-auto sm:right-6 z-50">
       <button
         onClick={scrollToContactForm}
         className="w-full sm:w-auto bg-amber-600 text-white px-6 py-3 rounded-full sm:rounded-full shadow-lg hover:bg-amber-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center sm:justify-start space-x-2"

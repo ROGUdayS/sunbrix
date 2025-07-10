@@ -54,10 +54,11 @@ export default function Header({
 
   const getMobileLinkClassName = (path: string) => {
     const baseClasses =
-      "block px-3 py-2 text-base font-medium transition-colors";
-    const activeClasses = "text-amber-900 bg-amber-50";
+      "block px-4 py-3 text-base font-medium transition-all duration-300 rounded-lg mx-2 relative overflow-hidden";
+    const activeClasses =
+      "text-amber-900 bg-gradient-to-r from-amber-100 to-orange-100 border-2 border-amber-300 shadow-md transform scale-105";
     const inactiveClasses =
-      "text-gray-700 hover:text-amber-900 hover:bg-gray-50";
+      "text-gray-700 hover:text-amber-900 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 border-2 border-transparent hover:border-amber-200 hover:shadow-sm hover:transform hover:scale-102";
 
     return isActive(path)
       ? `${baseClasses} ${activeClasses}`
@@ -192,8 +193,8 @@ export default function Header({
 
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white shadow-lg">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="md:hidden border-t border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 shadow-xl">
+            <div className="px-2 pt-4 pb-4 space-y-2">
               <Link
                 href="/projects"
                 className={getMobileLinkClassName("/projects")}
@@ -220,7 +221,7 @@ export default function Header({
                     window.location.href = "/#packages";
                   }
                 }}
-                className="block px-3 py-2 text-base font-medium transition-colors text-gray-700 hover:text-amber-900 hover:bg-gray-50 w-full text-left"
+                className="block px-4 py-3 text-base font-medium transition-all duration-300 text-gray-700 hover:text-amber-900 hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 border-2 border-transparent hover:border-amber-200 hover:shadow-sm hover:transform hover:scale-102 rounded-lg mx-2 w-full text-left relative overflow-hidden"
               >
                 Services
               </button>
