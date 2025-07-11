@@ -126,6 +126,9 @@ export default function Header({
 
           {/* Center - Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
+            <Link href="/about" className={getLinkClassName("/about")}>
+              About Us
+            </Link>
             <Link href="/projects" className={getLinkClassName("/projects")}>
               Gallery
             </Link>
@@ -155,12 +158,6 @@ export default function Header({
             >
               Services
             </button>
-            <Link href="/about" className={getLinkClassName("/about")}>
-              About Us
-            </Link>
-            <Link href="/faq" className={getLinkClassName("/faq")}>
-              FAQs
-            </Link>
           </nav>
 
           {/* Right side - City selector (with fixed width to prevent layout shift) */}
@@ -196,6 +193,13 @@ export default function Header({
           <div className="md:hidden border-t border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 shadow-xl">
             <div className="px-2 pt-4 pb-4 space-y-2">
               <Link
+                href="/about"
+                className={getMobileLinkClassName("/about")}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                About Us
+              </Link>
+              <Link
                 href="/projects"
                 className={getMobileLinkClassName("/projects")}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -225,20 +229,6 @@ export default function Header({
               >
                 Services
               </button>
-              <Link
-                href="/about"
-                className={getMobileLinkClassName("/about")}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link
-                href="/faq"
-                className={getMobileLinkClassName("/faq")}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                FAQs
-              </Link>
             </div>
           </div>
         )}

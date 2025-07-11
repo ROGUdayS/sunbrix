@@ -31,16 +31,7 @@ export async function POST(request: NextRequest) {
       mobileNumber: body.mobileNumber ? "[REDACTED]" : undefined,
     });
 
-    const {
-      fullName,
-      email,
-      mobileNumber,
-      city,
-      timeline,
-      plotOwnership,
-      whatsappConsent,
-      privacyConsent,
-    } = body;
+    const { fullName, email, mobileNumber, city } = body;
 
     // Validate required fields
     if (!fullName || !email || !mobileNumber) {
@@ -83,17 +74,7 @@ export async function POST(request: NextRequest) {
 
     // Prepare the row data
     const timestamp = new Date().toISOString();
-    const rowData = [
-      timestamp,
-      fullName,
-      email,
-      mobileNumber,
-      city,
-      timeline,
-      plotOwnership,
-      whatsappConsent ? "Yes" : "No",
-      privacyConsent ? "Yes" : "No",
-    ];
+    const rowData = [timestamp, fullName, email, mobileNumber, city];
 
     // Ensure headers are present in the spreadsheet
     const headers = [
@@ -102,16 +83,12 @@ export async function POST(request: NextRequest) {
       "Email",
       "Mobile Number",
       "City",
-      "Timeline",
-      "Plot Ownership",
-      "WhatsApp Consent",
-      "Privacy Consent",
     ];
 
     try {
       const headerResponse = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: "Sheet1!A1:I1",
+        range: "Sheet1!A1:E1",
       });
 
       const existingHeaders = headerResponse.data.values?.[0];
@@ -124,7 +101,7 @@ export async function POST(request: NextRequest) {
         console.log("Adding/updating headers in spreadsheet...");
         await sheets.spreadsheets.values.update({
           spreadsheetId,
-          range: "Sheet1!A1:I1",
+          range: "Sheet1!A1:E1",
           valueInputOption: "RAW",
           requestBody: {
             values: [headers],
@@ -138,7 +115,7 @@ export async function POST(request: NextRequest) {
       try {
         await sheets.spreadsheets.values.update({
           spreadsheetId,
-          range: "Sheet1!A1:I1",
+          range: "Sheet1!A1:E1",
           valueInputOption: "RAW",
           requestBody: {
             values: [headers],
@@ -155,7 +132,7 @@ export async function POST(request: NextRequest) {
     try {
       await sheets.spreadsheets.values.append({
         spreadsheetId,
-        range: "Sheet1!A:I",
+        range: "Sheet1!A:E",
         valueInputOption: "RAW",
         insertDataOption: "INSERT_ROWS",
         requestBody: {
@@ -176,10 +153,6 @@ export async function POST(request: NextRequest) {
         email,
         mobileNumber: "[REDACTED]",
         city,
-        timeline,
-        plotOwnership,
-        whatsappConsent: whatsappConsent ? "Yes" : "No",
-        privacyConsent: privacyConsent ? "Yes" : "No",
       });
 
       // Return error instead of success when Google Sheets fails

@@ -113,7 +113,7 @@ export default function Footer() {
                   href="/projects"
                   className="hover:text-white transition-colors"
                 >
-                  Our projects
+                  Gallery
                 </Link>
               </li>
               <li>

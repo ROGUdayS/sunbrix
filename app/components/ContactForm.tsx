@@ -14,7 +14,6 @@ interface FormData {
   email: string;
   mobileNumber: string;
   city: string;
-  termsConsent: boolean;
 }
 
 export default function ContactForm({
@@ -28,19 +27,13 @@ export default function ContactForm({
     email: "",
     mobileNumber: "",
     city: selectedCity.displayName || "",
-    termsConsent: false,
   });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, type } = e.target;
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -185,28 +178,18 @@ export default function ContactForm({
               </div>
             </div>
 
-            {/* Row 5: Terms & Conditions checkbox */}
+            {/* Row 5: Terms & Conditions text */}
             <div className="space-y-3">
-              <label className="flex items-start">
-                <input
-                  type="checkbox"
-                  name="termsConsent"
-                  checked={formData.termsConsent}
-                  onChange={handleInputChange}
-                  required
-                  className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 mt-0.5 flex-shrink-0"
-                />
-                <span className="ml-3 text-sm text-gray-700">
-                  We agree with Sunbrix{" "}
-                  <Link
-                    href="#"
-                    className="text-orange-500 hover:text-orange-600 underline"
-                  >
-                    Terms & Conditions
-                  </Link>{" "}
-                  by signing into this form
-                </span>
-              </label>
+              <p className="text-sm text-gray-700">
+                We agree with Sunbrix{" "}
+                <Link
+                  href="#"
+                  className="text-orange-500 hover:text-orange-600 underline"
+                >
+                  Terms & Conditions
+                </Link>{" "}
+                by signing into this form
+              </p>
             </div>
 
             {/* Submit button */}
