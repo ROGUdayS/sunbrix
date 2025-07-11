@@ -535,8 +535,10 @@ export default function Home() {
               Our Commitment to Quality
             </h2>
             <p className="text-lg sm:text-xl text-amber-800 mb-6 sm:mb-8 lg:mb-10">
-              We are committed to building your dream home with the highest
-              quality materials and workmanship.
+              At Sunbrix, quality isn’t a feature, it’s the foundation of
+              everything we do. For over 20 years, we’ve crafted homes that last
+              and function with purpose, building each one with care in every
+              corner and meaning in every brick laid.
             </p>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
@@ -823,7 +825,7 @@ export default function Home() {
                     href="/projects"
                     className="bg-amber-600 hover:bg-amber-700 text-white px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
                   >
-                    Explore more projects
+                    Explore Gallery
                   </Link>
                 </div>
               </div>

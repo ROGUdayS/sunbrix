@@ -118,12 +118,6 @@ export default function Contact() {
                 {/* Terms & Conditions checkbox */}
                 <div className="space-y-3">
                   <label className="flex items-start">
-                    <input
-                      type="checkbox"
-                      name="termsConsent"
-                      required
-                      className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 mt-0.5 flex-shrink-0"
-                    />
                     <span className="ml-3 text-sm text-gray-700">
                       We agree with Sunbrix{" "}
                       <a
