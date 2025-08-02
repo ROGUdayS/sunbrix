@@ -535,10 +535,10 @@ export default function Home() {
               Our Commitment to Quality
             </h2>
             <p className="text-lg sm:text-xl text-amber-800 mb-6 sm:mb-8 lg:mb-10">
-              At Sunbrix, quality isn’t a feature, it’s the foundation of
-              everything we do. For over 20 years, we’ve crafted homes that last
-              and function with purpose, building each one with care in every
-              corner and meaning in every brick laid.
+              At Sunbrix, quality isn&apos;t a feature, it&apos;s the foundation
+              of everything we do. For over 20 years, we&apos;ve crafted homes
+              that last and function with purpose, building each one with care
+              in every corner and meaning in every brick laid.
             </p>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
@@ -553,10 +553,12 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  Designs matching vision
+                  Design & Strength
                 </h3>
                 <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  Functional layouts that are unique to your lifestyle.
+                  At Sunbrix, we build homes with timeless designs, using time
+                  tested traditional practices to ensure lasting strength and
+                  durability.
                 </p>
               </div>
               <div className="text-center">
@@ -570,27 +572,10 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  High-quality materials
+                  20 year warranty
                 </h3>
                 <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  No compromises. Only certified-grade materials.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
-                </div>
-                <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  Price transparency
-                </h3>
-                <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  Clear pricing with no surprises, just peace of mind.
+                  At Sunbrix, we proudly offer a 20 year warranty on our homes.
                 </p>
               </div>
               <div className="text-center">
@@ -604,11 +589,28 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  On-time delivery
+                  100% On time delivery
                 </h3>
                 <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  From planning to handover, our turnkey model stays on
-                  schedule.
+                  The past 20 years, Sunbrix has never delayed a single project.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <svg
+                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
+                  High quality materials
+                </h3>
+                <p className="text-xs sm:text-sm lg:text-base text-amber-700">
+                  At Sunbrix, Using the best quality materials is simply the
+                  norm.
                 </p>
               </div>
             </div>

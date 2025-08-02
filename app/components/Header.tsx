@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCity } from "../contexts/CityContext";
 import { useState, useEffect } from "react";
@@ -114,13 +115,19 @@ export default function Header({
             </button>
 
             {/* Logo */}
-            <Link
-              href="/"
-              className={`text-2xl font-bold transition-colors ${
-                isTransparent && !isScrolled ? "text-white" : "text-amber-900"
-              }`}
-            >
-              Sunbrix
+            <Link href="/" className="flex items-center">
+              <Image
+                src={
+                  isTransparent && !isScrolled
+                    ? "/logos/horizontal-logo/LOGO-WHITE-H.png"
+                    : "/logos/horizontal-logo/LOGO-ORIGINAL-H.png"
+                }
+                alt="Sunbrix"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+                priority
+              />
             </Link>
           </div>
 
