@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -7,7 +8,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-5">
-            <div className="text-3xl font-bold mb-6">Sunbrix</div>
+            <div className="mb-6">
+              <Image
+                src="/logos/horizontal-logo/LOGO-WHITE-H.png"
+                alt="Sunbrix"
+                width={150}
+                height={50}
+                className="h-12 w-auto"
+                priority
+              />
+            </div>
             <p className="text-gray-300 mb-8 text-base leading-relaxed max-w-md">
               Browse ideas, explore options and book a meeting with our expert
               consultants to finalise your design.

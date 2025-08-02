@@ -10,6 +10,14 @@ export const metadata: Metadata = {
     "Build your dream home hassle-free with Sunbrix. High-quality materials, transparent pricing, and on-time delivery.",
   keywords:
     "home construction, dream home, Sunbrix homes, house building, construction company",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.ico", type: "image/x-icon" },
+    ],
+    apple: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -19,6 +27,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <meta name="msapplication-TileImage" content="/favicon.ico" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff" />
+      </head>
       <body className="antialiased">
         <CityProvider>
           {children}
