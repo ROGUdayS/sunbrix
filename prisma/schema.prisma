@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  title         String   @db.VarChar(255)
+  location      String   @db.VarChar(100)
+  plot_size     String   @map("plot_size") @db.VarChar(50)
+  facing        String   @db.VarChar(50)
+  description   String   @db.Text
+  specifications Json    @default("{}")
+  images        String[]
+  active        Boolean  @default(true)
+  featured      Boolean  @default(false)
+  created_at    DateTime @default(now()) @map("created_at")
+  updated_at    DateTime @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model City {
+  id             String   @id @default(cuid())
+  name           String   @unique @db.VarChar(100)
+  active         Boolean  @default(true)
+  created_at     DateTime @default(now()) @map("created_at")
+  updated_at     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  packages       Package[]
+
+  @@map("cities")
+}
+
+model Package {
+  id           String   @id @default(cuid())
+  city_id      String   @map("city_id")
+  name         String   @db.VarChar(100) // Standard, Premium, Luxury
+  price        Decimal  @db.Decimal(10, 2)
+  active       Boolean  @default(true)
+  created_at   DateTime @default(now()) @map("created_at")
+  updated_at   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  city         City     @relation(fields: [city_id], references: [id], onDelete: Cascade)
+  sections     PackageSection[]
+
+  @@map("packages")
+}
+
+model PackageSection {
+  id          String   @id @default(cuid())
+  package_id  String   @map("package_id")
+  title       String   @db.VarChar(255)
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  package     Package  @relation(fields: [package_id], references: [id], onDelete: Cascade)
+  items       PackageSectionItem[]
+
+  @@map("package_sections")
+}
+
+model PackageSectionItem {
+  id                String   @id @default(cuid())
+  section_id        String   @map("section_id")
+  content           String   @db.Text
+  order             Int      @default(0)
+  active            Boolean  @default(true)
+  created_at        DateTime @default(now()) @map("created_at")
+  updated_at        DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  section           PackageSection @relation(fields: [section_id], references: [id], onDelete: Cascade)
+
+  @@map("package_section_items")
+}
+
+model Lead {
+  id         String   @id @default(cuid())
+  name       String   @db.VarChar(255)
+  email      String   @db.VarChar(255)
+  phone      String   @db.VarChar(20)
+  city       String   @db.VarChar(100)
+  source     String   @default("website") @db.VarChar(50)
+  status     String   @default("new") @db.VarChar(20)
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("leads")
+}

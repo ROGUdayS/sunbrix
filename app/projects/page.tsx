@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import projectsData from "../../data/projects.json";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
@@ -28,6 +27,9 @@ interface Project {
 
 export default function ProjectGallery() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,14 +37,40 @@ export default function ProjectGallery() {
   const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
 
-  // Import project data from JSON - Add year built to each project for demo
-  const allProjects = projectsData.projects.map((project) => ({
-    ...project,
-    yearBuilt: "2023", // Add default year if not present
-    bhk: `${project.specifications.bedrooms}BHK`,
-    siteDimension: project.plotSize,
-    residential: "Residential",
-  }));
+  // Fetch projects from API
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/projects?active=true");
+        if (!response.ok) {
+          throw new Error("Failed to fetch projects");
+        }
+        const data = await response.json();
+
+        // Transform projects to match expected format
+        const transformedProjects = data.projects.map((project: any) => ({
+          ...project,
+          yearBuilt: new Date(project.created_at).getFullYear().toString(),
+          bhk: `${project.specifications?.bedrooms || 2}BHK`,
+          siteDimension: project.plotSize,
+          residential: "Residential",
+        }));
+
+        setProjects(transformedProjects);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load projects"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProjects();
+  }, []);
+
+  const allProjects = projects;
 
   // Pagination logic
   const projectsPerPage = 6;
@@ -246,137 +274,156 @@ export default function ProjectGallery() {
           </h1>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+            <p className="text-red-600 font-medium">Failed to load projects</p>
+            <p className="text-sm text-red-500 mt-1">{error}</p>
+          </div>
+        )}
+
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
-          {currentProjects.map((project: Project) => {
-            // Create array of images - use multiple images if available, otherwise use main image
-            const projectImages =
-              project.images && project.images.length > 0
-                ? project.images
-                : [project.image];
-            const currentIndex = 0; // Always show first image since auto-cycling is removed
+        {!loading && !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8">
+            {currentProjects.map((project: Project) => {
+              // Create array of images - use multiple images if available, otherwise use main image
+              const projectImages =
+                project.images && project.images.length > 0
+                  ? project.images
+                  : [project.image];
+              const currentIndex = 0; // Always show first image since auto-cycling is removed
 
-            return (
-              <div
-                key={project.id}
-                className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow"
-              >
-                {/* Project Photo with Carousel */}
+              return (
                 <div
-                  className="relative cursor-pointer"
-                  onClick={() =>
-                    openModal(projectImages, project.title, currentIndex)
-                  }
+                  key={project.id}
+                  className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-shadow"
                 >
-                  <Image
-                    src={projectImages[currentIndex]}
-                    alt={project.title}
-                    width={500}
-                    height={320}
-                    className="w-full h-48 sm:h-56 lg:h-64 object-cover"
-                  />
+                  {/* Project Photo with Carousel */}
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={() =>
+                      openModal(projectImages, project.title, currentIndex)
+                    }
+                  >
+                    <Image
+                      src={projectImages[currentIndex]}
+                      alt={project.title}
+                      width={500}
+                      height={320}
+                      className="w-full h-48 sm:h-56 lg:h-64 object-cover"
+                    />
 
-                  {/* Location overlay */}
-                  <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm rounded-lg px-2 sm:px-3 py-1 sm:py-2 flex items-center space-x-1 sm:space-x-2">
-                    <svg
-                      className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-xs sm:text-sm font-medium text-gray-700">
-                      {project.location}, {project.yearBuilt}
-                    </span>
-                  </div>
-
-                  {/* Image indicators - Only show if more than 1 image */}
-                  {projectImages.length > 1 && (
-                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                      {projectImages.map((_, index) => (
-                        <div
-                          key={index}
-                          className={`w-2 h-2 rounded-full ${
-                            index === currentIndex ? "bg-white" : "bg-white/50"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-4 sm:p-6">
-                  {/* Project Name */}
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
-                    {project.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
-                    {project.description}
-                  </p>
-
-                  {/* Overview - Single Line Design */}
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center space-x-1 text-gray-600">
+                    {/* Location overlay */}
+                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm rounded-lg px-2 sm:px-3 py-1 sm:py-2 flex items-center space-x-1 sm:space-x-2">
                       <svg
-                        className="w-4 h-4 text-gray-400"
+                        className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
                         <path
                           fillRule="evenodd"
-                          d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"
+                          d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span className="font-medium text-gray-800">
-                        {project.siteDimension}
+                      <span className="text-xs sm:text-sm font-medium text-gray-700">
+                        {project.location}, {project.yearBuilt}
                       </span>
                     </div>
 
-                    <div className="flex items-center space-x-1 text-gray-600">
-                      {getDirectionalArrow(project.facing)}
-                      <span className="font-medium text-gray-800">
-                        {project.facing}
-                      </span>
-                    </div>
+                    {/* Image indicators - Only show if more than 1 image */}
+                    {projectImages.length > 1 && (
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+                        {projectImages.map((_, index) => (
+                          <div
+                            key={index}
+                            className={`w-2 h-2 rounded-full ${
+                              index === currentIndex
+                                ? "bg-white"
+                                : "bg-white/50"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-                    <div className="flex items-center space-x-1 text-gray-600">
-                      <svg
-                        className="w-4 h-4 text-gray-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                      </svg>
-                      <span className="font-medium text-gray-800">
-                        {project.bhk}
-                      </span>
-                    </div>
+                  <div className="p-4 sm:p-6">
+                    {/* Project Name */}
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
+                      {project.title}
+                    </h3>
 
-                    <div className="flex items-center space-x-1 text-gray-600">
-                      <svg
-                        className="w-4 h-4 text-gray-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z" />
-                      </svg>
-                      <span className="font-medium text-gray-800">
-                        {project.residential}
-                      </span>
+                    {/* Description */}
+                    <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+                      {project.description}
+                    </p>
+
+                    {/* Overview - Single Line Design */}
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center space-x-1 text-gray-600">
+                        <svg
+                          className="w-4 h-4 text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm0 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="font-medium text-gray-800">
+                          {project.siteDimension}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-1 text-gray-600">
+                        {getDirectionalArrow(project.facing)}
+                        <span className="font-medium text-gray-800">
+                          {project.facing}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-1 text-gray-600">
+                        <svg
+                          className="w-4 h-4 text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                        </svg>
+                        <span className="font-medium text-gray-800">
+                          {project.bhk}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-1 text-gray-600">
+                        <svg
+                          className="w-4 h-4 text-gray-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z" />
+                        </svg>
+                        <span className="font-medium text-gray-800">
+                          {project.residential}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Pagination - Only show if more than 6 projects */}
         {allProjects.length > projectsPerPage && (

@@ -8,8 +8,6 @@ import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
 
 import { useCity } from "./contexts/CityContext";
-import packagesData from "../data/packages.json";
-import projectsData from "../data/projects.json";
 
 interface ProjectData {
   id: string;
@@ -39,7 +37,7 @@ export default function Home() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Add state for projects to fix hydration issue
+  // Add state for projects and packages
   const [projects, setProjects] = useState<
     {
       image: string;
@@ -48,6 +46,14 @@ export default function Home() {
       id: number;
     }[]
   >([]);
+  
+  const [packagesData, setPackagesData] = useState<any>({
+    packages: { construction: {} }
+  });
+  
+  const [projectsData, setProjectsData] = useState<any>({
+    projects: []
+  });
 
   // Add gallery transition state
   const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
@@ -70,6 +76,11 @@ export default function Home() {
       id: number;
     }[] = [];
 
+    // Check if projectsData and projects array exist
+    if (!projectsData || !projectsData.projects || !Array.isArray(projectsData.projects)) {
+      return allImages;
+    }
+
     // Collect all images from all projects
     projectsData.projects.forEach(
       (project: ProjectData, projectIndex: number) => {
@@ -82,7 +93,7 @@ export default function Home() {
               description: project.description,
             });
           });
-        } else {
+        } else if (project.image) {
           // Fallback to main image if no images array
           allImages.push({
             id: projectIndex * 100,
@@ -107,11 +118,58 @@ export default function Home() {
     return shuffled;
   };
 
-  // Initialize projects on client side to avoid hydration mismatch
+  // Initialize projects and packages from API
   useEffect(() => {
-    const allImages = getAllProjectImages();
-    const shuffledProjects = shuffleArray(allImages).slice(0, 6);
-    setProjects(shuffledProjects);
+    async function fetchData() {
+      try {
+        // Fetch projects
+        const projectsResponse = await fetch('/api/projects?active=true&limit=10');
+        if (projectsResponse.ok) {
+          const projectsResult = await projectsResponse.json();
+          
+          // Create gallery images from projects
+          const allImages: any[] = [];
+          projectsResult.projects.forEach((project: any, projectIndex: number) => {
+            if (project.images && project.images.length > 0) {
+              project.images.forEach((image: string, imageIndex: number) => {
+                allImages.push({
+                  image,
+                  title: project.title,
+                  description: project.description,
+                  id: projectIndex * 100 + imageIndex
+                });
+              });
+            } else if (project.image) {
+              allImages.push({
+                image: project.image,
+                title: project.title,
+                description: project.description,
+                id: projectIndex * 100
+              });
+            }
+          });
+          
+          const shuffledProjects = shuffleArray(allImages).slice(0, 6);
+          setProjects(shuffledProjects);
+          setProjectsData({ projects: projectsResult.projects });
+        }
+
+        // Fetch packages
+        const packagesResponse = await fetch('/api/packages?active=true');
+        if (packagesResponse.ok) {
+          const packagesResult = await packagesResponse.json();
+          setPackagesData(packagesResult);
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        // Fallback to empty data
+        setProjects([]);
+        setPackagesData({ packages: { construction: {} } });
+        setProjectsData({ projects: [] });
+      }
+    }
+
+    fetchData();
   }, []);
 
   // Handle hash navigation for packages section
@@ -889,10 +947,10 @@ export default function Home() {
             <>
               {/* Desktop View - All packages visible */}
               <div className="hidden lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
-                {Object.entries(packagesData.packages.construction).map(
+                {Object.entries(packagesData.packages?.construction || {}).map(
                   ([packageKey, packageInfo]) => {
                     const currentCityPricing =
-                      packageInfo.pricing[
+                      (packageInfo.pricing || {})[
                         selectedCity.id as keyof typeof packageInfo.pricing
                       ];
 
@@ -930,7 +988,7 @@ export default function Home() {
 
                           {/* Expandable Sections */}
                           <div className="space-y-1.5">
-                            {Object.entries(packageInfo.sections).map(
+                            {Object.entries(packageInfo.sections || {}).map(
                               ([sectionKey, section]) => (
                                 <div
                                   key={sectionKey}
@@ -1003,7 +1061,7 @@ export default function Home() {
               <div className="lg:hidden relative">
                 {(() => {
                   const packageEntries = Object.entries(
-                    packagesData.packages.construction
+                    packagesData.packages?.construction || {}
                   );
 
                   return (
@@ -1025,10 +1083,11 @@ export default function Home() {
                                       1 +
                                       packageEntries.length) %
                                     packageEntries.length;
-                                  const [, packageInfo] =
-                                    packageEntries[prevPackageIndex];
+                                  const packageEntry = packageEntries[prevPackageIndex];
+                                  if (!packageEntry) return null;
+                                  const [, packageInfo] = packageEntry;
                                   const currentCityPricing =
-                                    packageInfo.pricing[
+                                    (packageInfo.pricing || {})[
                                       selectedCity.id as keyof typeof packageInfo.pricing
                                     ];
 
@@ -1047,7 +1106,7 @@ export default function Home() {
                                         </div>
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
-                                          {Object.entries(packageInfo.sections)
+                                          {Object.entries(packageInfo.sections || {})
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
                                               <div
@@ -1108,7 +1167,7 @@ export default function Home() {
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
                                   const currentCityPricing =
-                                    packageInfo.pricing[
+                                    (packageInfo.pricing || {})[
                                       selectedCity.id as keyof typeof packageInfo.pricing
                                     ];
 
@@ -1218,7 +1277,7 @@ export default function Home() {
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
                                   const currentCityPricing =
-                                    packageInfo.pricing[
+                                    (packageInfo.pricing || {})[
                                       selectedCity.id as keyof typeof packageInfo.pricing
                                     ];
 
@@ -1336,7 +1395,7 @@ export default function Home() {
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
                                   const currentCityPricing =
-                                    packageInfo.pricing[
+                                    (packageInfo.pricing || {})[
                                       selectedCity.id as keyof typeof packageInfo.pricing
                                     ];
 
@@ -1455,10 +1514,11 @@ export default function Home() {
                                   const nextPackageIndex =
                                     (currentPackage + 1) %
                                     packageEntries.length;
-                                  const [, packageInfo] =
-                                    packageEntries[nextPackageIndex];
+                                  const nextPackageEntry = packageEntries[nextPackageIndex];
+                                  if (!nextPackageEntry) return null;
+                                  const [, packageInfo] = nextPackageEntry;
                                   const currentCityPricing =
-                                    packageInfo.pricing[
+                                    (packageInfo.pricing || {})[
                                       selectedCity.id as keyof typeof packageInfo.pricing
                                     ];
 
@@ -1477,7 +1537,7 @@ export default function Home() {
                                         </div>
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
-                                          {Object.entries(packageInfo.sections)
+                                          {Object.entries(packageInfo.sections || {})
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
                                               <div

@@ -8,12 +8,19 @@
     "start": "next start",
     "lint": "next lint",
     "test-sheets": "node scripts/test-sheets.mjs",
-    "update-sitemap": "node scripts/update-sitemap.mjs"
+    "update-sitemap": "node scripts/update-sitemap.mjs",
+    "test-supabase": "node scripts/test-supabase-connection.mjs",
+    "upload-images": "node scripts/upload-images-to-supabase.mjs",
+    "upload-project-images": "node scripts/upload-project-images.mjs"
   },
   "dependencies": {
+    "@prisma/client": "^6.14.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/ssr": "^0.1.0",
     "dotenv": "^16.5.0",
     "googleapis": "^150.0.1",
     "next": "15.3.3",
+    "prisma": "^6.14.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

@@ -178,7 +178,7 @@ export default function Header({
                     : "border-amber-300 text-amber-700 bg-white focus:border-amber-600"
                 }`}
               >
-                <span className="truncate">{selectedCity.displayName}</span>
+                <span className="truncate">{selectedCity?.name || 'Select City'}</span>
                 <svg
                   className="w-4 h-4 flex-shrink-0"
                   fill="currentColor"

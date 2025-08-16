@@ -1,0 +1,174 @@
+{
+  "projects": [
+    {
+      "id": "rajendras-residence",
+      "title": "Mr. Rajendra's Residence",
+      "location": "Indore",
+      "plotSize": "30x50 sq. ft",
+      "facing": "East",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajendras-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajendras-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajendras-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajendras-residence/motions-background.webp"
+      ],
+      "description": "A modern 3-story residence designed with contemporary architecture and optimal space utilization.",
+      "specifications": {
+        "bedrooms": 3
+      }
+    },
+    {
+      "id": "shailendras-residence",
+      "title": "Mr. Shailendra's Residence",
+      "location": "Indore",
+      "plotSize": "40x60 sq. ft",
+      "facing": "East",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shailendras-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shailendras-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shailendras-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shailendras-residence/motions-background.webp"
+      ],
+      "description": "A spacious family home with elegant design and premium amenities for comfortable living.",
+      "specifications": {
+        "bedrooms": 4
+      }
+    },
+    {
+      "id": "itishrees-residence",
+      "title": "Mrs. Itishree's Residence",
+      "location": "Bhubaneswar",
+      "plotSize": "30x50 sq. ft",
+      "facing": "South",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/itishrees-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/itishrees-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/itishrees-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/itishrees-residence/motions-background.webp"
+      ],
+      "description": "A luxurious 4-story residence with premium finishes and contemporary design elements.",
+      "specifications": {
+        "bedrooms": 4
+      }
+    },
+    {
+      "id": "srishtis-residence",
+      "title": "Mrs. Srishti's Residence",
+      "location": "Bengaluru",
+      "plotSize": "30x40 sq. ft",
+      "facing": "East",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srishtis-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srishtis-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srishtis-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srishtis-residence/motions-background.webp"
+      ],
+      "description": "A cozy 2-story home designed for young families with efficient space planning.",
+      "specifications": {
+        "bedrooms": 2
+      }
+    },
+    {
+      "id": "rajbeers-residence",
+      "title": "Mr. Rajbeer's Residence",
+      "location": "Bhubaneswar",
+      "plotSize": "30x40 sq. ft",
+      "facing": "East",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajbeers-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajbeers-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajbeers-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/rajbeers-residence/motions-background.webp"
+      ],
+      "description": "A traditional yet modern home design that balances comfort with functionality.",
+      "specifications": {
+        "bedrooms": 2
+      }
+    },
+    {
+      "id": "sanjays-residence",
+      "title": "Mr. Sanjay's Residence",
+      "location": "Indore",
+      "plotSize": "30x50 sq. ft",
+      "facing": "West",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sanjays-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sanjays-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sanjays-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sanjays-residence/motions-background.webp"
+      ],
+      "description": "An economical yet stylish home design that maximizes value without compromising on quality.",
+      "specifications": {
+        "bedrooms": 3
+      }
+    },
+    {
+      "id": "ranjeeths-residence",
+      "title": "Mr. Ranjeeth's Residence",
+      "location": "Bengaluru",
+      "plotSize": "30x40 sq. ft",
+      "facing": "West",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ranjeeths-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ranjeeths-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ranjeeths-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ranjeeths-residence/motions-background.webp"
+      ],
+      "description": "A well-planned 3-story residence with modern amenities and thoughtful design.",
+      "specifications": {
+        "bedrooms": 3
+      }
+    },
+    {
+      "id": "narayans-residence",
+      "title": "Mr. Narayan's Residence",
+      "location": "Bhubaneswar",
+      "plotSize": "30x50 sq. ft",
+      "facing": "South",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/narayans-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/narayans-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/narayans-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/narayans-residence/motions-background.webp"
+      ],
+      "description": "A family-oriented home with spacious rooms and excellent natural lighting.",
+      "specifications": {
+        "bedrooms": 3
+      }
+    },
+    {
+      "id": "ashoks-residence",
+      "title": "Mr. Ashok's Residence",
+      "location": "Bhubaneswar",
+      "plotSize": "30x40 sq. ft",
+      "facing": "South",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ashoks-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ashoks-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ashoks-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ashoks-residence/motions-background.webp"
+      ],
+      "description": "A simple yet elegant 2-story home perfect for small families seeking comfort.",
+      "specifications": {
+        "bedrooms": 2
+      }
+    },
+    {
+      "id": "nileshs-residence",
+      "title": "Mr. Nilesh's Residence",
+      "location": "Indore",
+      "plotSize": "30x40 sq. ft",
+      "facing": "East",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/nileshs-residence/HomeHeroWebImage.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/nileshs-residence/HomeHeroWebImage.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/nileshs-residence/how-it-works.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/nileshs-residence/motions-background.webp"
+      ],
+      "description": "An affordable starter home with smart design solutions and quality construction.",
+      "specifications": {
+        "bedrooms": 2
+      }
+    }
+  ]
+}

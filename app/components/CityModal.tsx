@@ -50,7 +50,7 @@ export default function CityModal() {
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-medium">{city.displayName}</span>
+                <span className="font-medium">{city.name}</span>
                 {selectedCityId === city.id && (
                   <svg
                     className="w-5 h-5 text-amber-600"
