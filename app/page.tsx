@@ -46,13 +46,13 @@ export default function Home() {
       id: number;
     }[]
   >([]);
-  
+
   const [packagesData, setPackagesData] = useState<any>({
-    packages: { construction: {} }
+    packages: { construction: {} },
   });
-  
+
   const [projectsData, setProjectsData] = useState<any>({
-    projects: []
+    projects: [],
   });
 
   // Add gallery transition state
@@ -77,7 +77,11 @@ export default function Home() {
     }[] = [];
 
     // Check if projectsData and projects array exist
-    if (!projectsData || !projectsData.projects || !Array.isArray(projectsData.projects)) {
+    if (
+      !projectsData ||
+      !projectsData.projects ||
+      !Array.isArray(projectsData.projects)
+    ) {
       return allImages;
     }
 
@@ -123,45 +127,49 @@ export default function Home() {
     async function fetchData() {
       try {
         // Fetch projects
-        const projectsResponse = await fetch('/api/projects?active=true&limit=10');
+        const projectsResponse = await fetch(
+          "/api/projects?active=true&limit=10"
+        );
         if (projectsResponse.ok) {
           const projectsResult = await projectsResponse.json();
-          
+
           // Create gallery images from projects
           const allImages: any[] = [];
-          projectsResult.projects.forEach((project: any, projectIndex: number) => {
-            if (project.images && project.images.length > 0) {
-              project.images.forEach((image: string, imageIndex: number) => {
+          projectsResult.projects.forEach(
+            (project: any, projectIndex: number) => {
+              if (project.images && project.images.length > 0) {
+                project.images.forEach((image: string, imageIndex: number) => {
+                  allImages.push({
+                    image,
+                    title: project.title,
+                    description: project.description,
+                    id: projectIndex * 100 + imageIndex,
+                  });
+                });
+              } else if (project.image) {
                 allImages.push({
-                  image,
+                  image: project.image,
                   title: project.title,
                   description: project.description,
-                  id: projectIndex * 100 + imageIndex
+                  id: projectIndex * 100,
                 });
-              });
-            } else if (project.image) {
-              allImages.push({
-                image: project.image,
-                title: project.title,
-                description: project.description,
-                id: projectIndex * 100
-              });
+              }
             }
-          });
-          
+          );
+
           const shuffledProjects = shuffleArray(allImages).slice(0, 6);
           setProjects(shuffledProjects);
           setProjectsData({ projects: projectsResult.projects });
         }
 
         // Fetch packages
-        const packagesResponse = await fetch('/api/packages?active=true');
+        const packagesResponse = await fetch("/api/packages?active=true");
         if (packagesResponse.ok) {
           const packagesResult = await packagesResponse.json();
           setPackagesData(packagesResult);
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error("Failed to fetch data:", error);
         // Fallback to empty data
         setProjects([]);
         setPackagesData({ packages: { construction: {} } });
@@ -289,7 +297,7 @@ export default function Home() {
   const nextPackage = () => {
     if (isTransitioning) return;
 
-    const packageKeys = Object.keys(packagesData.packages.construction || {});
+    const packageKeys = Object.keys(getFilteredPackages());
 
     if (packageKeys.length === 0) return;
 
@@ -300,7 +308,7 @@ export default function Home() {
   const prevPackage = () => {
     if (isTransitioning) return;
 
-    const packageKeys = Object.keys(packagesData.packages.construction || {});
+    const packageKeys = Object.keys(getFilteredPackages());
 
     if (packageKeys.length === 0) return;
 
@@ -391,7 +399,7 @@ export default function Home() {
   useEffect(() => {
     if (!isTransitioning) return;
 
-    const packageKeys = Object.keys(packagesData.packages.construction || {});
+    const packageKeys = Object.keys(getFilteredPackages());
 
     const totalPackages = packageKeys.length;
     if (totalPackages === 0) return;
@@ -425,7 +433,7 @@ export default function Home() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [currentPackage, isTransitioning]);
+  }, [currentPackage, isTransitioning, selectedCity]);
 
   // Handle infinite loop transitions for gallery
   useEffect(() => {
@@ -496,6 +504,26 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, [currentTestimonial, isTestimonialTransitioning, testimonials.length]);
+
+  // Helper function to get packages filtered by selected city
+  const getFilteredPackages = () => {
+    if (!selectedCity || !packagesData.packages?.construction) {
+      return {};
+    }
+    
+    const allPackages = packagesData.packages.construction;
+    const filteredPackages: Record<string, any> = {};
+    
+    Object.entries(allPackages).forEach(([packageKey, packageInfo]) => {
+      // Check if this package has pricing for the selected city
+      if (packageInfo.pricing && packageInfo.pricing[selectedCity.id]) {
+        // Only include packages that have valid pricing for this city
+        filteredPackages[packageKey] = packageInfo;
+      }
+    });
+    
+    return filteredPackages;
+  };
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
@@ -947,13 +975,8 @@ export default function Home() {
             <>
               {/* Desktop View - All packages visible */}
               <div className="hidden lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
-                {Object.entries(packagesData.packages?.construction || {}).map(
+                {Object.entries(getFilteredPackages()).map(
                   ([packageKey, packageInfo]) => {
-                    const currentCityPricing =
-                      (packageInfo.pricing || {})[
-                        selectedCity.id as keyof typeof packageInfo.pricing
-                      ];
-
                     return (
                       <div
                         key={packageKey}
@@ -970,16 +993,13 @@ export default function Home() {
                             {/* Price Display */}
                             <div className="mb-3">
                               <div className="text-2xl lg:text-3xl font-bold text-amber-600 mb-1">
-                                {selectedCity
-                                  ? currentCityPricing?.price
+                                {selectedCity && packageInfo.pricing && packageInfo.pricing[selectedCity.id]
+                                  ? packageInfo.pricing[selectedCity.id].price
                                   : "X,XXX"}
                               </div>
-                              {selectedCity &&
-                                !currentCityPricing?.startingAt && (
-                                  <div className="text-xs text-gray-500">
-                                    per sq. ft (Ex GST)
-                                  </div>
-                                )}
+                              <div className="text-xs text-gray-500">
+                                per sq. ft (Ex GST)
+                              </div>
                             </div>
                           </div>
 
@@ -1022,27 +1042,29 @@ export default function Home() {
 
                                   <div
                                     className={`
-                                    transition-all duration-300 ease-in-out overflow-hidden
-                                    ${
-                                      expandedSection === sectionKey
-                                        ? "max-h-64 opacity-100"
-                                        : "max-h-0 opacity-0"
-                                    }
-                                  `}
+                                      transition-all duration-300 ease-in-out overflow-hidden
+                                      ${
+                                        expandedSection === sectionKey
+                                          ? "max-h-64 opacity-100"
+                                          : "max-h-0 opacity-0"
+                                      }
+                                    `}
                                   >
                                     <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
                                       <ul className="space-y-1.5">
-                                        {section.items.map((item, index) => (
-                                          <li
-                                            key={index}
-                                            className="flex items-start text-xs lg:text-sm text-gray-700"
-                                          >
-                                            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                            <span className="leading-relaxed">
-                                              {item}
-                                            </span>
-                                          </li>
-                                        ))}
+                                        {section.items.map(
+                                          (item: any, index: number) => (
+                                            <li
+                                              key={index}
+                                              className="flex items-start text-xs lg:text-sm text-gray-700"
+                                            >
+                                              <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                                              <span className="leading-relaxed">
+                                                {item}
+                                              </span>
+                                            </li>
+                                          )
+                                        )}
                                       </ul>
                                     </div>
                                   </div>
@@ -1060,9 +1082,7 @@ export default function Home() {
               {/* Mobile/Tablet Carousel View with Instagram-style previews */}
               <div className="lg:hidden relative">
                 {(() => {
-                  const packageEntries = Object.entries(
-                    packagesData.packages?.construction || {}
-                  );
+                  const packageEntries = Object.entries(getFilteredPackages());
 
                   return (
                     <>
@@ -1083,7 +1103,8 @@ export default function Home() {
                                       1 +
                                       packageEntries.length) %
                                     packageEntries.length;
-                                  const packageEntry = packageEntries[prevPackageIndex];
+                                  const packageEntry =
+                                    packageEntries[prevPackageIndex];
                                   if (!packageEntry) return null;
                                   const [, packageInfo] = packageEntry;
                                   const currentCityPricing =
@@ -1106,7 +1127,9 @@ export default function Home() {
                                         </div>
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
-                                          {Object.entries(packageInfo.sections || {})
+                                          {Object.entries(
+                                            packageInfo.sections || {}
+                                          )
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
                                               <div
@@ -1514,7 +1537,8 @@ export default function Home() {
                                   const nextPackageIndex =
                                     (currentPackage + 1) %
                                     packageEntries.length;
-                                  const nextPackageEntry = packageEntries[nextPackageIndex];
+                                  const nextPackageEntry =
+                                    packageEntries[nextPackageIndex];
                                   if (!nextPackageEntry) return null;
                                   const [, packageInfo] = nextPackageEntry;
                                   const currentCityPricing =
@@ -1537,7 +1561,9 @@ export default function Home() {
                                         </div>
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
-                                          {Object.entries(packageInfo.sections || {})
+                                          {Object.entries(
+                                            packageInfo.sections || {}
+                                          )
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
                                               <div

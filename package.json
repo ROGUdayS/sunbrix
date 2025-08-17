@@ -6,13 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "db:generate": "prisma generate",
-    "test-sheets": "node scripts/test-sheets.mjs",
-    "update-sitemap": "node scripts/update-sitemap.mjs",
-    "test-supabase": "node scripts/test-supabase-connection.mjs",
-    "upload-images": "node scripts/upload-images-to-supabase.mjs",
-    "upload-project-images": "node scripts/upload-project-images.mjs"
+    "lint": "next lint"
   },
   "dependencies": {
     "@prisma/client": "^6.14.0",

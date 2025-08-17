@@ -46,6 +46,7 @@ model Package {
   city_id      String   @map("city_id")
   name         String   @db.VarChar(100) // Standard, Premium, Luxury
   price        Decimal  @db.Decimal(10, 2)
+  package_data Json?    @map("package_data") // JSON structure for simplified package management
   active       Boolean  @default(true)
   created_at   DateTime @default(now()) @map("created_at")
   updated_at   DateTime @updatedAt @map("updated_at")
