@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export const revalidate = 300; // Revalidate every 5 minutes
-export const fetchCache = 'force-cache'
+export const dynamic = 'force-dynamic' // Always fetch fresh data from database
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,8 +23,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(cities, {
       headers: {
-        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-        'Cache-Tag': 'cities'
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
       }
     })
 
@@ -37,8 +37,9 @@ export async function GET(request: NextRequest) {
       const citiesData = await import('@/data/cities.json')
       return NextResponse.json(citiesData.default, {
         headers: {
-          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-          'Cache-Tag': 'cities'
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         }
       })
     } catch (fallbackError) {

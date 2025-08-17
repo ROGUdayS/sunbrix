@@ -15,13 +15,13 @@ model Project {
   id            String   @id @default(cuid())
   title         String   @db.VarChar(255)
   location      String   @db.VarChar(100)
+  year          String   @db.VarChar(4)  // Project year (e.g., "2024")
   plot_size     String   @map("plot_size") @db.VarChar(50)
   facing        String   @db.VarChar(50)
   description   String   @db.Text
   specifications Json    @default("{}")
   images        String[]
   active        Boolean  @default(true)
-  featured      Boolean  @default(false)
   created_at    DateTime @default(now()) @map("created_at")
   updated_at    DateTime @updatedAt @map("updated_at")
 

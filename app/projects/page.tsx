@@ -42,7 +42,10 @@ export default function ProjectGallery() {
     async function fetchProjects() {
       try {
         setLoading(true);
+        setError(null);
+
         const response = await fetch("/api/projects?active=true");
+
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
@@ -51,7 +54,9 @@ export default function ProjectGallery() {
         // Transform projects to match expected format
         const transformedProjects = data.projects.map((project: any) => ({
           ...project,
-          yearBuilt: new Date(project.created_at).getFullYear().toString(),
+          yearBuilt:
+            project.year ||
+            new Date(project.created_at).getFullYear().toString(),
           bhk: `${project.specifications?.bedrooms || 2}BHK`,
           siteDimension: project.plotSize,
           residential: "Residential",
