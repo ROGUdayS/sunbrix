@@ -97,8 +97,22 @@ model Lead {
   city       String   @db.VarChar(100)
   source     String   @default("website") @db.VarChar(50)
   status     String   @default("new") @db.VarChar(20)
+  email_sent Boolean  @default(false) @map("email_sent")
   created_at DateTime @default(now()) @map("created_at")
   updated_at DateTime @updatedAt @map("updated_at")
 
   @@map("leads")
+}
+
+model EmailTemplate {
+  id           String   @id @default(cuid())
+  name         String   @unique @db.VarChar(100)
+  subject      String   @db.VarChar(255)
+  body         String   @db.Text
+  category     String   @db.VarChar(50) // e.g., "form_submission", "follow_up", "welcome"
+  active       Boolean  @default(true)
+  created_at   DateTime @default(now()) @map("created_at")
+  updated_at   DateTime @updatedAt @map("updated_at")
+
+  @@map("email_templates")
 }
