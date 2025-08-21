@@ -116,3 +116,29 @@ model EmailTemplate {
 
   @@map("email_templates")
 }
+
+model CompanySettings {
+  id                    String   @id @default(cuid())
+  company_name          String   @map("company_name") @db.VarChar(255)
+  contact_email         String   @map("contact_email") @db.VarChar(255)
+  contact_phone         String   @map("contact_phone") @db.VarChar(50)
+  
+  // Social Media Settings
+  show_facebook         Boolean  @default(false) @map("show_facebook")
+  facebook_url          String?  @map("facebook_url") @db.VarChar(500)
+  show_instagram        Boolean  @default(false) @map("show_instagram") 
+  instagram_url         String?  @map("instagram_url") @db.VarChar(500)
+  show_google           Boolean  @default(false) @map("show_google")
+  google_url            String?  @map("google_url") @db.VarChar(500)
+  show_youtube          Boolean  @default(false) @map("show_youtube")
+  youtube_url           String?  @map("youtube_url") @db.VarChar(500)
+  
+  // Legal Documents
+  terms_conditions      String?  @map("terms_conditions") @db.Text
+  privacy_policy        String?  @map("privacy_policy") @db.Text
+  
+  created_at            DateTime @default(now()) @map("created_at")
+  updated_at            DateTime @updatedAt @map("updated_at")
+
+  @@map("company_settings")
+}
