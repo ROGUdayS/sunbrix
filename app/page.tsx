@@ -23,6 +23,24 @@ interface ProjectData {
   };
 }
 
+// Helper functions for YouTube URL handling
+const isYouTubeUrl = (url: string): boolean => {
+  return url.includes('youtube.com') || url.includes('youtu.be');
+};
+
+const convertToEmbedUrl = (url: string): string => {
+  if (url.includes('youtu.be/')) {
+    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  } else if (url.includes('youtube.com/watch?v=')) {
+    const videoId = url.split('v=')[1]?.split('&')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  } else if (url.includes('youtube.com/embed/')) {
+    return url; // Already in embed format
+  }
+  return url; // Return original if not YouTube
+};
+
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -257,7 +275,7 @@ export default function Home() {
       try {
         // Fetch main page content (demo video + gallery)
         const contentResponse = await fetch(
-          "/api/content/commitment-to-quality"
+          "/api/content/main-page"
         );
         if (contentResponse.ok) {
           const content = await contentResponse.json();
@@ -998,19 +1016,32 @@ export default function Home() {
           {/* Video Container */}
           <div className="relative max-w-6xl mx-auto">
             <div className="relative bg-gradient-to-br from-orange-100 to-orange-50 rounded-2xl overflow-hidden shadow-xl">
-              {/* Video Element */}
-              <video
-                ref={videoRef}
-                className="w-full h-auto rounded-2xl"
-                controls
-                muted
-                poster="/images/video-poster.jpg" // You can add a poster image if you have one
-                preload="metadata"
-                playsInline
-              >
-                <source src={demoVideoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              {/* Video Element - Conditional rendering for YouTube vs direct video */}
+              {isYouTubeUrl(demoVideoUrl) ? (
+                <div className="aspect-video w-full">
+                  <iframe
+                    className="w-full h-full rounded-2xl"
+                    src={convertToEmbedUrl(demoVideoUrl)}
+                    title="Build Your Dream Home Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              ) : (
+                <video
+                  ref={videoRef}
+                  className="w-full h-auto rounded-2xl"
+                  controls
+                  muted
+                  poster="/images/video-poster.jpg"
+                  preload="metadata"
+                  playsInline
+                >
+                  <source src={demoVideoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
             </div>
           </div>
         </div>
