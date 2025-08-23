@@ -7,10 +7,18 @@ import FloatingBookButton from "../components/FloatingBookButton";
 
 interface Testimonial {
   id: number;
+  originalId?: string;
   name: string;
-  location: string;
+  role?: string;
+  company?: string;
+  rating?: number;
   quote: string;
+  testimonial?: string;
+  projectType?: string | null;
+  image?: string | null;
   videoUrl: string;
+  videoThumbnail?: string | null;
+  featured?: boolean;
 }
 
 export default function Testimonials() {
@@ -18,62 +26,34 @@ export default function Testimonials() {
   const [isTestimonialTransitioning, setIsTestimonialTransitioning] =
     useState(false);
   const testimonialRef = useRef<HTMLDivElement>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Touch/swipe handlers for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const testimonials: Testimonial[] = [
-    {
-      id: 1,
-      name: "Mr. Suryanarayanan Karthikeyan",
-      location: "",
-      quote:
-        "Most people struggle with delays, finances, or contractors. I didn't face even 1% of that. Sunbrix made my home journey smooth and hassle-free.",
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-    },
-    {
-      id: 2,
-      name: "Mr. Gururaj Naik",
-      location: "Hyderabad",
-      quote:
-        "Sunbrix's expert team guided me at every step. Their quality gave me total confidence throughout the journey.",
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-    },
-    {
-      id: 3,
-      name: "Mr. Hariharasudan",
-      location: "Coimbatore",
-      quote:
-        "Sunbrix Homes exceeded our expectations! The construction quality and timely delivery were remarkable. Truly a dream home.",
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-    },
-    {
-      id: 4,
-      name: "Mr. Radhakrishna",
-      location: "Bengaluru",
-      quote:
-        "Sunbrix made my dream home a hassle-free reality - clear costs, quality build, and service you can trust.",
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-    },
-    {
-      id: 5,
-      name: "Mr. RP Sharma",
-      location: "Others",
-      quote:
-        "Sunbrix's holistic support was reassuring. Their team patiently guided me from design to execution.",
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-    },
-    {
-      id: 6,
-      name: "Mr. Santosh",
-      location: "Bengaluru",
-      quote:
-        "With Sunbrix, we didn't just build a home - we gained trust, care, and peace of mind.",
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-    },
-  ];
+  // Load testimonials from API
+  useEffect(() => {
+    const loadTestimonials = async () => {
+      try {
+        const response = await fetch('/api/content/testimonials');
+        if (response.ok) {
+          const data = await response.json();
+          setTestimonials(data);
+        } else {
+          console.error('Failed to load testimonials');
+        }
+      } catch (error) {
+        console.error('Error loading testimonials:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTestimonials();
+  }, []);
 
   const nextTestimonial = () => {
     if (isTestimonialTransitioning) return;
@@ -170,6 +150,30 @@ export default function Testimonials() {
 
     return () => clearTimeout(timer);
   }, [currentTestimonial, isTestimonialTransitioning, testimonials.length]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#fdfdf8]">
+        <Header />
+        <div className="flex items-center justify-center h-64 pt-32">
+          <div className="text-lg">Loading testimonials...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state if no testimonials
+  if (testimonials.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#fdfdf8]">
+        <Header />
+        <div className="flex items-center justify-center h-64 pt-32">
+          <div className="text-lg text-gray-600">No testimonials available.</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
@@ -285,15 +289,26 @@ export default function Testimonials() {
                       ((currentTestimonial % testimonials.length) +
                         testimonials.length) %
                         testimonials.length
-                    ].location && (
+                    ].role && (
                       <div className="text-gray-600 mt-1 text-sm sm:text-base">
                         {
                           testimonials[
                             ((currentTestimonial % testimonials.length) +
                               testimonials.length) %
                               testimonials.length
-                          ].location
+                          ].role
                         }
+                        {testimonials[
+                          ((currentTestimonial % testimonials.length) +
+                            testimonials.length) %
+                            testimonials.length
+                        ].company && (
+                          <> • {testimonials[
+                            ((currentTestimonial % testimonials.length) +
+                              testimonials.length) %
+                              testimonials.length
+                          ].company}</>
+                        )}
                       </div>
                     )}
                   </div>
@@ -354,9 +369,12 @@ export default function Testimonials() {
                           <div className="font-semibold text-amber-900 text-sm sm:text-base">
                             {testimonial.name}
                           </div>
-                          {testimonial.location && (
+                          {testimonial.role && (
                             <div className="text-gray-600 mt-1 text-xs sm:text-sm">
-                              {testimonial.location}
+                              {testimonial.role}
+                              {testimonial.company && (
+                                <> • {testimonial.company}</>
+                              )}
                             </div>
                           )}
                         </div>
@@ -396,9 +414,12 @@ export default function Testimonials() {
                           <div className="font-semibold text-amber-900 text-sm sm:text-base">
                             {testimonial.name}
                           </div>
-                          {testimonial.location && (
+                          {testimonial.role && (
                             <div className="text-gray-600 mt-1 text-xs sm:text-sm">
-                              {testimonial.location}
+                              {testimonial.role}
+                              {testimonial.company && (
+                                <> • {testimonial.company}</>
+                              )}
                             </div>
                           )}
                         </div>
@@ -441,9 +462,12 @@ export default function Testimonials() {
                           <div className="font-semibold text-amber-900 text-sm sm:text-base">
                             {testimonial.name}
                           </div>
-                          {testimonial.location && (
+                          {testimonial.role && (
                             <div className="text-gray-600 mt-1 text-xs sm:text-sm">
-                              {testimonial.location}
+                              {testimonial.role}
+                              {testimonial.company && (
+                                <> • {testimonial.company}</>
+                              )}
                             </div>
                           )}
                         </div>

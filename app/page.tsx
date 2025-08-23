@@ -55,6 +55,13 @@ export default function Home() {
     projects: [],
   });
 
+  // Dynamic content state (simplified)
+  const [demoVideoUrl, setDemoVideoUrl] = useState<string>(
+    "/videos/video_demo.mp4"
+  );
+  const [dynamicTestimonials, setDynamicTestimonials] = useState<any[]>([]);
+  const [dynamicGalleryImages, setDynamicGalleryImages] = useState<any[]>([]);
+
   // Add gallery transition state
   const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -108,6 +115,18 @@ export default function Home() {
         }
       }
     );
+
+    // Add dynamic gallery images to the collection
+    if (dynamicGalleryImages && dynamicGalleryImages.length > 0) {
+      dynamicGalleryImages.forEach((galleryImage, index) => {
+        allImages.push({
+          id: 9000 + index, // Use high ID to avoid conflicts
+          image: galleryImage.image || galleryImage.image_url,
+          title: galleryImage.title,
+          description: galleryImage.description,
+        });
+      });
+    }
 
     return allImages;
   };
@@ -232,6 +251,35 @@ export default function Home() {
     };
   }, []);
 
+  // Fetch dynamic content from database (simplified)
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        // Fetch main page content (demo video + gallery)
+        const contentResponse = await fetch(
+          "/api/content/commitment-to-quality"
+        );
+        if (contentResponse.ok) {
+          const content = await contentResponse.json();
+          setDemoVideoUrl(content.demoVideoUrl || "/videos/video_demo.mp4");
+          setDynamicGalleryImages(content.galleryImages || []);
+        }
+
+        // Fetch testimonials
+        const testimonialsResponse = await fetch("/api/content/testimonials");
+        if (testimonialsResponse.ok) {
+          const data = await testimonialsResponse.json();
+          setDynamicTestimonials(data.testimonials || []);
+        }
+      } catch (error) {
+        console.error("Error fetching dynamic content:", error);
+        // Keep using static data if API fails
+      }
+    };
+
+    fetchContent();
+  }, []);
+
   const nextSlide = () => {
     if (projects.length === 0 || isGalleryTransitioning) return;
     setIsGalleryTransitioning(true);
@@ -249,7 +297,8 @@ export default function Home() {
   };
 
   // Testimonial data
-  const testimonials = [
+  // Use dynamic testimonials if available, fallback to static data
+  const staticTestimonials = [
     {
       id: 1,
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
@@ -272,6 +321,16 @@ export default function Home() {
       name: "Mr. Hariharasudan",
     },
   ];
+
+  const testimonials =
+    dynamicTestimonials.length > 0
+      ? dynamicTestimonials.map((testimonial) => ({
+          id: testimonial.id,
+          videoUrl: testimonial.videoUrl || testimonial.video_url,
+          quote: testimonial.quote || testimonial.testimonial,
+          name: testimonial.name,
+        }))
+      : staticTestimonials;
 
   const nextTestimonial = () => {
     if (isTestimonialTransitioning) return;
@@ -510,10 +569,10 @@ export default function Home() {
     if (!selectedCity || !packagesData.packages?.construction) {
       return {};
     }
-    
+
     const allPackages = packagesData.packages.construction;
     const filteredPackages: Record<string, any> = {};
-    
+
     Object.entries(allPackages).forEach(([packageKey, packageInfo]) => {
       // Check if this package has pricing for the selected city
       if (packageInfo.pricing && packageInfo.pricing[selectedCity.id]) {
@@ -521,7 +580,7 @@ export default function Home() {
         filteredPackages[packageKey] = packageInfo;
       }
     });
-    
+
     return filteredPackages;
   };
 
@@ -629,14 +688,14 @@ export default function Home() {
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/Design & Strength.svg"
+                    alt="Design & Strength"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   Design & Strength
@@ -648,14 +707,14 @@ export default function Home() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/20 Year Warranty.svg"
+                    alt="20 Year Warranty"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   20 year warranty
@@ -665,14 +724,14 @@ export default function Home() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/On time Delivery.svg"
+                    alt="On Time Delivery"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   100% On time delivery
@@ -682,14 +741,14 @@ export default function Home() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/High quality materials.svg"
+                    alt="High Quality Materials"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   High quality materials
@@ -949,7 +1008,7 @@ export default function Home() {
                 preload="metadata"
                 playsInline
               >
-                <source src="/videos/video_demo.mp4" type="video/mp4" />
+                <source src={demoVideoUrl} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
             </div>
@@ -993,7 +1052,9 @@ export default function Home() {
                             {/* Price Display */}
                             <div className="mb-3">
                               <div className="text-2xl lg:text-3xl font-bold text-amber-600 mb-1">
-                                {selectedCity && packageInfo.pricing && packageInfo.pricing[selectedCity.id]
+                                {selectedCity &&
+                                packageInfo.pricing &&
+                                packageInfo.pricing[selectedCity.id]
                                   ? packageInfo.pricing[selectedCity.id].price
                                   : "X,XXX"}
                               </div>
@@ -1688,7 +1749,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/consult.png"
+                        src="/icons/construction-journey/consult.svg"
                         alt="Planning"
                         width={24}
                         height={24}
@@ -1714,7 +1775,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/planning-drawing.png"
+                        src="/icons/construction-journey/planning-drawing.svg"
                         alt="Design"
                         width={24}
                         height={24}
@@ -1740,7 +1801,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/building-under-construction.png"
+                        src="/icons/construction-journey/building-under-construction.svg"
                         alt="Build/Execute"
                         width={24}
                         height={24}
@@ -1766,7 +1827,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/built-homes.png"
+                        src="/icons/construction-journey/built-homes.svg"
                         alt="Complete"
                         width={24}
                         height={24}
@@ -1807,7 +1868,7 @@ export default function Home() {
           <div className="flex justify-center items-center gap-4 sm:gap-8 lg:gap-12">
             <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
-                src="/banks-icons/hdfc.png"
+                src="/icons/banks-icons/hdfc.svg"
                 alt="HDFC Bank"
                 fill
                 className="object-contain"
@@ -1815,7 +1876,7 @@ export default function Home() {
             </div>
             <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
-                src="/banks-icons/icici.png"
+                src="/icons/banks-icons/icici.svg"
                 alt="ICICI Bank"
                 fill
                 className="object-contain"
@@ -1823,7 +1884,7 @@ export default function Home() {
             </div>
             <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
-                src="/banks-icons/sbi.png"
+                src="/icons/banks-icons/sbi.svg"
                 alt="SBI Bank"
                 fill
                 className="object-contain"
@@ -2020,103 +2081,40 @@ export default function Home() {
 
             {/* Desktop: All testimonials visible */}
             <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-              {/* Video Testimonial 1 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
-                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk"
-                    title="Customer Testimonial 1"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={testimonial.id}
+                  className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
+                >
+                  <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                    <iframe
+                      className="w-full h-full"
+                      src={testimonial.videoUrl}
+                      title={`Customer Testimonial ${index + 1}`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
                   </div>
-                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                    Most people struggle with delays, finances, or contractors.
-                    I didn&apos;t face even 1% of that. Sunbrix made my home
-                    journey smooth and hassle-free.
-                  </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                    Mr. Suryanarayanan Karthikeyan
-                  </div>
-                </div>
-              </div>
-
-              {/* Video Testimonial 2 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
-                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk"
-                    title="Customer Testimonial 2"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                    Sunbrix&apos;s expert team guided me at every step. Their
-                    quality gave me total confidence throughout the journey.
-                  </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                    Mr. Gururaj Naik
+                  <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
+                    <div className="flex items-center justify-center mb-4">
+                      <svg
+                        className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                      {testimonial.quote}
+                    </p>
+                    <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                      {testimonial.name}
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Video Testimonial 3 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
-                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk"
-                    title="Customer Testimonial 3"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                    Sunbrix Homes exceeded our expectations! The construction
-                    quality and timely delivery were remarkable. Truly a dream
-                    home.
-                  </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                    Mr. Hariharasudan
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* Mobile Pagination Dots */}
@@ -2140,15 +2138,7 @@ export default function Home() {
               })}
             </div>
 
-            {/* Desktop Pagination Dots */}
-            <div className="hidden md:flex justify-center mt-8 space-x-2">
-              <button className="w-3 h-3 rounded-full bg-gray-800"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-            </div>
+            {/* Desktop Pagination Dots - Remove this section since desktop shows all testimonials */}
           </div>
         </div>
       </section>

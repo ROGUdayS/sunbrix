@@ -35,7 +35,7 @@ export default function NotFound() {
           <div className="mb-8 sm:mb-12">
             <div className="w-48 h-48 sm:w-64 sm:h-64 mx-auto relative">
               <Image
-                src="/icons/building-under-construction.png"
+                src="/icons/construction-journey/building-under-construction.svg"
                 alt="Construction Icon"
                 fill
                 className="object-contain opacity-20"

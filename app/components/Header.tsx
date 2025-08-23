@@ -119,8 +119,8 @@ export default function Header({
               <Image
                 src={
                   isTransparent && !isScrolled
-                    ? "/logos/horizontal-logo/LOGO-WHITE-H.png"
-                    : "/logos/horizontal-logo/LOGO-ORIGINAL-H.png"
+                    ? "/logos/horizontal-logo/LOGO-WHITE-H.svg"
+                    : "/logos/horizontal-logo/LOGO-ORIGINAL-H.svg"
                 }
                 alt="Sunbrix"
                 width={120}
@@ -178,7 +178,9 @@ export default function Header({
                     : "border-amber-300 text-amber-700 bg-white focus:border-amber-600"
                 }`}
               >
-                <span className="truncate">{selectedCity?.name || 'Select City'}</span>
+                <span className="truncate">
+                  {selectedCity?.name || "Select City"}
+                </span>
                 <svg
                   className="w-4 h-4 flex-shrink-0"
                   fill="currentColor"

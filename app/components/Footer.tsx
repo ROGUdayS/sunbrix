@@ -20,16 +20,17 @@ interface CompanySettings {
 async function getCompanySettings(): Promise<CompanySettings> {
   try {
     // For server-side rendering, we need to use absolute URL
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-                    process.env.VERCEL_URL || 
-                    'http://localhost:3003';
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.VERCEL_URL ||
+      "http://localhost:3003";
     const url = `${baseUrl}/api/company-settings`;
-    
+
     const response = await fetch(url, {
-      cache: 'force-cache',
+      cache: "force-cache",
       next: { revalidate: 300 }, // Revalidate every 5 minutes
     });
-    
+
     if (response.ok) {
       const data = await response.json();
       if (data.success && data.settings) {
@@ -37,9 +38,9 @@ async function getCompanySettings(): Promise<CompanySettings> {
       }
     }
   } catch (error) {
-    console.error('Failed to fetch company settings:', error);
+    console.error("Failed to fetch company settings:", error);
   }
-  
+
   // Fallback to default settings
   return {
     company_name: "SUNBRIX Constructions",
@@ -60,7 +61,7 @@ async function getCompanySettings(): Promise<CompanySettings> {
 
 export default async function Footer() {
   const settings = await getCompanySettings();
-  
+
   return (
     <footer className="bg-gray-900 text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -69,7 +70,7 @@ export default async function Footer() {
           <div className="lg:col-span-5">
             <div className="mb-6">
               <Image
-                src="/logos/horizontal-logo/LOGO-WHITE-H.png"
+                src="/logos/horizontal-logo/LOGO-WHITE-H.svg"
                 alt="Sunbrix"
                 width={150}
                 height={50}
@@ -92,7 +93,7 @@ export default async function Footer() {
                 {settings.contact_email}
               </a>
               <a
-                href={`tel:${settings.contact_phone.replace(/\s+/g, '')}`}
+                href={`tel:${settings.contact_phone.replace(/\s+/g, "")}`}
                 className="text-base text-orange-400 hover:text-orange-300 transition-colors block"
               >
                 {settings.contact_phone}
