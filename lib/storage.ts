@@ -23,7 +23,7 @@ export async function uploadProjectImage(
       .substring(7)}.${fileExt}`;
 
     // Upload file to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from(PROJECT_IMAGES_BUCKET)
       .upload(fileName, file, {
         cacheControl: "3600",
@@ -41,8 +41,8 @@ export async function uploadProjectImage(
     } = supabase.storage.from(PROJECT_IMAGES_BUCKET).getPublicUrl(fileName);
 
     return { url: publicUrl };
-  } catch (error) {
-    console.error("Unexpected upload error:", error);
+  } catch (err) {
+    console.error("Unexpected upload error:", err);
     return { error: "Unexpected error during upload" };
   }
 }
@@ -73,8 +73,8 @@ export async function deleteProjectImage(
     }
 
     return { success: true };
-  } catch (error) {
-    console.error("Unexpected delete error:", error);
+  } catch (err) {
+    console.error("Unexpected delete error:", err);
     return { error: "Unexpected error during deletion" };
   }
 }
@@ -110,8 +110,8 @@ export async function getProjectImages(
     });
 
     return { images: imageUrls };
-  } catch (error) {
-    console.error("Unexpected list error:", error);
+  } catch (err) {
+    console.error("Unexpected list error:", err);
     return { error: "Unexpected error while fetching images" };
   }
 }

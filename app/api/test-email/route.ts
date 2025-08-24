@@ -51,12 +51,14 @@ export async function POST(request: NextRequest) {
 
     // Get email template
     let template = await prisma.emailTemplate.findFirst({
-      where: { is_default: true, active: true },
+      where: { active: true },
     });
 
     if (!template) {
       // Create a test template
       template = {
+        id: "test-template",
+        name: "Test Template",
         subject: "Test Email from SUNBRIX",
         body: `Hello {name}!
 
@@ -72,6 +74,10 @@ SUNBRIX Team
 
 ---
 Test sent at: ${new Date().toISOString()}`,
+        category: "test",
+        active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       };
     }
 
@@ -105,8 +111,8 @@ Test sent at: ${new Date().toISOString()}`,
         </div>
       `,
       headers: {
-        'X-Mailer': 'SUNBRIX-Test',
-        'X-Priority': '1',
+        "X-Mailer": "SUNBRIX-Test",
+        "X-Priority": "1",
       },
     };
 
@@ -130,18 +136,21 @@ Test sent at: ${new Date().toISOString()}`,
         timestamp: new Date().toISOString(),
       },
     });
-
   } catch (error) {
     console.error("Test email failed:", error);
-    
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-      details: {
-        timestamp: new Date().toISOString(),
-        errorType: error instanceof Error ? error.constructor.name : "UnknownError",
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+        details: {
+          timestamp: new Date().toISOString(),
+          errorType:
+            error instanceof Error ? error.constructor.name : "UnknownError",
+        },
       },
-    }, { status: 500 });
+      { status: 500 }
+    );
   } finally {
     await prisma.$disconnect();
   }

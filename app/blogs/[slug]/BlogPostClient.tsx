@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { notFound } from "next/navigation";
 import Header from "../../components/Header";
 import ContactForm from "../../components/ContactForm";
@@ -41,36 +41,31 @@ export default function BlogPostClient({ slug }: { slug: string }) {
   const [relatedPosts, setRelatedPosts] = useState<RelatedPost[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadBlogPost();
-  }, [slug]);
-
-  const loadBlogPost = async () => {
+  const loadBlogPost = useCallback(async () => {
     try {
       const response = await fetch(`/api/content/blogs/${slug}`);
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          notFound();
+      if (response.ok) {
+        const post = await response.json();
+        setBlogPost(post);
+
+        // Load related posts
+        if (post.categorySlug) {
+          const relatedResponse = await fetch(
+            `/api/content/blogs?category=${post.categorySlug}&limit=3`
+          );
+          if (relatedResponse.ok) {
+            const allPosts = await relatedResponse.json();
+            const filtered = allPosts
+              .filter((p: RelatedPost) => p.slug !== slug)
+              .slice(0, 3);
+            setRelatedPosts(filtered);
+          }
         }
+      } else if (response.status === 404) {
+        notFound();
+      } else {
         throw new Error("Failed to fetch blog post");
-      }
-
-      const post = await response.json();
-      setBlogPost(post);
-
-      // Load related posts
-      if (post.categorySlug) {
-        const relatedResponse = await fetch(
-          `/api/content/blogs?category=${post.categorySlug}&limit=3`
-        );
-        if (relatedResponse.ok) {
-          const allPosts = await relatedResponse.json();
-          const filtered = allPosts
-            .filter((p: any) => p.slug !== slug)
-            .slice(0, 3);
-          setRelatedPosts(filtered);
-        }
       }
     } catch (error) {
       console.error("Error loading blog post:", error);
@@ -78,7 +73,11 @@ export default function BlogPostClient({ slug }: { slug: string }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    loadBlogPost();
+  }, [slug, loadBlogPost]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -252,11 +251,15 @@ export default function BlogPostClient({ slug }: { slug: string }) {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => {
-                    navigator.share?.({
-                      title: blogPost.title,
-                      text: blogPost.excerpt,
-                      url: window.location.href,
-                    }) || navigator.clipboard.writeText(window.location.href);
+                    if (navigator.share) {
+                      navigator.share({
+                        title: blogPost.title,
+                        text: blogPost.excerpt,
+                        url: window.location.href,
+                      });
+                    } else {
+                      navigator.clipboard.writeText(window.location.href);
+                    }
                   }}
                   className="text-gray-500 hover:text-orange-600 transition-colors"
                   title="Share this article"

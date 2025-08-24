@@ -10,14 +10,20 @@ export async function GET(request: NextRequest) {
     const active = searchParams.get("active");
 
     // Build query conditions
-    const where: any = {};
+    const where: {
+      active?: boolean;
+    } = {};
 
     if (active !== null) {
       where.active = active === "true";
     }
 
     // Build query options
-    const queryOptions: any = {
+    const queryOptions: {
+      where: { active?: boolean };
+      orderBy: { created_at: "desc" };
+      take?: number;
+    } = {
       where,
       orderBy: { created_at: "desc" },
     };

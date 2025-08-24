@@ -6,12 +6,13 @@ const prisma = new PrismaClient();
 // GET - Fetch individual blog post by slug
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await params;
     const blogPost = await prisma.blogPost.findFirst({
       where: {
-        slug: params.slug,
+        slug: slug,
         active: true,
         status: 'published', // Only show published posts on frontend
       },

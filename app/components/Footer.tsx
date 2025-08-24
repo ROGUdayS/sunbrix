@@ -22,8 +22,9 @@ async function getCompanySettings(): Promise<CompanySettings> {
     // For server-side rendering, we need to use absolute URL
     const baseUrl =
       process.env.NEXT_PUBLIC_SITE_URL ||
-      process.env.VERCEL_URL ||
-      "http://localhost:3003";
+      process.env.APP_URL ||
+      "http://localhost:3003" ||
+      "https://sunbrix.netlify.app";
     const url = `${baseUrl}/api/company-settings`;
 
     const response = await fetch(url, {

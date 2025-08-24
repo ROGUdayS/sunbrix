@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
@@ -25,17 +25,17 @@ interface ProjectData {
 
 // Helper functions for YouTube URL handling
 const isYouTubeUrl = (url: string): boolean => {
-  return url.includes('youtube.com') || url.includes('youtu.be');
+  return url.includes("youtube.com") || url.includes("youtu.be");
 };
 
 const convertToEmbedUrl = (url: string): string => {
-  if (url.includes('youtu.be/')) {
-    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+  if (url.includes("youtu.be/")) {
+    const videoId = url.split("youtu.be/")[1]?.split("?")[0];
     return `https://www.youtube.com/embed/${videoId}`;
-  } else if (url.includes('youtube.com/watch?v=')) {
-    const videoId = url.split('v=')[1]?.split('&')[0];
+  } else if (url.includes("youtube.com/watch?v=")) {
+    const videoId = url.split("v=")[1]?.split("&")[0];
     return `https://www.youtube.com/embed/${videoId}`;
-  } else if (url.includes('youtube.com/embed/')) {
+  } else if (url.includes("youtube.com/embed/")) {
     return url; // Already in embed format
   }
   return url; // Return original if not YouTube
@@ -62,14 +62,19 @@ export default function Home() {
       title: string;
       description: string;
       id: number;
+      quote?: string;
     }[]
   >([]);
 
-  const [packagesData, setPackagesData] = useState<any>({
+  const [packagesData, setPackagesData] = useState<{
+    packages: { construction: Record<string, unknown> };
+  }>({
     packages: { construction: {} },
   });
 
-  const [projectsData, setProjectsData] = useState<any>({
+  const [projectsData, setProjectsData] = useState<{
+    projects: ProjectData[];
+  }>({
     projects: [],
   });
 
@@ -77,8 +82,28 @@ export default function Home() {
   const [demoVideoUrl, setDemoVideoUrl] = useState<string>(
     "/videos/video_demo.mp4"
   );
-  const [dynamicTestimonials, setDynamicTestimonials] = useState<any[]>([]);
-  const [dynamicGalleryImages, setDynamicGalleryImages] = useState<any[]>([]);
+  const [dynamicTestimonials, setDynamicTestimonials] = useState<
+    {
+      id: number;
+      name: string;
+      role: string;
+      company: string;
+      rating: number;
+      quote: string;
+      projectType: string;
+      image: string;
+      videoUrl?: string;
+      videoThumbnail?: string;
+      featured: boolean;
+    }[]
+  >([]);
+  const [dynamicGalleryImages, setDynamicGalleryImages] = useState<
+    {
+      image?: string;
+      image_url?: string;
+      quote?: string;
+    }[]
+  >([]);
 
   // Add gallery transition state
   const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
@@ -91,62 +116,6 @@ export default function Home() {
 
   // Add video ref for auto-play functionality
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Project gallery data - get random images from project data
-  const getAllProjectImages = () => {
-    const allImages: {
-      image: string;
-      title: string;
-      description: string;
-      id: number;
-    }[] = [];
-
-    // Check if projectsData and projects array exist
-    if (
-      !projectsData ||
-      !projectsData.projects ||
-      !Array.isArray(projectsData.projects)
-    ) {
-      return allImages;
-    }
-
-    // Collect all images from all projects
-    projectsData.projects.forEach(
-      (project: ProjectData, projectIndex: number) => {
-        if (project.images && project.images.length > 0) {
-          project.images.forEach((image: string, imageIndex: number) => {
-            allImages.push({
-              id: projectIndex * 100 + imageIndex, // Unique ID
-              image: image,
-              title: project.title,
-              description: project.description,
-            });
-          });
-        } else if (project.image) {
-          // Fallback to main image if no images array
-          allImages.push({
-            id: projectIndex * 100,
-            image: project.image,
-            title: project.title,
-            description: project.description,
-          });
-        }
-      }
-    );
-
-    // Add dynamic gallery images to the collection (now with quotes only)
-    if (dynamicGalleryImages && dynamicGalleryImages.length > 0) {
-      dynamicGalleryImages.forEach((galleryImage, index) => {
-        allImages.push({
-          id: 9000 + index, // Use high ID to avoid conflicts
-          image: galleryImage.image || galleryImage.image_url,
-          quote: galleryImage.quote || "",
-        });
-      });
-    }
-
-    return allImages;
-  };
 
   // Shuffle array function
   const shuffleArray = <T,>(array: T[]): T[] => {
@@ -163,16 +132,20 @@ export default function Home() {
     async function fetchData() {
       try {
         // Fetch projects
-        const projectsResponse = await fetch(
-          "/api/projects?active=true&limit=10"
-        );
+        const projectsResponse = await fetch("/api/projects?active=true");
         if (projectsResponse.ok) {
           const projectsResult = await projectsResponse.json();
 
           // Create gallery images from projects
-          const allImages: any[] = [];
+          const allImages: {
+            image: string;
+            title: string;
+            description: string;
+            id: number;
+            quote?: string;
+          }[] = [];
           projectsResult.projects.forEach(
-            (project: any, projectIndex: number) => {
+            (project: ProjectData, projectIndex: number) => {
               if (project.images && project.images.length > 0) {
                 project.images.forEach((image: string, imageIndex: number) => {
                   allImages.push({
@@ -273,9 +246,7 @@ export default function Home() {
     const fetchContent = async () => {
       try {
         // Fetch main page content (demo video + gallery)
-        const contentResponse = await fetch(
-          "/api/content/main-page"
-        );
+        const contentResponse = await fetch("/api/content/main-page");
         if (contentResponse.ok) {
           const content = await contentResponse.json();
           setDemoVideoUrl(content.demoVideoUrl || "/videos/video_demo.mp4");
@@ -343,8 +314,8 @@ export default function Home() {
     dynamicTestimonials.length > 0
       ? dynamicTestimonials.map((testimonial) => ({
           id: testimonial.id,
-          videoUrl: testimonial.videoUrl || testimonial.video_url,
-          quote: testimonial.quote || testimonial.testimonial,
+          videoUrl: testimonial.videoUrl,
+          quote: testimonial.quote,
           name: testimonial.name,
         }))
       : staticTestimonials;
@@ -582,24 +553,30 @@ export default function Home() {
   }, [currentTestimonial, isTestimonialTransitioning, testimonials.length]);
 
   // Helper function to get packages filtered by selected city
-  const getFilteredPackages = () => {
-    if (!selectedCity || !packagesData.packages?.construction) {
+  const getFilteredPackages = useCallback(() => {
+    if (!packagesData?.packages?.construction || !selectedCity) {
       return {};
     }
 
     const allPackages = packagesData.packages.construction;
-    const filteredPackages: Record<string, any> = {};
+    const filteredPackages: Record<string, unknown> = {};
 
     Object.entries(allPackages).forEach(([packageKey, packageInfo]) => {
       // Check if this package has pricing for the selected city
-      if (packageInfo.pricing && packageInfo.pricing[selectedCity.id]) {
+      const pkg = packageInfo as {
+        pricing?: Record<string, unknown>;
+        title?: string;
+        popular?: boolean;
+        sections?: Record<string, { title: string; items: string[] }>;
+      };
+      if (pkg.pricing && pkg.pricing[selectedCity.id]) {
         // Only include packages that have valid pricing for this city
         filteredPackages[packageKey] = packageInfo;
       }
     });
 
     return filteredPackages;
-  };
+  }, [packagesData, selectedCity]);
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
@@ -810,10 +787,12 @@ export default function Home() {
                                 projects.length
                             ]?.image
                           }
-                          alt={projects[
-                            (currentSlide - 1 + projects.length) %
-                              projects.length
-                          ]?.quote || "Previous"}
+                          alt={
+                            projects[
+                              (currentSlide - 1 + projects.length) %
+                                projects.length
+                            ]?.quote || "Previous"
+                          }
                           fill
                           className="object-cover object-right"
                         />
@@ -873,7 +852,7 @@ export default function Home() {
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
-                                    "{project.quote}"
+                                    &ldquo;{project.quote}&rdquo;
                                   </blockquote>
                                 </div>
                               </div>
@@ -898,7 +877,7 @@ export default function Home() {
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
-                                    "{project.quote}"
+                                    &ldquo;{project.quote}&rdquo;
                                   </blockquote>
                                 </div>
                               </div>
@@ -926,7 +905,7 @@ export default function Home() {
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
-                                    "{project.quote}"
+                                    &ldquo;{project.quote}&rdquo;
                                   </blockquote>
                                 </div>
                               </div>
@@ -949,7 +928,10 @@ export default function Home() {
                             projects[(currentSlide + 1) % projects.length]
                               ?.image
                           }
-                          alt={projects[(currentSlide + 1) % projects.length]?.quote || "Next"}
+                          alt={
+                            projects[(currentSlide + 1) % projects.length]
+                              ?.quote || "Next"
+                          }
                           fill
                           className="object-cover object-left"
                         />
@@ -1109,16 +1091,18 @@ export default function Home() {
                           {/* Package Title */}
                           <div className="text-center mb-4">
                             <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
-                              {packageInfo.title}
+                              {(packageInfo as any).title}
                             </h3>
 
                             {/* Price Display */}
                             <div className="mb-3">
                               <div className="text-2xl lg:text-3xl font-bold text-amber-600 mb-1">
                                 {selectedCity &&
-                                packageInfo.pricing &&
-                                packageInfo.pricing[selectedCity.id]
-                                  ? packageInfo.pricing[selectedCity.id].price
+                                (packageInfo as any).pricing &&
+                                (packageInfo as any).pricing[selectedCity.id]
+                                  ? (packageInfo as any).pricing[
+                                      selectedCity.id
+                                    ].price
                                   : "X,XXX"}
                               </div>
                               <div className="text-xs text-gray-500">
@@ -1132,40 +1116,41 @@ export default function Home() {
 
                           {/* Expandable Sections */}
                           <div className="space-y-1.5">
-                            {Object.entries(packageInfo.sections || {}).map(
-                              ([sectionKey, section]) => (
-                                <div
-                                  key={sectionKey}
-                                  className="border border-gray-100 rounded-md overflow-hidden"
+                            {Object.entries(
+                              (packageInfo as any).sections || {}
+                            ).map(([sectionKey, section]) => (
+                              <div
+                                key={sectionKey}
+                                className="border border-gray-100 rounded-md overflow-hidden"
+                              >
+                                <button
+                                  onClick={() => toggleSection(sectionKey)}
+                                  className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
                                 >
-                                  <button
-                                    onClick={() => toggleSection(sectionKey)}
-                                    className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
-                                  >
-                                    <span className="font-semibold text-gray-900 text-xs lg:text-sm">
-                                      {section.title}
-                                    </span>
-                                    <div className="flex items-center space-x-2">
-                                      <svg
-                                        className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                                          expandedSection === sectionKey
-                                            ? "rotate-180"
-                                            : ""
-                                        }`}
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                      >
-                                        <path
-                                          fillRule="evenodd"
-                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                          clipRule="evenodd"
-                                        />
-                                      </svg>
-                                    </div>
-                                  </button>
+                                  <span className="font-semibold text-gray-900 text-xs lg:text-sm">
+                                    {(section as any).title}
+                                  </span>
+                                  <div className="flex items-center space-x-2">
+                                    <svg
+                                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                                        expandedSection === sectionKey
+                                          ? "rotate-180"
+                                          : ""
+                                      }`}
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                  </div>
+                                </button>
 
-                                  <div
-                                    className={`
+                                <div
+                                  className={`
                                       transition-all duration-300 ease-in-out overflow-hidden
                                       ${
                                         expandedSection === sectionKey
@@ -1173,28 +1158,27 @@ export default function Home() {
                                           : "max-h-0 opacity-0"
                                       }
                                     `}
-                                  >
-                                    <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
-                                      <ul className="space-y-1.5">
-                                        {section.items.map(
-                                          (item: any, index: number) => (
-                                            <li
-                                              key={index}
-                                              className="flex items-start text-xs lg:text-sm text-gray-700"
-                                            >
-                                              <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                              <span className="leading-relaxed">
-                                                {item}
-                                              </span>
-                                            </li>
-                                          )
-                                        )}
-                                      </ul>
-                                    </div>
+                                >
+                                  <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
+                                    <ul className="space-y-1.5">
+                                      {(section as any).items.map(
+                                        (item: string, index: number) => (
+                                          <li
+                                            key={index}
+                                            className="flex items-start text-xs lg:text-sm text-gray-700"
+                                          >
+                                            <div className="w-1.5 h-1.5 bg-amber-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                                            <span className="leading-relaxed">
+                                              {item}
+                                            </span>
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
                                   </div>
                                 </div>
-                              )
-                            )}
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -1231,17 +1215,16 @@ export default function Home() {
                                     packageEntries[prevPackageIndex];
                                   if (!packageEntry) return null;
                                   const [, packageInfo] = packageEntry;
-                                  const currentCityPricing =
-                                    (packageInfo.pricing || {})[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 h-full">
                                       <div className="p-2 sm:p-3">
                                         <div className="text-center mb-2">
                                           <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1 truncate">
-                                            {packageInfo.title}
+                                            {(packageInfo as any).title}
                                           </h3>
                                           <div className="text-sm sm:text-base font-bold text-amber-600">
                                             {selectedCity
@@ -1252,7 +1235,7 @@ export default function Home() {
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
                                           {Object.entries(
-                                            packageInfo.sections || {}
+                                            (packageInfo as any).sections || {}
                                           )
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
@@ -1262,7 +1245,7 @@ export default function Home() {
                                               >
                                                 <div className="p-1.5 sm:p-2 text-left">
                                                   <span className="font-semibold text-gray-900 text-xs">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                 </div>
                                               </div>
@@ -1313,10 +1296,9 @@ export default function Home() {
                               {/* Previous set for seamless left scrolling */}
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
-                                  const currentCityPricing =
-                                    (packageInfo.pricing || {})[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div
@@ -1328,7 +1310,7 @@ export default function Home() {
                                         <div className="p-3 sm:p-4">
                                           <div className="text-center mb-3 sm:mb-4">
                                             <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                              {packageInfo.title}
+                                              {(packageInfo as any).title}
                                             </h3>
                                             <div className="mb-3">
                                               <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
@@ -1347,7 +1329,7 @@ export default function Home() {
                                           <div className="border-t border-gray-100 mb-3"></div>
                                           <div className="space-y-1.5">
                                             {Object.entries(
-                                              packageInfo.sections
+                                              (packageInfo as any).sections
                                             ).map(([sectionKey, section]) => (
                                               <div
                                                 key={sectionKey}
@@ -1360,7 +1342,7 @@ export default function Home() {
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                   <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                   <div className="flex items-center space-x-2">
                                                     <svg
@@ -1394,7 +1376,9 @@ export default function Home() {
                                                 >
                                                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
                                                     <ul className="space-y-1.5">
-                                                      {section.items.map(
+                                                      {(
+                                                        section as any
+                                                      ).items.map(
                                                         (item, itemIndex) => (
                                                           <li
                                                             key={itemIndex}
@@ -1423,10 +1407,9 @@ export default function Home() {
                               {/* Current set - main packages */}
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
-                                  const currentCityPricing =
-                                    (packageInfo.pricing || {})[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div
@@ -1439,7 +1422,7 @@ export default function Home() {
                                           {/* Package Title */}
                                           <div className="text-center mb-3 sm:mb-4">
                                             <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                              {packageInfo.title}
+                                              {(packageInfo as any).title}
                                             </h3>
 
                                             {/* Price Display */}
@@ -1464,7 +1447,7 @@ export default function Home() {
                                           {/* Expandable Sections */}
                                           <div className="space-y-1.5">
                                             {Object.entries(
-                                              packageInfo.sections
+                                              (packageInfo as any).sections
                                             ).map(([sectionKey, section]) => (
                                               <div
                                                 key={sectionKey}
@@ -1477,7 +1460,7 @@ export default function Home() {
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                   <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                   <div className="flex items-center space-x-2">
                                                     <svg
@@ -1512,7 +1495,9 @@ export default function Home() {
                                                 >
                                                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
                                                     <ul className="space-y-1.5">
-                                                      {section.items.map(
+                                                      {(
+                                                        section as any
+                                                      ).items.map(
                                                         (item, itemIndex) => (
                                                           <li
                                                             key={itemIndex}
@@ -1541,10 +1526,9 @@ export default function Home() {
                               {/* Next set for seamless right scrolling */}
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
-                                  const currentCityPricing =
-                                    (packageInfo.pricing || {})[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div
@@ -1556,7 +1540,7 @@ export default function Home() {
                                         <div className="p-3 sm:p-4">
                                           <div className="text-center mb-3 sm:mb-4">
                                             <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                              {packageInfo.title}
+                                              {(packageInfo as any).title}
                                             </h3>
                                             <div className="mb-3">
                                               <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
@@ -1575,7 +1559,7 @@ export default function Home() {
                                           <div className="border-t border-gray-100 mb-3"></div>
                                           <div className="space-y-1.5">
                                             {Object.entries(
-                                              packageInfo.sections
+                                              (packageInfo as any).sections
                                             ).map(([sectionKey, section]) => (
                                               <div
                                                 key={sectionKey}
@@ -1588,7 +1572,7 @@ export default function Home() {
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                   <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                   <div className="flex items-center space-x-2">
                                                     <svg
@@ -1622,7 +1606,9 @@ export default function Home() {
                                                 >
                                                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
                                                     <ul className="space-y-1.5">
-                                                      {section.items.map(
+                                                      {(
+                                                        section as any
+                                                      ).items.map(
                                                         (item, itemIndex) => (
                                                           <li
                                                             key={itemIndex}
@@ -1665,17 +1651,16 @@ export default function Home() {
                                     packageEntries[nextPackageIndex];
                                   if (!nextPackageEntry) return null;
                                   const [, packageInfo] = nextPackageEntry;
-                                  const currentCityPricing =
-                                    (packageInfo.pricing || {})[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 h-full">
                                       <div className="p-2 sm:p-3">
                                         <div className="text-center mb-2">
                                           <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1 truncate">
-                                            {packageInfo.title}
+                                            {(packageInfo as any).title}
                                           </h3>
                                           <div className="text-sm sm:text-base font-bold text-amber-600">
                                             {selectedCity
@@ -1686,7 +1671,7 @@ export default function Home() {
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
                                           {Object.entries(
-                                            packageInfo.sections || {}
+                                            (packageInfo as any).sections || {}
                                           )
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
@@ -1696,7 +1681,7 @@ export default function Home() {
                                               >
                                                 <div className="p-1.5 sm:p-2 text-left">
                                                   <span className="font-semibold text-gray-900 text-xs">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                 </div>
                                               </div>

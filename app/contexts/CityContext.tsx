@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 interface City {
   id: string;
@@ -35,7 +41,7 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
   const selectedCity =
     cities.find((city) => city.id === selectedCityId) || cities[0] || null;
 
-  const fetchCities = async () => {
+  const fetchCities = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -58,7 +64,7 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCityId]);
 
   const refreshCities = () => {
     fetchCities();
@@ -67,7 +73,7 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
   // Load cities on mount
   useEffect(() => {
     fetchCities();
-  }, []);
+  }, [fetchCities]);
 
   // Load saved city from localStorage on mount
   useEffect(() => {

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -7,23 +7,28 @@ const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category'); // filter by category slug
-    const featured = searchParams.get('featured'); // filter featured posts
-    const limit = searchParams.get('limit'); // limit results
+    const category = searchParams.get("category"); // filter by category slug
+    const featured = searchParams.get("featured"); // filter featured posts
+    const limit = searchParams.get("limit"); // limit results
 
-    const where: any = {
+    const where: {
+      active: boolean;
+      status: string;
+      category?: { slug: string; active: boolean };
+      featured?: boolean;
+    } = {
       active: true,
-      status: 'published', // Only show published posts on frontend
+      status: "published", // Only show published posts on frontend
     };
 
-    if (category && category !== 'all') {
+    if (category && category !== "all") {
       where.category = {
         slug: category,
         active: true,
       };
     }
 
-    if (featured === 'true') {
+    if (featured === "true") {
       where.featured = true;
     }
 
@@ -40,21 +45,21 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: [
-        { featured: 'desc' },
-        { order_index: 'asc' },
-        { publish_date: 'desc' },
+        { featured: "desc" },
+        { order_index: "asc" },
+        { publish_date: "desc" },
       ],
       take: limit ? parseInt(limit) : undefined,
     });
 
     // Transform data for frontend
-    const transformedPosts = blogPosts.map(post => ({
+    const transformedPosts = blogPosts.map((post) => ({
       id: post.id,
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt,
       author: post.author,
-      date: post.publish_date.toISOString().split('T')[0],
+      date: post.publish_date.toISOString().split("T")[0],
       image: post.featured_image || "/images/blog-placeholder.jpg",
       tags: post.tags,
       category: post.category.name,
@@ -66,9 +71,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(transformedPosts);
   } catch (error) {
-    console.error('Error fetching blog posts:', error);
+    console.error("Error fetching blog posts:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch blog posts' },
+      { error: "Failed to fetch blog posts" },
       { status: 500 }
     );
   }

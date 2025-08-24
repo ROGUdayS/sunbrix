@@ -9,7 +9,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category'); // filter by category name
 
-    const where: any = {
+    const where: {
+      active: boolean;
+      category?: { name: string; active: boolean };
+    } = {
       active: true,
     };
 

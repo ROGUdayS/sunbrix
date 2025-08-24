@@ -37,9 +37,11 @@ export default function FAQ() {
   const [categories, setCategories] = useState<FAQCategory[]>([]);
   const [pageContent, setPageContent] = useState<PageContent>({
     page_title: "Frequently Asked Questions",
-    page_subtitle: "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
+    page_subtitle:
+      "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
     cta_title: "Still Have Questions?",
-    cta_description: "Contact us for personalized assistance and detailed information",
+    cta_description:
+      "Contact us for personalized assistance and detailed information",
     cta_button_text: "Contact Us",
     cta_button_link: "/contact",
   });
@@ -53,11 +55,12 @@ export default function FAQ() {
   const loadFaqData = async () => {
     try {
       // Load FAQs, categories, and page content in parallel
-      const [faqsResponse, categoriesResponse, pageContentResponse] = await Promise.all([
-        fetch('/api/content/faqs'),
-        fetch('/api/content/faqs/categories'),
-        fetch('/api/content/faqs/page-content'),
-      ]);
+      const [faqsResponse, categoriesResponse, pageContentResponse] =
+        await Promise.all([
+          fetch("/api/content/faqs"),
+          fetch("/api/content/faqs/categories"),
+          fetch("/api/content/faqs/page-content"),
+        ]);
 
       if (faqsResponse.ok) {
         const faqsData = await faqsResponse.json();
@@ -75,7 +78,7 @@ export default function FAQ() {
         setPageContent(pageData);
       }
     } catch (error) {
-      console.error('Error loading FAQ data:', error);
+      console.error("Error loading FAQ data:", error);
     } finally {
       setLoading(false);
     }
@@ -84,26 +87,27 @@ export default function FAQ() {
   // Filter and search FAQs
   const filterAndSearchFaqs = () => {
     let filtered = allFaqs;
-    
+
     // Filter by category
     if (activeCategory !== "All") {
       filtered = filtered.filter((faq) => faq.category === activeCategory);
     }
-    
+
     // Search by question and answer
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((faq) =>
-        faq.question.toLowerCase().includes(query) ||
-        faq.answer.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        (faq) =>
+          faq.question.toLowerCase().includes(query) ||
+          faq.answer.toLowerCase().includes(query)
       );
     }
-    
+
     return filtered;
   };
 
   const filteredFAQs = filterAndSearchFaqs();
-  const allCategories = ["All", ...categories.map(cat => cat.name)];
+  const allCategories = ["All", ...categories.map((cat) => cat.name)];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -148,8 +152,18 @@ export default function FAQ() {
           <div className="flex justify-center mb-8">
             <div className="relative w-full max-w-md">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
               <input
@@ -164,8 +178,18 @@ export default function FAQ() {
                   onClick={() => handleSearch("")}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               )}
@@ -187,17 +211,22 @@ export default function FAQ() {
                 {category}
                 {category !== "All" && (
                   <span className="ml-1 text-xs opacity-75">
-                    ({categories.find(cat => cat.name === category)?.faqCount || 0})
+                    (
+                    {categories.find((cat) => cat.name === category)
+                      ?.faqCount || 0}
+                    )
                   </span>
                 )}
               </button>
             ))}
           </div>
-          
+
           {/* Search Results Info */}
           {searchQuery && (
             <div className="text-center mt-4 text-sm text-gray-600">
-              Showing {filteredFAQs.length} result{filteredFAQs.length !== 1 ? 's' : ''} for "{searchQuery}"
+              Showing {filteredFAQs.length} result
+              {filteredFAQs.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}
+              &rdquo;
             </div>
           )}
         </div>
@@ -209,15 +238,27 @@ export default function FAQ() {
           {filteredFAQs.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-500 mb-4">
-                <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="mx-auto h-12 w-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No FAQs found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No FAQs found
+              </h3>
               <p className="text-gray-500">
-                {activeCategory === "All" 
-                  ? "There are no FAQs available yet." 
-                  : `No FAQs found in the "${activeCategory}" category.`}
+                {activeCategory === "All"
+                  ? "There are no FAQs available yet."
+                  : `No FAQs found in the &ldquo;${activeCategory}&rdquo; category.`}
               </p>
             </div>
           ) : (
@@ -262,7 +303,7 @@ export default function FAQ() {
                   {expandedFAQ === faq.id && (
                     <div className="px-6 pb-4 border-t border-gray-100">
                       <div className="pt-4 text-gray-700 leading-relaxed">
-                        {faq.answer.split('\n').map((paragraph, index) => (
+                        {faq.answer.split("\n").map((paragraph, index) => (
                           <p key={index} className={index > 0 ? "mt-4" : ""}>
                             {paragraph}
                           </p>
@@ -296,7 +337,12 @@ export default function FAQ() {
               </div>
               <div className="bg-green-50 rounded-lg p-4">
                 <div className="text-2xl font-bold text-green-600 mb-1">
-                  {Math.round(faqs.reduce((acc, faq) => acc + faq.answer.length, 0) / faqs.length / 10)}s
+                  {Math.round(
+                    faqs.reduce((acc, faq) => acc + faq.answer.length, 0) /
+                      faqs.length /
+                      10
+                  )}
+                  s
                 </div>
                 <div className="text-sm text-gray-600">Avg Read Time</div>
               </div>

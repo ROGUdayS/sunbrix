@@ -44,14 +44,15 @@ export default function Blogs() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [allBlogPosts, setAllBlogPosts] = useState<BlogPost[]>([]);
   const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [pageContent, setPageContent] = useState<PageContent>({
     page_title: "Blogs & Articles",
-    page_subtitle: "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.",
+    page_subtitle:
+      "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.",
     cta_title: "You Dream. We Deliver.",
-    cta_description: "Ready to build your dream home? Schedule a free consultation today and begin the journey of turning your dream into reality.",
+    cta_description:
+      "Ready to build your dream home? Schedule a free consultation today and begin the journey of turning your dream into reality.",
     cta_button_text: "Book a Meeting",
     cta_button_link: "/contact",
   });
@@ -65,15 +66,15 @@ export default function Blogs() {
   const loadBlogData = async () => {
     try {
       // Load blog posts, categories, and page content in parallel
-      const [blogPostsResponse, categoriesResponse, pageContentResponse] = await Promise.all([
-        fetch('/api/content/blogs'),
-        fetch('/api/content/blogs/categories'),
-        fetch('/api/content/blogs/page-content'),
-      ]);
+      const [blogPostsResponse, categoriesResponse, pageContentResponse] =
+        await Promise.all([
+          fetch("/api/content/blogs"),
+          fetch("/api/content/blogs/categories"),
+          fetch("/api/content/blogs/page-content"),
+        ]);
 
       if (blogPostsResponse.ok) {
         const blogPostsData = await blogPostsResponse.json();
-        setBlogPosts(blogPostsData);
         setAllBlogPosts(blogPostsData);
       }
 
@@ -87,7 +88,7 @@ export default function Blogs() {
         setPageContent(pageData);
       }
     } catch (error) {
-      console.error('Error loading blog data:', error);
+      console.error("Error loading blog data:", error);
     } finally {
       setLoading(false);
     }
@@ -96,29 +97,30 @@ export default function Blogs() {
   // Filter and search posts
   const filterAndSearchPosts = () => {
     let filtered = allBlogPosts;
-    
+
     // Filter by category
     if (selectedCategory !== "All") {
       filtered = filtered.filter((post) => post.category === selectedCategory);
     }
-    
+
     // Search by title, excerpt, content, and tags
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((post) =>
-        post.title.toLowerCase().includes(query) ||
-        post.excerpt.toLowerCase().includes(query) ||
-        post.tags.some(tag => tag.toLowerCase().includes(query)) ||
-        post.author.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.excerpt.toLowerCase().includes(query) ||
+          post.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+          post.author.toLowerCase().includes(query)
       );
     }
-    
+
     return filtered;
   };
 
   const filteredPosts = filterAndSearchPosts();
-  const allCategories = ["All", ...categories.map(cat => cat.name)];
-  
+  const allCategories = ["All", ...categories.map((cat) => cat.name)];
+
   // Pagination
   const postsPerPage = 9;
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
@@ -138,7 +140,7 @@ export default function Blogs() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (loading) {
@@ -178,8 +180,18 @@ export default function Blogs() {
           <div className="flex justify-center mb-8">
             <div className="relative w-full max-w-md">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
               <input
@@ -194,8 +206,18 @@ export default function Blogs() {
                   onClick={() => handleSearch("")}
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               )}
@@ -217,17 +239,22 @@ export default function Blogs() {
                 {category}
                 {category !== "All" && (
                   <span className="ml-1 text-xs opacity-75">
-                    ({categories.find(cat => cat.name === category)?.postCount || 0})
+                    (
+                    {categories.find((cat) => cat.name === category)
+                      ?.postCount || 0}
+                    )
                   </span>
                 )}
               </button>
             ))}
           </div>
-          
+
           {/* Search Results Info */}
           {searchQuery && (
             <div className="text-center mt-4 text-sm text-gray-600">
-              Showing {filteredPosts.length} result{filteredPosts.length !== 1 ? 's' : ''} for "{searchQuery}"
+              Showing {filteredPosts.length} result
+              {filteredPosts.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}
+              &rdquo;
             </div>
           )}
         </div>
@@ -239,14 +266,26 @@ export default function Blogs() {
           {currentPosts.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-500 mb-4">
-                <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <svg
+                  className="mx-auto h-12 w-12"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No blog posts found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No blog posts found
+              </h3>
               <p className="text-gray-500">
-                {selectedCategory === "All" 
-                  ? "There are no published blog posts yet." 
+                {selectedCategory === "All"
+                  ? "There are no published blog posts yet."
                   : `No blog posts found in the "${selectedCategory}" category.`}
               </p>
             </div>
@@ -282,9 +321,12 @@ export default function Blogs() {
                               />
                             </svg>
                           </div>
-                          <span 
+                          <span
                             className="text-sm font-medium text-orange-600 bg-orange-100 px-3 py-1 rounded-full"
-                            style={{ backgroundColor: `${post.categoryColor}20`, color: post.categoryColor }}
+                            style={{
+                              backgroundColor: `${post.categoryColor}20`,
+                              color: post.categoryColor,
+                            }}
                           >
                             {post.category}
                           </span>
@@ -312,9 +354,12 @@ export default function Blogs() {
                       )}
                     </div>
                     <div className="flex items-center justify-between mb-3">
-                      <span 
+                      <span
                         className="text-xs font-medium px-2 py-1 rounded-full"
-                        style={{ backgroundColor: `${post.categoryColor}20`, color: post.categoryColor }}
+                        style={{
+                          backgroundColor: `${post.categoryColor}20`,
+                          color: post.categoryColor,
+                        }}
                       >
                         {post.category}
                       </span>
@@ -336,7 +381,9 @@ export default function Blogs() {
                           </span>
                         ))}
                         {post.tags.length > 3 && (
-                          <span className="text-xs text-gray-500">+{post.tags.length - 3} more</span>
+                          <span className="text-xs text-gray-500">
+                            +{post.tags.length - 3} more
+                          </span>
                         )}
                       </div>
                     )}
@@ -378,37 +425,51 @@ export default function Blogs() {
               </button>
 
               {/* Page Numbers */}
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                // Show first page, last page, current page, and pages around current page
-                const shouldShow = 
-                  page === 1 || 
-                  page === totalPages || 
-                  (page >= currentPage - 1 && page <= currentPage + 1);
-                
-                if (!shouldShow && page === 2 && currentPage > 4) {
-                  return <span key={page} className="px-2 text-gray-400">...</span>;
-                }
-                
-                if (!shouldShow && page === totalPages - 1 && currentPage < totalPages - 3) {
-                  return <span key={page} className="px-2 text-gray-400">...</span>;
-                }
-                
-                if (!shouldShow) return null;
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => {
+                  // Show first page, last page, current page, and pages around current page
+                  const shouldShow =
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1);
 
-                return (
-                  <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === page
-                        ? "bg-orange-500 text-white shadow-lg"
-                        : "text-gray-700 hover:text-orange-600 hover:bg-orange-50"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                );
-              })}
+                  if (!shouldShow && page === 2 && currentPage > 4) {
+                    return (
+                      <span key={page} className="px-2 text-gray-400">
+                        ...
+                      </span>
+                    );
+                  }
+
+                  if (
+                    !shouldShow &&
+                    page === totalPages - 1 &&
+                    currentPage < totalPages - 3
+                  ) {
+                    return (
+                      <span key={page} className="px-2 text-gray-400">
+                        ...
+                      </span>
+                    );
+                  }
+
+                  if (!shouldShow) return null;
+
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === page
+                          ? "bg-orange-500 text-white shadow-lg"
+                          : "text-gray-700 hover:text-orange-600 hover:bg-orange-50"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                }
+              )}
 
               {/* Next Button */}
               <button
@@ -424,7 +485,9 @@ export default function Blogs() {
           {/* Results Summary */}
           {filteredPosts.length > 0 && (
             <div className="text-center mt-6 text-sm text-gray-600">
-              Showing {startIndex + 1} to {Math.min(endIndex, filteredPosts.length)} of {filteredPosts.length} articles
+              Showing {startIndex + 1} to{" "}
+              {Math.min(endIndex, filteredPosts.length)} of{" "}
+              {filteredPosts.length} articles
               {searchQuery && ` for "${searchQuery}"`}
             </div>
           )}
