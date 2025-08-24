@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// GET - Fetch main page content for the frontend (simplified)
+// GET - Fetch main page content for the frontend (gallery with quotes only)
 export async function GET() {
   try {
     const [demoVideoContent, galleryImages] = await Promise.all([
@@ -17,18 +17,12 @@ export async function GET() {
       }),
       prisma.galleryImage.findMany({
         where: { active: true },
-        orderBy: [{ featured: 'desc' }, { order_index: 'asc' }, { created_at: 'desc' }],
+        orderBy: [{ order_index: 'asc' }, { created_at: 'desc' }],
         select: {
           id: true,
-          title: true,
-          description: true,
           image_url: true,
-          thumbnail_url: true,
-          alt_text: true,
-          category: true,
-          project_type: true,
-          location: true,
-          featured: true
+          quote: true,
+          order_index: true
         }
       })
     ]);
@@ -38,15 +32,10 @@ export async function GET() {
       demoVideoUrl: demoVideoContent?.demo_video_url || "/videos/video_demo.mp4",
       galleryImages: galleryImages.map(image => ({
         id: image.id,
-        title: image.title,
-        description: image.description,
         image: image.image_url,
-        thumbnail: image.thumbnail_url || image.image_url,
-        alt: image.alt_text || image.title,
-        category: image.category,
-        projectType: image.project_type,
-        location: image.location,
-        featured: image.featured
+        image_url: image.image_url, // Keep both for compatibility
+        quote: image.quote,
+        order_index: image.order_index
       }))
     };
 

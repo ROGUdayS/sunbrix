@@ -3,37 +3,25 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// GET - Fetch gallery images for the frontend
+// GET - Fetch simplified gallery images (image + quote only) for the frontend
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
-    const featured = searchParams.get('featured');
     const limit = parseInt(searchParams.get('limit') || '50');
     
-    const where: any = { active: true };
-    if (category) where.category = category;
-    if (featured === 'true') where.featured = true;
+    const where = { active: true };
 
     const galleryImages = await prisma.galleryImage.findMany({
       where,
       orderBy: [
-        { featured: 'desc' },
         { order_index: 'asc' },
         { created_at: 'desc' }
       ],
       take: limit,
       select: {
         id: true,
-        title: true,
-        description: true,
         image_url: true,
-        thumbnail_url: true,
-        alt_text: true,
-        category: true,
-        project_type: true,
-        location: true,
-        featured: true,
+        quote: true,
         order_index: true
       }
     });
@@ -41,15 +29,10 @@ export async function GET(request: NextRequest) {
     // Transform data to match expected frontend format
     const transformedImages = galleryImages.map(image => ({
       id: image.id,
-      title: image.title,
-      description: image.description,
       image: image.image_url,
-      thumbnail: image.thumbnail_url || image.image_url,
-      alt: image.alt_text || image.title,
-      category: image.category,
-      projectType: image.project_type,
-      location: image.location,
-      featured: image.featured
+      image_url: image.image_url, // Keep both for compatibility
+      quote: image.quote,
+      order_index: image.order_index
     }));
 
     // Set cache headers for better performance

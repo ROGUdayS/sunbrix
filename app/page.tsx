@@ -134,14 +134,13 @@ export default function Home() {
       }
     );
 
-    // Add dynamic gallery images to the collection
+    // Add dynamic gallery images to the collection (now with quotes only)
     if (dynamicGalleryImages && dynamicGalleryImages.length > 0) {
       dynamicGalleryImages.forEach((galleryImage, index) => {
         allImages.push({
           id: 9000 + index, // Use high ID to avoid conflicts
           image: galleryImage.image || galleryImage.image_url,
-          title: galleryImage.title,
-          description: galleryImage.description,
+          quote: galleryImage.quote || "",
         });
       });
     }
@@ -811,7 +810,10 @@ export default function Home() {
                                 projects.length
                             ]?.image
                           }
-                          alt="Previous"
+                          alt={projects[
+                            (currentSlide - 1 + projects.length) %
+                              projects.length
+                          ]?.quote || "Previous"}
                           fill
                           className="object-cover object-right"
                         />
@@ -861,11 +863,21 @@ export default function Home() {
                           <div className="relative">
                             <Image
                               src={project.image}
-                              alt={project.title}
+                              alt={project.quote || "Gallery image"}
                               width={900}
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
+                            {/* Quote overlay */}
+                            {project.quote && (
+                              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+                                <div className="text-center max-w-2xl">
+                                  <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
+                                    "{project.quote}"
+                                  </blockquote>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -876,11 +888,21 @@ export default function Home() {
                           <div className="relative">
                             <Image
                               src={project.image}
-                              alt={project.title}
+                              alt={project.quote || "Gallery image"}
                               width={900}
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
+                            {/* Quote overlay */}
+                            {project.quote && (
+                              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+                                <div className="text-center max-w-2xl">
+                                  <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
+                                    "{project.quote}"
+                                  </blockquote>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -894,11 +916,21 @@ export default function Home() {
                           <div className="relative">
                             <Image
                               src={project.image}
-                              alt={project.title}
+                              alt={project.quote || "Gallery image"}
                               width={900}
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
+                            {/* Quote overlay */}
+                            {project.quote && (
+                              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+                                <div className="text-center max-w-2xl">
+                                  <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
+                                    "{project.quote}"
+                                  </blockquote>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -917,7 +949,7 @@ export default function Home() {
                             projects[(currentSlide + 1) % projects.length]
                               ?.image
                           }
-                          alt="Next"
+                          alt={projects[(currentSlide + 1) % projects.length]?.quote || "Next"}
                           fill
                           className="object-cover object-left"
                         />

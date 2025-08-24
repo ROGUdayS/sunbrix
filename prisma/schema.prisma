@@ -164,20 +164,13 @@ model PageContent {
 }
 
 model GalleryImage {
-  id                String   @id @default(cuid())
-  title             String   @db.VarChar(255)
-  description       String?  @db.Text
-  image_url         String   @map("image_url") @db.VarChar(500)
-  thumbnail_url     String?  @map("thumbnail_url") @db.VarChar(500)
-  alt_text          String?  @map("alt_text") @db.VarChar(255)
-  order_index       Int      @default(0) @map("order_index")
-  category          String?  @db.VarChar(100) // e.g., "residential", "commercial", "interior"
-  project_type      String?  @map("project_type") @db.VarChar(100)
-  location          String?  @db.VarChar(100)
-  featured          Boolean  @default(false)
-  active            Boolean  @default(true)
-  created_at        DateTime @default(now()) @map("created_at")
-  updated_at        DateTime @updatedAt @map("updated_at")
+  id          String   @id @default(cuid())
+  image_url   String   @map("image_url") @db.VarChar(500)
+  quote       String?  @db.Text // Quote text to display with the image
+  order_index Int      @default(0) @map("order_index")
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @updatedAt @map("updated_at")
 
   @@map("gallery_images")
 }
