@@ -13,6 +13,7 @@ interface Project {
   location: string;
   plotSize: string;
   facing: string;
+  property_type: string;
   image: string;
   images?: string[];
   description: string;
@@ -59,7 +60,7 @@ export default function ProjectGallery() {
             new Date(project.created_at).getFullYear().toString(),
           bhk: `${project.specifications?.bedrooms || 2}BHK`,
           siteDimension: project.plotSize,
-          residential: "Residential",
+          residential: project.property_type || "Residential",
         }));
 
         setProjects(transformedProjects);

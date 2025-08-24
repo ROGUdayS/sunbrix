@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
       year: project.year,
       plotSize: project.plot_size,
       facing: project.facing,
+      property_type: project.property_type,
       image: project.images?.[0] || "/images/HomeHeroWebImage.webp",
       images: project.images,
       description: project.description,

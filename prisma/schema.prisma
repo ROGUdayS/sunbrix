@@ -18,6 +18,7 @@ model Project {
   year          String   @db.VarChar(4)  // Project year (e.g., "2024")
   plot_size     String   @map("plot_size") @db.VarChar(50)
   facing        String   @db.VarChar(50)
+  property_type String   @map("property_type") @db.VarChar(50) @default("Residential")
   description   String   @db.Text
   specifications Json    @default("{}")
   images        String[]
