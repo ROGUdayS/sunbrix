@@ -28,15 +28,34 @@ export async function POST(request: NextRequest) {
         revalidateTag('cities')
         revalidatePath('/api/cities')
         break
+      case 'testimonials':
+        revalidateTag('testimonials')
+        revalidatePath('/api/content/testimonials')
+        revalidatePath('/testimonials')
+        revalidatePath('/') // Home page uses testimonials
+        break
+      case 'content':
+      case 'main-page':
+        revalidateTag('content')
+        revalidateTag('main-page')
+        revalidatePath('/api/content/main-page')
+        revalidatePath('/') // Home page uses main page content
+        break
       case 'all':
         // Revalidate everything
         revalidateTag('projects')
         revalidateTag('packages')
         revalidateTag('cities')
+        revalidateTag('testimonials')
+        revalidateTag('content')
+        revalidateTag('main-page')
         revalidatePath('/api/projects')
         revalidatePath('/api/packages')
         revalidatePath('/api/cities')
+        revalidatePath('/api/content/testimonials')
+        revalidatePath('/api/content/main-page')
         revalidatePath('/projects')
+        revalidatePath('/testimonials')
         revalidatePath('/')
         break
       default:

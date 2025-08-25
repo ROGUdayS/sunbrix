@@ -41,7 +41,8 @@ export async function GET() {
 
     // Set cache headers for better performance
     const headers = {
-      'Cache-Control': 'public, max-age=300, stale-while-revalidate=60', // 5 minutes cache
+      'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      'Cache-Tag': 'content,main-page',
     };
 
     return NextResponse.json(response, { headers });

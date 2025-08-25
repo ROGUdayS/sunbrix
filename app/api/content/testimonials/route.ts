@@ -58,7 +58,8 @@ export async function GET(request: NextRequest) {
 
     // Set cache headers for better performance
     const headers = {
-      'Cache-Control': 'public, max-age=600, stale-while-revalidate=120', // 10 minutes cache
+      'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=300',
+      'Cache-Tag': 'testimonials',
     };
 
     return NextResponse.json(transformedTestimonials, { headers });
