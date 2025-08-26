@@ -2,14 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
 
 import { useCity } from "./contexts/CityContext";
-import packagesData from "../data/packages.json";
-import projectsData from "../data/projects.json";
 
 interface ProjectData {
   id: string;
@@ -25,6 +23,24 @@ interface ProjectData {
   };
 }
 
+// Helper functions for YouTube URL handling
+const isYouTubeUrl = (url: string): boolean => {
+  return url.includes("youtube.com") || url.includes("youtu.be");
+};
+
+const convertToEmbedUrl = (url: string): string => {
+  if (url.includes("youtu.be/")) {
+    const videoId = url.split("youtu.be/")[1]?.split("?")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  } else if (url.includes("youtube.com/watch?v=")) {
+    const videoId = url.split("v=")[1]?.split("&")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  } else if (url.includes("youtube.com/embed/")) {
+    return url; // Already in embed format
+  }
+  return url; // Return original if not YouTube
+};
+
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -39,13 +55,53 @@ export default function Home() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Add state for projects to fix hydration issue
+  // Add state for projects and packages
   const [projects, setProjects] = useState<
     {
       image: string;
       title: string;
       description: string;
       id: number;
+      quote?: string;
+    }[]
+  >([]);
+
+  const [packagesData, setPackagesData] = useState<{
+    packages: { construction: Record<string, unknown> };
+  }>({
+    packages: { construction: {} },
+  });
+
+  const [projectsData, setProjectsData] = useState<{
+    projects: ProjectData[];
+  }>({
+    projects: [],
+  });
+
+  // Dynamic content state (simplified)
+  const [demoVideoUrl, setDemoVideoUrl] = useState<string>(
+    "/videos/video_demo.mp4"
+  );
+  const [dynamicTestimonials, setDynamicTestimonials] = useState<
+    {
+      id: number;
+      name: string;
+      role: string;
+      company: string;
+      rating: number;
+      quote: string;
+      projectType: string;
+      image: string;
+      videoUrl?: string;
+      videoThumbnail?: string;
+      featured: boolean;
+    }[]
+  >([]);
+  const [dynamicGalleryImages, setDynamicGalleryImages] = useState<
+    {
+      image?: string;
+      image_url?: string;
+      quote?: string;
     }[]
   >([]);
 
@@ -61,42 +117,6 @@ export default function Home() {
   // Add video ref for auto-play functionality
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Project gallery data - get random images from project data
-  const getAllProjectImages = () => {
-    const allImages: {
-      image: string;
-      title: string;
-      description: string;
-      id: number;
-    }[] = [];
-
-    // Collect all images from all projects
-    projectsData.projects.forEach(
-      (project: ProjectData, projectIndex: number) => {
-        if (project.images && project.images.length > 0) {
-          project.images.forEach((image: string, imageIndex: number) => {
-            allImages.push({
-              id: projectIndex * 100 + imageIndex, // Unique ID
-              image: image,
-              title: project.title,
-              description: project.description,
-            });
-          });
-        } else {
-          // Fallback to main image if no images array
-          allImages.push({
-            id: projectIndex * 100,
-            image: project.image,
-            title: project.title,
-            description: project.description,
-          });
-        }
-      }
-    );
-
-    return allImages;
-  };
-
   // Shuffle array function
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffled = [...array];
@@ -107,11 +127,66 @@ export default function Home() {
     return shuffled;
   };
 
-  // Initialize projects on client side to avoid hydration mismatch
+  // Initialize projects and packages from API
   useEffect(() => {
-    const allImages = getAllProjectImages();
-    const shuffledProjects = shuffleArray(allImages).slice(0, 6);
-    setProjects(shuffledProjects);
+    async function fetchData() {
+      try {
+        // Fetch projects
+        const projectsResponse = await fetch("/api/projects?active=true");
+        if (projectsResponse.ok) {
+          const projectsResult = await projectsResponse.json();
+
+          // Create gallery images from projects
+          const allImages: {
+            image: string;
+            title: string;
+            description: string;
+            id: number;
+            quote?: string;
+          }[] = [];
+          projectsResult.projects.forEach(
+            (project: ProjectData, projectIndex: number) => {
+              if (project.images && project.images.length > 0) {
+                project.images.forEach((image: string, imageIndex: number) => {
+                  allImages.push({
+                    image,
+                    title: project.title,
+                    description: project.description,
+                    id: projectIndex * 100 + imageIndex,
+                  });
+                });
+              } else if (project.image) {
+                allImages.push({
+                  image: project.image,
+                  title: project.title,
+                  description: project.description,
+                  id: projectIndex * 100,
+                });
+              }
+            }
+          );
+
+          const shuffledProjects = shuffleArray(allImages).slice(0, 6);
+          setProjects(shuffledProjects);
+          setProjectsData({ projects: projectsResult.projects });
+        }
+
+        // Fetch packages
+        const packagesResponse = await fetch("/api/packages?active=true");
+        if (packagesResponse.ok) {
+          const packagesResult = await packagesResponse.json();
+          setPackagesData(packagesResult);
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        // Fallback to empty data
+        setProjects([]);
+        setPackagesData({ packages: { construction: {} } });
+        setProjectsData({ projects: [] });
+      }
+    }
+
+    fetchData();
   }, []);
 
   // Handle hash navigation for packages section
@@ -166,6 +241,33 @@ export default function Home() {
     };
   }, []);
 
+  // Fetch dynamic content from database (simplified)
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        // Fetch main page content (demo video + gallery)
+        const contentResponse = await fetch("/api/content/main-page");
+        if (contentResponse.ok) {
+          const content = await contentResponse.json();
+          setDemoVideoUrl(content.demoVideoUrl || "/videos/video_demo.mp4");
+          setDynamicGalleryImages(content.galleryImages || []);
+        }
+
+        // Fetch testimonials
+        const testimonialsResponse = await fetch("/api/content/testimonials");
+        if (testimonialsResponse.ok) {
+          const data = await testimonialsResponse.json();
+          setDynamicTestimonials(data.testimonials || []);
+        }
+      } catch (error) {
+        console.error("Error fetching dynamic content:", error);
+        // Keep using static data if API fails
+      }
+    };
+
+    fetchContent();
+  }, []);
+
   const nextSlide = () => {
     if (projects.length === 0 || isGalleryTransitioning) return;
     setIsGalleryTransitioning(true);
@@ -183,7 +285,8 @@ export default function Home() {
   };
 
   // Testimonial data
-  const testimonials = [
+  // Use dynamic testimonials if available, fallback to static data
+  const staticTestimonials = [
     {
       id: 1,
       videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
@@ -206,6 +309,16 @@ export default function Home() {
       name: "Mr. Hariharasudan",
     },
   ];
+
+  const testimonials =
+    dynamicTestimonials.length > 0
+      ? dynamicTestimonials.map((testimonial) => ({
+          id: testimonial.id,
+          videoUrl: testimonial.videoUrl,
+          quote: testimonial.quote,
+          name: testimonial.name,
+        }))
+      : staticTestimonials;
 
   const nextTestimonial = () => {
     if (isTestimonialTransitioning) return;
@@ -231,7 +344,7 @@ export default function Home() {
   const nextPackage = () => {
     if (isTransitioning) return;
 
-    const packageKeys = Object.keys(packagesData.packages.construction || {});
+    const packageKeys = Object.keys(getFilteredPackages());
 
     if (packageKeys.length === 0) return;
 
@@ -242,7 +355,7 @@ export default function Home() {
   const prevPackage = () => {
     if (isTransitioning) return;
 
-    const packageKeys = Object.keys(packagesData.packages.construction || {});
+    const packageKeys = Object.keys(getFilteredPackages());
 
     if (packageKeys.length === 0) return;
 
@@ -333,7 +446,7 @@ export default function Home() {
   useEffect(() => {
     if (!isTransitioning) return;
 
-    const packageKeys = Object.keys(packagesData.packages.construction || {});
+    const packageKeys = Object.keys(getFilteredPackages());
 
     const totalPackages = packageKeys.length;
     if (totalPackages === 0) return;
@@ -367,7 +480,7 @@ export default function Home() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [currentPackage, isTransitioning]);
+  }, [currentPackage, isTransitioning, selectedCity]);
 
   // Handle infinite loop transitions for gallery
   useEffect(() => {
@@ -438,6 +551,32 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, [currentTestimonial, isTestimonialTransitioning, testimonials.length]);
+
+  // Helper function to get packages filtered by selected city
+  const getFilteredPackages = useCallback(() => {
+    if (!packagesData?.packages?.construction || !selectedCity) {
+      return {};
+    }
+
+    const allPackages = packagesData.packages.construction;
+    const filteredPackages: Record<string, unknown> = {};
+
+    Object.entries(allPackages).forEach(([packageKey, packageInfo]) => {
+      // Check if this package has pricing for the selected city
+      const pkg = packageInfo as {
+        pricing?: Record<string, unknown>;
+        title?: string;
+        popular?: boolean;
+        sections?: Record<string, { title: string; items: string[] }>;
+      };
+      if (pkg.pricing && pkg.pricing[selectedCity.id]) {
+        // Only include packages that have valid pricing for this city
+        filteredPackages[packageKey] = packageInfo;
+      }
+    });
+
+    return filteredPackages;
+  }, [packagesData, selectedCity]);
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
@@ -543,14 +682,14 @@ export default function Home() {
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 2L3 7v11h4v-6h6v6h4V7l-7-5z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/Design & Strength.svg"
+                    alt="Design & Strength"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   Design & Strength
@@ -562,14 +701,14 @@ export default function Home() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/20 Year Warranty.svg"
+                    alt="20 Year Warranty"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   20 year warranty
@@ -579,14 +718,14 @@ export default function Home() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/On time Delivery.svg"
+                    alt="On Time Delivery"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   100% On time delivery
@@ -596,14 +735,14 @@ export default function Home() {
                 </p>
               </div>
               <div className="text-center">
-                <div className="bg-amber-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 text-amber-800"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
-                  </svg>
+                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                  <Image
+                    src="/icons/commitment-to-quality/High quality materials.svg"
+                    alt="High Quality Materials"
+                    width={80}
+                    height={80}
+                    className="w-16 h-16 sm:w-20 sm:h-20"
+                  />
                 </div>
                 <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
                   High quality materials
@@ -648,7 +787,12 @@ export default function Home() {
                                 projects.length
                             ]?.image
                           }
-                          alt="Previous"
+                          alt={
+                            projects[
+                              (currentSlide - 1 + projects.length) %
+                                projects.length
+                            ]?.quote || "Previous"
+                          }
                           fill
                           className="object-cover object-right"
                         />
@@ -698,11 +842,21 @@ export default function Home() {
                           <div className="relative">
                             <Image
                               src={project.image}
-                              alt={project.title}
+                              alt={project.quote || "Gallery image"}
                               width={900}
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
+                            {/* Quote overlay */}
+                            {project.quote && (
+                              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+                                <div className="text-center max-w-2xl">
+                                  <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
+                                    &ldquo;{project.quote}&rdquo;
+                                  </blockquote>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -713,11 +867,21 @@ export default function Home() {
                           <div className="relative">
                             <Image
                               src={project.image}
-                              alt={project.title}
+                              alt={project.quote || "Gallery image"}
                               width={900}
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
+                            {/* Quote overlay */}
+                            {project.quote && (
+                              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+                                <div className="text-center max-w-2xl">
+                                  <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
+                                    &ldquo;{project.quote}&rdquo;
+                                  </blockquote>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -731,11 +895,21 @@ export default function Home() {
                           <div className="relative">
                             <Image
                               src={project.image}
-                              alt={project.title}
+                              alt={project.quote || "Gallery image"}
                               width={900}
                               height={600}
                               className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                             />
+                            {/* Quote overlay */}
+                            {project.quote && (
+                              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+                                <div className="text-center max-w-2xl">
+                                  <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
+                                    &ldquo;{project.quote}&rdquo;
+                                  </blockquote>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -754,7 +928,10 @@ export default function Home() {
                             projects[(currentSlide + 1) % projects.length]
                               ?.image
                           }
-                          alt="Next"
+                          alt={
+                            projects[(currentSlide + 1) % projects.length]
+                              ?.quote || "Next"
+                          }
                           fill
                           className="object-cover object-left"
                         />
@@ -853,19 +1030,32 @@ export default function Home() {
           {/* Video Container */}
           <div className="relative max-w-6xl mx-auto">
             <div className="relative bg-gradient-to-br from-orange-100 to-orange-50 rounded-2xl overflow-hidden shadow-xl">
-              {/* Video Element */}
-              <video
-                ref={videoRef}
-                className="w-full h-auto rounded-2xl"
-                controls
-                muted
-                poster="/images/video-poster.jpg" // You can add a poster image if you have one
-                preload="metadata"
-                playsInline
-              >
-                <source src="/videos/video_demo.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              {/* Video Element - Conditional rendering for YouTube vs direct video */}
+              {isYouTubeUrl(demoVideoUrl) ? (
+                <div className="aspect-video w-full">
+                  <iframe
+                    className="w-full h-full rounded-2xl"
+                    src={convertToEmbedUrl(demoVideoUrl)}
+                    title="Build Your Dream Home Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              ) : (
+                <video
+                  ref={videoRef}
+                  className="w-full h-auto rounded-2xl"
+                  controls
+                  muted
+                  poster="/images/video-poster.jpg"
+                  preload="metadata"
+                  playsInline
+                >
+                  <source src={demoVideoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
             </div>
           </div>
         </div>
@@ -889,13 +1079,8 @@ export default function Home() {
             <>
               {/* Desktop View - All packages visible */}
               <div className="hidden lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
-                {Object.entries(packagesData.packages.construction).map(
+                {Object.entries(getFilteredPackages()).map(
                   ([packageKey, packageInfo]) => {
-                    const currentCityPricing =
-                      packageInfo.pricing[
-                        selectedCity.id as keyof typeof packageInfo.pricing
-                      ];
-
                     return (
                       <div
                         key={packageKey}
@@ -906,22 +1091,23 @@ export default function Home() {
                           {/* Package Title */}
                           <div className="text-center mb-4">
                             <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2">
-                              {packageInfo.title}
+                              {(packageInfo as any).title}
                             </h3>
 
                             {/* Price Display */}
                             <div className="mb-3">
                               <div className="text-2xl lg:text-3xl font-bold text-amber-600 mb-1">
-                                {selectedCity
-                                  ? currentCityPricing?.price
+                                {selectedCity &&
+                                (packageInfo as any).pricing &&
+                                (packageInfo as any).pricing[selectedCity.id]
+                                  ? (packageInfo as any).pricing[
+                                      selectedCity.id
+                                    ].price
                                   : "X,XXX"}
                               </div>
-                              {selectedCity &&
-                                !currentCityPricing?.startingAt && (
-                                  <div className="text-xs text-gray-500">
-                                    per sq. ft (Ex GST)
-                                  </div>
-                                )}
+                              <div className="text-xs text-gray-500">
+                                per sq. ft (Ex GST)
+                              </div>
                             </div>
                           </div>
 
@@ -930,51 +1116,53 @@ export default function Home() {
 
                           {/* Expandable Sections */}
                           <div className="space-y-1.5">
-                            {Object.entries(packageInfo.sections).map(
-                              ([sectionKey, section]) => (
-                                <div
-                                  key={sectionKey}
-                                  className="border border-gray-100 rounded-md overflow-hidden"
+                            {Object.entries(
+                              (packageInfo as any).sections || {}
+                            ).map(([sectionKey, section]) => (
+                              <div
+                                key={sectionKey}
+                                className="border border-gray-100 rounded-md overflow-hidden"
+                              >
+                                <button
+                                  onClick={() => toggleSection(sectionKey)}
+                                  className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
                                 >
-                                  <button
-                                    onClick={() => toggleSection(sectionKey)}
-                                    className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
-                                  >
-                                    <span className="font-semibold text-gray-900 text-xs lg:text-sm">
-                                      {section.title}
-                                    </span>
-                                    <div className="flex items-center space-x-2">
-                                      <svg
-                                        className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-                                          expandedSection === sectionKey
-                                            ? "rotate-180"
-                                            : ""
-                                        }`}
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                      >
-                                        <path
-                                          fillRule="evenodd"
-                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                          clipRule="evenodd"
-                                        />
-                                      </svg>
-                                    </div>
-                                  </button>
+                                  <span className="font-semibold text-gray-900 text-xs lg:text-sm">
+                                    {(section as any).title}
+                                  </span>
+                                  <div className="flex items-center space-x-2">
+                                    <svg
+                                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                                        expandedSection === sectionKey
+                                          ? "rotate-180"
+                                          : ""
+                                      }`}
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path
+                                        fillRule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clipRule="evenodd"
+                                      />
+                                    </svg>
+                                  </div>
+                                </button>
 
-                                  <div
-                                    className={`
-                                    transition-all duration-300 ease-in-out overflow-hidden
-                                    ${
-                                      expandedSection === sectionKey
-                                        ? "max-h-64 opacity-100"
-                                        : "max-h-0 opacity-0"
-                                    }
-                                  `}
-                                  >
-                                    <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
-                                      <ul className="space-y-1.5">
-                                        {section.items.map((item, index) => (
+                                <div
+                                  className={`
+                                      transition-all duration-300 ease-in-out overflow-hidden
+                                      ${
+                                        expandedSection === sectionKey
+                                          ? "max-h-64 opacity-100"
+                                          : "max-h-0 opacity-0"
+                                      }
+                                    `}
+                                >
+                                  <div className="px-2.5 lg:px-3 pb-2.5 lg:pb-3 bg-gray-50">
+                                    <ul className="space-y-1.5">
+                                      {(section as any).items.map(
+                                        (item: string, index: number) => (
                                           <li
                                             key={index}
                                             className="flex items-start text-xs lg:text-sm text-gray-700"
@@ -984,13 +1172,13 @@ export default function Home() {
                                               {item}
                                             </span>
                                           </li>
-                                        ))}
-                                      </ul>
-                                    </div>
+                                        )
+                                      )}
+                                    </ul>
                                   </div>
                                 </div>
-                              )
-                            )}
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -1002,9 +1190,7 @@ export default function Home() {
               {/* Mobile/Tablet Carousel View with Instagram-style previews */}
               <div className="lg:hidden relative">
                 {(() => {
-                  const packageEntries = Object.entries(
-                    packagesData.packages.construction
-                  );
+                  const packageEntries = Object.entries(getFilteredPackages());
 
                   return (
                     <>
@@ -1025,19 +1211,20 @@ export default function Home() {
                                       1 +
                                       packageEntries.length) %
                                     packageEntries.length;
-                                  const [, packageInfo] =
+                                  const packageEntry =
                                     packageEntries[prevPackageIndex];
-                                  const currentCityPricing =
-                                    packageInfo.pricing[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  if (!packageEntry) return null;
+                                  const [, packageInfo] = packageEntry;
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 h-full">
                                       <div className="p-2 sm:p-3">
                                         <div className="text-center mb-2">
                                           <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1 truncate">
-                                            {packageInfo.title}
+                                            {(packageInfo as any).title}
                                           </h3>
                                           <div className="text-sm sm:text-base font-bold text-amber-600">
                                             {selectedCity
@@ -1047,7 +1234,9 @@ export default function Home() {
                                         </div>
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
-                                          {Object.entries(packageInfo.sections)
+                                          {Object.entries(
+                                            (packageInfo as any).sections || {}
+                                          )
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
                                               <div
@@ -1056,7 +1245,7 @@ export default function Home() {
                                               >
                                                 <div className="p-1.5 sm:p-2 text-left">
                                                   <span className="font-semibold text-gray-900 text-xs">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                 </div>
                                               </div>
@@ -1107,10 +1296,9 @@ export default function Home() {
                               {/* Previous set for seamless left scrolling */}
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
-                                  const currentCityPricing =
-                                    packageInfo.pricing[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div
@@ -1122,7 +1310,7 @@ export default function Home() {
                                         <div className="p-3 sm:p-4">
                                           <div className="text-center mb-3 sm:mb-4">
                                             <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                              {packageInfo.title}
+                                              {(packageInfo as any).title}
                                             </h3>
                                             <div className="mb-3">
                                               <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
@@ -1141,7 +1329,7 @@ export default function Home() {
                                           <div className="border-t border-gray-100 mb-3"></div>
                                           <div className="space-y-1.5">
                                             {Object.entries(
-                                              packageInfo.sections
+                                              (packageInfo as any).sections
                                             ).map(([sectionKey, section]) => (
                                               <div
                                                 key={sectionKey}
@@ -1154,7 +1342,7 @@ export default function Home() {
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                   <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                   <div className="flex items-center space-x-2">
                                                     <svg
@@ -1188,7 +1376,9 @@ export default function Home() {
                                                 >
                                                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
                                                     <ul className="space-y-1.5">
-                                                      {section.items.map(
+                                                      {(
+                                                        section as any
+                                                      ).items.map(
                                                         (item, itemIndex) => (
                                                           <li
                                                             key={itemIndex}
@@ -1217,10 +1407,9 @@ export default function Home() {
                               {/* Current set - main packages */}
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
-                                  const currentCityPricing =
-                                    packageInfo.pricing[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div
@@ -1233,7 +1422,7 @@ export default function Home() {
                                           {/* Package Title */}
                                           <div className="text-center mb-3 sm:mb-4">
                                             <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                              {packageInfo.title}
+                                              {(packageInfo as any).title}
                                             </h3>
 
                                             {/* Price Display */}
@@ -1258,7 +1447,7 @@ export default function Home() {
                                           {/* Expandable Sections */}
                                           <div className="space-y-1.5">
                                             {Object.entries(
-                                              packageInfo.sections
+                                              (packageInfo as any).sections
                                             ).map(([sectionKey, section]) => (
                                               <div
                                                 key={sectionKey}
@@ -1271,7 +1460,7 @@ export default function Home() {
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                   <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                   <div className="flex items-center space-x-2">
                                                     <svg
@@ -1306,7 +1495,9 @@ export default function Home() {
                                                 >
                                                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
                                                     <ul className="space-y-1.5">
-                                                      {section.items.map(
+                                                      {(
+                                                        section as any
+                                                      ).items.map(
                                                         (item, itemIndex) => (
                                                           <li
                                                             key={itemIndex}
@@ -1335,10 +1526,9 @@ export default function Home() {
                               {/* Next set for seamless right scrolling */}
                               {packageEntries.map(
                                 ([packageKey, packageInfo]) => {
-                                  const currentCityPricing =
-                                    packageInfo.pricing[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div
@@ -1350,7 +1540,7 @@ export default function Home() {
                                         <div className="p-3 sm:p-4">
                                           <div className="text-center mb-3 sm:mb-4">
                                             <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2">
-                                              {packageInfo.title}
+                                              {(packageInfo as any).title}
                                             </h3>
                                             <div className="mb-3">
                                               <div className="text-xl sm:text-2xl font-bold text-amber-600 mb-1">
@@ -1369,7 +1559,7 @@ export default function Home() {
                                           <div className="border-t border-gray-100 mb-3"></div>
                                           <div className="space-y-1.5">
                                             {Object.entries(
-                                              packageInfo.sections
+                                              (packageInfo as any).sections
                                             ).map(([sectionKey, section]) => (
                                               <div
                                                 key={sectionKey}
@@ -1382,7 +1572,7 @@ export default function Home() {
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
                                                   <span className="font-semibold text-gray-900 text-xs sm:text-sm">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                   <div className="flex items-center space-x-2">
                                                     <svg
@@ -1416,7 +1606,9 @@ export default function Home() {
                                                 >
                                                   <div className="px-2.5 sm:px-3 pb-2.5 sm:pb-3 bg-gray-50">
                                                     <ul className="space-y-1.5">
-                                                      {section.items.map(
+                                                      {(
+                                                        section as any
+                                                      ).items.map(
                                                         (item, itemIndex) => (
                                                           <li
                                                             key={itemIndex}
@@ -1455,19 +1647,20 @@ export default function Home() {
                                   const nextPackageIndex =
                                     (currentPackage + 1) %
                                     packageEntries.length;
-                                  const [, packageInfo] =
+                                  const nextPackageEntry =
                                     packageEntries[nextPackageIndex];
-                                  const currentCityPricing =
-                                    packageInfo.pricing[
-                                      selectedCity.id as keyof typeof packageInfo.pricing
-                                    ];
+                                  if (!nextPackageEntry) return null;
+                                  const [, packageInfo] = nextPackageEntry;
+                                  const currentCityPricing = ((
+                                    packageInfo as any
+                                  ).pricing || {})[selectedCity.id];
 
                                   return (
                                     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 h-full">
                                       <div className="p-2 sm:p-3">
                                         <div className="text-center mb-2">
                                           <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1 truncate">
-                                            {packageInfo.title}
+                                            {(packageInfo as any).title}
                                           </h3>
                                           <div className="text-sm sm:text-base font-bold text-amber-600">
                                             {selectedCity
@@ -1477,7 +1670,9 @@ export default function Home() {
                                         </div>
                                         <div className="border-t border-gray-100 mb-2"></div>
                                         <div className="space-y-1">
-                                          {Object.entries(packageInfo.sections)
+                                          {Object.entries(
+                                            (packageInfo as any).sections || {}
+                                          )
                                             .slice(0, 2)
                                             .map(([sectionKey, section]) => (
                                               <div
@@ -1486,7 +1681,7 @@ export default function Home() {
                                               >
                                                 <div className="p-1.5 sm:p-2 text-left">
                                                   <span className="font-semibold text-gray-900 text-xs">
-                                                    {section.title}
+                                                    {(section as any).title}
                                                   </span>
                                                 </div>
                                               </div>
@@ -1602,7 +1797,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/consult.png"
+                        src="/icons/construction-journey/consult.svg"
                         alt="Planning"
                         width={24}
                         height={24}
@@ -1628,7 +1823,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/planning-drawing.png"
+                        src="/icons/construction-journey/planning-drawing.svg"
                         alt="Design"
                         width={24}
                         height={24}
@@ -1654,7 +1849,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/building-under-construction.png"
+                        src="/icons/construction-journey/building-under-construction.svg"
                         alt="Build/Execute"
                         width={24}
                         height={24}
@@ -1680,7 +1875,7 @@ export default function Home() {
                   <div className="relative mb-3 sm:mb-4 lg:mb-6">
                     <div className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-white border-2 sm:border-4 border-amber-400 rounded-full flex items-center justify-center mx-auto shadow-lg">
                       <Image
-                        src="/icons/built-homes.png"
+                        src="/icons/construction-journey/built-homes.svg"
                         alt="Complete"
                         width={24}
                         height={24}
@@ -1721,7 +1916,7 @@ export default function Home() {
           <div className="flex justify-center items-center gap-4 sm:gap-8 lg:gap-12">
             <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
-                src="/banks-icons/hdfc.png"
+                src="/icons/banks-icons/hdfc.svg"
                 alt="HDFC Bank"
                 fill
                 className="object-contain"
@@ -1729,7 +1924,7 @@ export default function Home() {
             </div>
             <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
-                src="/banks-icons/icici.png"
+                src="/icons/banks-icons/icici.svg"
                 alt="ICICI Bank"
                 fill
                 className="object-contain"
@@ -1737,7 +1932,7 @@ export default function Home() {
             </div>
             <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
               <Image
-                src="/banks-icons/sbi.png"
+                src="/icons/banks-icons/sbi.svg"
                 alt="SBI Bank"
                 fill
                 className="object-contain"
@@ -1934,103 +2129,40 @@ export default function Home() {
 
             {/* Desktop: All testimonials visible */}
             <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-              {/* Video Testimonial 1 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
-                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk"
-                    title="Customer Testimonial 1"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={testimonial.id}
+                  className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
+                >
+                  <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                    <iframe
+                      className="w-full h-full"
+                      src={testimonial.videoUrl}
+                      title={`Customer Testimonial ${index + 1}`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
                   </div>
-                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                    Most people struggle with delays, finances, or contractors.
-                    I didn&apos;t face even 1% of that. Sunbrix made my home
-                    journey smooth and hassle-free.
-                  </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                    Mr. Suryanarayanan Karthikeyan
-                  </div>
-                </div>
-              </div>
-
-              {/* Video Testimonial 2 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
-                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk"
-                    title="Customer Testimonial 2"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                    Sunbrix&apos;s expert team guided me at every step. Their
-                    quality gave me total confidence throughout the journey.
-                  </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                    Mr. Gururaj Naik
+                  <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
+                    <div className="flex items-center justify-center mb-4">
+                      <svg
+                        className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                      {testimonial.quote}
+                    </p>
+                    <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                      {testimonial.name}
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Video Testimonial 3 */}
-              <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col">
-                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk"
-                    title="Customer Testimonial 3"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                  <div className="flex items-center justify-center mb-4">
-                    <svg
-                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                    Sunbrix Homes exceeded our expectations! The construction
-                    quality and timely delivery were remarkable. Truly a dream
-                    home.
-                  </p>
-                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                    Mr. Hariharasudan
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* Mobile Pagination Dots */}
@@ -2054,15 +2186,7 @@ export default function Home() {
               })}
             </div>
 
-            {/* Desktop Pagination Dots */}
-            <div className="hidden md:flex justify-center mt-8 space-x-2">
-              <button className="w-3 h-3 rounded-full bg-gray-800"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-300 hover:bg-gray-400"></button>
-            </div>
+            {/* Desktop Pagination Dots - Remove this section since desktop shows all testimonials */}
           </div>
         </div>
       </section>

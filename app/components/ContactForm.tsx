@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCity } from "../contexts/CityContext";
-import citiesData from "../../data/cities.json";
 
 interface ContactFormProps {
   title?: string;
@@ -19,14 +18,14 @@ interface FormData {
 export default function ContactForm({
   title = "Contact Us",
 }: ContactFormProps) {
-  const { selectedCity, setSelectedCity } = useCity();
+  const { selectedCity, cities, setSelectedCity, loading } = useCity();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
     mobileNumber: "",
-    city: selectedCity.displayName || "",
+    city: selectedCity?.name || "",
   });
 
   const handleInputChange = (
@@ -43,13 +42,7 @@ export default function ContactForm({
 
     try {
       // Get the selected city name from the context
-      const selectedCityData = citiesData.cities.find(
-        (city) => city.id === selectedCity.id
-      );
-      const cityName =
-        selectedCityData?.displayName ||
-        selectedCity.displayName ||
-        "Not specified";
+      const cityName = selectedCity?.name || "Not specified";
 
       const submitData = {
         ...formData,
@@ -86,6 +79,25 @@ export default function ContactForm({
     }
   };
 
+  // Don't render if cities are still loading
+  if (loading || !selectedCity) {
+    return (
+      <section id="contact-form" className="py-8 sm:py-12 lg:py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 text-gray-900">{title}</h2>
+          </div>
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading cities...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="contact-form" className="py-8 sm:py-12 lg:py-16 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -98,8 +110,8 @@ export default function ContactForm({
             <div
               className={`mb-6 p-4 rounded-lg ${
                 submitMessage.startsWith("Error")
-                  ? "bg-red-50 text-red-700 border border-red-200"
-                  : "bg-green-50 text-green-700 border border-green-200"
+                  ? "bg-red-50 border border-red-200 text-red-700"
+                  : "bg-green-50 border border-green-200 text-green-700"
               }`}
             >
               {submitMessage}
@@ -107,12 +119,12 @@ export default function ContactForm({
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Row 1: Full name */}
+            {/* Row 1: Full Name */}
             <div>
               <input
                 type="text"
                 name="fullName"
-                placeholder="Full name"
+                placeholder="Full Name"
                 value={formData.fullName}
                 onChange={handleInputChange}
                 required
@@ -156,9 +168,9 @@ export default function ContactForm({
                 <option disabled value="Choose City">
                   Choose City
                 </option>
-                {citiesData.cities.map((city) => (
+                {cities.map((city) => (
                   <option key={city.id} value={city.id}>
-                    {city.displayName}
+                    {city.name}
                   </option>
                 ))}
               </select>

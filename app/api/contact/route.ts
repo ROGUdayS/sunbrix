@@ -1,25 +1,186 @@
 import { NextRequest, NextResponse } from "next/server";
-import { google } from "googleapis";
+import { PrismaClient } from "@prisma/client";
+import nodemailer from "nodemailer";
 
-// Initialize Google Sheets API
-async function getGoogleSheetsClient() {
-  // Check if we have the required environment variables
-  if (
-    !process.env.GOOGLE_SHEETS_CLIENT_EMAIL ||
-    !process.env.GOOGLE_SHEETS_PRIVATE_KEY
-  ) {
-    throw new Error("Missing required Google Sheets credentials");
+const prisma = new PrismaClient();
+
+// Initialize email transporter with explicit SMTP settings
+async function createEmailTransporter() {
+  const gmailUser = process.env.GMAIL_USER || "sunbrix.co@gmail.com";
+  const gmailPassword = process.env.GMAIL_APP_PASSWORD;
+
+  console.log("Initializing email transporter for:", gmailUser);
+  
+  if (!gmailPassword) {
+    throw new Error("Gmail app password not configured. Please set GMAIL_APP_PASSWORD environment variable.");
   }
 
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: gmailUser,
+      pass: gmailPassword,
     },
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    tls: {
+      rejectUnauthorized: false,
+    },
+    debug: true, // Enable debug logging
+    logger: true, // Enable logger
   });
 
-  return google.sheets({ version: "v4", auth });
+  // Verify connection configuration
+  try {
+    console.log("Verifying SMTP connection...");
+    await transporter.verify();
+    console.log("SMTP connection verified successfully");
+  } catch (verifyError) {
+    console.error("SMTP verification failed:", verifyError);
+    throw new Error(`SMTP configuration error: ${verifyError instanceof Error ? verifyError.message : 'Unknown error'}`);
+  }
+
+  return transporter;
+}
+
+
+// Get email template by category with robust connection handling
+async function getEmailTemplate(category: string = "form_submission") {
+  // Create a fresh Prisma client for background operations
+  const backgroundPrisma = new PrismaClient();
+  
+  try {
+    console.log(`Attempting to fetch ${category} email template from database...`);
+    
+    // Use the fresh client instance
+    const template = await backgroundPrisma.emailTemplate.findFirst({
+      where: { 
+        category: category, 
+        active: true 
+      },
+    });
+
+    if (!template) {
+      throw new Error(`No active email template found for category: ${category}`);
+    }
+
+    console.log(`Email template for ${category} fetched successfully from database`);
+    return template;
+    
+  } catch (dbError) {
+    console.error(`Database error while fetching ${category} email template:`, dbError);
+    
+    // Return a minimal fallback template for critical failures only
+    console.log("Using emergency fallback template due to database connectivity issues");
+    return {
+      subject: "Thank you for your inquiry - SUNBRIX",
+      body: `Dear {name},
+
+Thank you for reaching out to SUNBRIX! We have received your inquiry and appreciate your interest in our construction services.
+
+Our team will review your requirements and get back to you within 24 hours.
+
+Best regards,
+The SUNBRIX Team
+Email: sunbrix.co@gmail.com
+Phone: +91 XXXXX XXXXX
+
+Visit us: www.sunbrix.com`,
+      category: category
+    };
+  } finally {
+    try {
+      await backgroundPrisma.$disconnect();
+      console.log("Background Prisma client disconnected successfully");
+    } catch (disconnectError) {
+      console.error("Error disconnecting background Prisma client:", disconnectError);
+    }
+  }
+}
+
+// Send thank you email with comprehensive error handling
+async function sendThankYouEmail(
+  to: string,
+  name: string,
+  template: { subject: string; body: string }
+) {
+  console.log("Starting email send process for:", to);
+  
+  const transporter = await createEmailTransporter();
+  
+  const personalizedBody = template.body.replace(/{name}/g, name);
+  const personalizedHtml = personalizedBody
+    .replace(/\n/g, "<br>")
+    .replace(/{name}/g, name);
+  
+  const mailOptions = {
+    from: {
+      name: "SUNBRIX Team",
+      address: process.env.GMAIL_USER || "sunbrix.co@gmail.com",
+    },
+    to: to,
+    subject: template.subject,
+    text: personalizedBody,
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        ${personalizedHtml}
+        <br><br>
+        <p style="font-size: 12px; color: #666;">
+          This email was sent from SUNBRIX construction services. If you did not request this, please ignore this email.
+        </p>
+      </div>
+    `,
+    // Add additional headers for better deliverability
+    headers: {
+      'X-Mailer': 'SUNBRIX-CRM',
+      'Reply-To': process.env.GMAIL_USER || "sunbrix.co@gmail.com",
+    },
+  };
+
+  console.log("Sending email with options:", {
+    from: mailOptions.from,
+    to: mailOptions.to,
+    subject: mailOptions.subject,
+  });
+
+  const result = await transporter.sendMail(mailOptions);
+  
+  console.log("Email sent successfully:", {
+    messageId: result.messageId,
+    response: result.response,
+    to: to,
+  });
+
+  return result;
+}
+
+// Retry mechanism for email sending
+async function sendEmailWithRetry(
+  to: string,
+  name: string,
+  template: { subject: string; body: string },
+  maxRetries: number = 3
+) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Email attempt ${attempt}/${maxRetries} for ${to}`);
+      const result = await sendThankYouEmail(to, name, template);
+      console.log(`Email sent successfully on attempt ${attempt}`);
+      return result;
+    } catch (error) {
+      console.error(`Email attempt ${attempt} failed:`, error);
+      
+      if (attempt === maxRetries) {
+        console.error(`All ${maxRetries} email attempts failed for ${to}`);
+        throw error;
+      }
+      
+      // Wait before retrying (exponential backoff)
+      const waitTime = Math.pow(2, attempt - 1) * 1000; // 1s, 2s, 4s, etc.
+      console.log(`Waiting ${waitTime}ms before retry...`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -42,152 +203,85 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if Google Sheets is properly configured
-    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
-    const hasGoogleSheetsConfig =
-      spreadsheetId &&
-      process.env.GOOGLE_SHEETS_CLIENT_EMAIL &&
-      process.env.GOOGLE_SHEETS_PRIVATE_KEY;
+    // Save lead to database
+    console.log("Saving lead to database...");
+    const lead = await prisma.lead.create({
+      data: {
+        name: fullName,
+        email: email,
+        phone: mobileNumber,
+        city: city || "Not specified",
+        source: "website",
+        status: "new",
+      },
+    });
+    console.log("Lead saved to database with ID:", lead.id);
 
-    if (!hasGoogleSheetsConfig) {
-      console.log("Google Sheets not configured");
-      console.log("Missing environment variables:");
-      if (!spreadsheetId) console.log("- GOOGLE_SHEETS_SPREADSHEET_ID");
-      if (!process.env.GOOGLE_SHEETS_CLIENT_EMAIL)
-        console.log("- GOOGLE_SHEETS_CLIENT_EMAIL");
-      if (!process.env.GOOGLE_SHEETS_PRIVATE_KEY)
-        console.log("- GOOGLE_SHEETS_PRIVATE_KEY");
-
-      return NextResponse.json(
-        {
-          error:
-            "Google Sheets integration not configured. Please set up the required environment variables.",
-        },
-        { status: 500 }
-      );
-    }
-
-    // Get Google Sheets client
-    console.log("Initializing Google Sheets client...");
-    const sheets = await getGoogleSheetsClient();
-    console.log("Google Sheets client initialized successfully");
-
-    // Prepare the row data
-    const timestamp = new Date().toISOString();
-    const rowData = [timestamp, fullName, email, mobileNumber, city];
-
-    // Ensure headers are present in the spreadsheet
-    const headers = [
-      "Timestamp",
-      "Full Name",
-      "Email",
-      "Mobile Number",
-      "City",
-    ];
-
-    try {
-      const headerResponse = await sheets.spreadsheets.values.get({
-        spreadsheetId,
-        range: "Sheet1!A1:E1",
-      });
-
-      const existingHeaders = headerResponse.data.values?.[0];
-      const headersMatch =
-        existingHeaders &&
-        existingHeaders.length === headers.length &&
-        existingHeaders.every((header, index) => header === headers[index]);
-
-      if (!headersMatch) {
-        console.log("Adding/updating headers in spreadsheet...");
-        await sheets.spreadsheets.values.update({
-          spreadsheetId,
-          range: "Sheet1!A1:E1",
-          valueInputOption: "RAW",
-          requestBody: {
-            values: [headers],
-          },
-        });
-        console.log("Headers added successfully");
-      }
-    } catch (error) {
-      console.error("Error managing headers:", error);
-      // Try to add headers anyway
+    // Send thank you email asynchronously (don't wait for completion)
+    console.log("Initiating background email sending...");
+    setImmediate(async () => {
+      // Create a separate Prisma client for background operations
+      const backgroundPrisma = new PrismaClient();
+      
       try {
-        await sheets.spreadsheets.values.update({
-          spreadsheetId,
-          range: "Sheet1!A1:E1",
-          valueInputOption: "RAW",
-          requestBody: {
-            values: [headers],
-          },
+        console.log("Sending thank you email in background...");
+        const template = await getEmailTemplate("form_submission");
+        
+        // Use retry mechanism for email sending
+        const emailResult = await sendEmailWithRetry(email, fullName, template);
+        
+        // Update lead to mark email as sent using background client
+        await backgroundPrisma.lead.update({
+          where: { id: lead.id },
+          data: { email_sent: true },
         });
-        console.log("Headers added successfully (fallback)");
-      } catch (headerError) {
-        console.error("Failed to add headers:", headerError);
-      }
-    }
-
-    // Append the form data to the sheet
-    console.log("Appending data to Google Sheets...");
-    try {
-      await sheets.spreadsheets.values.append({
-        spreadsheetId,
-        range: "Sheet1!A:E",
-        valueInputOption: "RAW",
-        insertDataOption: "INSERT_ROWS",
-        requestBody: {
-          values: [rowData],
-        },
-      });
-
-      console.log("Data successfully appended to Google Sheets");
-      return NextResponse.json(
-        { message: "Form submitted successfully" },
-        { status: 200 }
-      );
-    } catch (sheetsError) {
-      console.error("Google Sheets error:", sheetsError);
-      console.log("Form submission data (failed to save to sheets):", {
-        timestamp: new Date().toISOString(),
-        fullName,
-        email,
-        mobileNumber: "[REDACTED]",
-        city,
-      });
-
-      // Return error instead of success when Google Sheets fails
-      let errorMessage = "Failed to save to Google Sheets";
-      if (sheetsError instanceof Error) {
-        if (sheetsError.message.includes("permission")) {
-          errorMessage =
-            "Google Sheets permission denied. Please ensure the service account has access to the spreadsheet.";
-        } else if (sheetsError.message.includes("not found")) {
-          errorMessage =
-            "Google Spreadsheet not found. Please check the spreadsheet ID.";
-        } else {
-          errorMessage = `Google Sheets error: ${sheetsError.message}`;
+        
+        console.log("Background email sent successfully to:", email, "MessageId:", emailResult?.messageId);
+      } catch (emailError) {
+        console.error("Background email failed for lead:", lead.id, emailError);
+        
+        // Log detailed error information
+        if (emailError instanceof Error) {
+          console.error("Email error details:", {
+            message: emailError.message,
+            stack: emailError.stack?.substring(0, 500), // Limit stack trace length
+            leadId: lead.id,
+            recipientEmail: email,
+            timestamp: new Date().toISOString()
+          });
+        }
+        
+        // Don't throw errors in background processes to prevent unhandled rejections
+        console.log("Email delivery failed but form submission was successful");
+      } finally {
+        try {
+          await backgroundPrisma.$disconnect();
+          console.log("Background Prisma client disconnected after email processing");
+        } catch (disconnectError) {
+          console.error("Error disconnecting background Prisma client:", disconnectError);
         }
       }
+    }).unref(); // Prevent this from keeping the process alive
 
-      return NextResponse.json({ error: errorMessage }, { status: 500 });
-    }
+    // Return immediate success response (don't wait for email)
+    return NextResponse.json(
+      {
+        message: "Form submitted successfully",
+        leadId: lead.id,
+        emailSent: "processing", // Indicates email is being sent in background
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error submitting form:", error);
 
-    // Provide more specific error messages
     let errorMessage = "Failed to submit form";
     if (error instanceof Error) {
-      if (error.message.includes("credentials")) {
-        errorMessage =
-          "Google Sheets authentication failed. Please check your credentials.";
-      } else if (error.message.includes("Spreadsheet ID")) {
-        errorMessage =
-          "Google Sheets configuration error. Please check your spreadsheet ID.";
-      } else {
-        errorMessage = `Submission failed: ${error.message}`;
-      }
+      errorMessage = `Submission failed: ${error.message}`;
     }
 
     return NextResponse.json({ error: errorMessage }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 }

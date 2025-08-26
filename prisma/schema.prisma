@@ -1,0 +1,310 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  title         String   @db.VarChar(255)
+  location      String   @db.VarChar(100)
+  year          String   @db.VarChar(4)  // Project year (e.g., "2024")
+  plot_size     String   @map("plot_size") @db.VarChar(50)
+  facing        String   @db.VarChar(50)
+  property_type String   @map("property_type") @db.VarChar(50) @default("Residential")
+  description   String   @db.Text
+  specifications Json    @default("{}")
+  images        String[]
+  active        Boolean  @default(true)
+  created_at    DateTime @default(now()) @map("created_at")
+  updated_at    DateTime @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model City {
+  id             String   @id @default(cuid())
+  name           String   @unique @db.VarChar(100)
+  active         Boolean  @default(true)
+  created_at     DateTime @default(now()) @map("created_at")
+  updated_at     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  packages       Package[]
+
+  @@map("cities")
+}
+
+model Package {
+  id               String   @id @default(cuid())
+  city_id          String   @map("city_id")
+  name             String   @db.VarChar(100) // Standard, Premium, Luxury
+  price            Decimal  @db.Decimal(10, 2)
+  package_data     Json?    @map("package_data") // JSON structure for simplified package management
+  ui_created_order Int      @default(0) @map("ui_created_order") // Order based on UI interaction sequence
+  active           Boolean  @default(true)
+  created_at       DateTime @default(now()) @map("created_at")
+  updated_at       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  city         City     @relation(fields: [city_id], references: [id], onDelete: Cascade)
+  sections     PackageSection[]
+
+  @@map("packages")
+}
+
+model PackageSection {
+  id               String   @id @default(cuid())
+  package_id       String   @map("package_id")
+  title            String   @db.VarChar(255)
+  order            Int      @default(0)
+  ui_created_order Int      @default(0) @map("ui_created_order") // Order based on UI interaction sequence across all packages in city
+  active           Boolean  @default(true)
+  created_at       DateTime @default(now()) @map("created_at")
+  updated_at       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  package     Package  @relation(fields: [package_id], references: [id], onDelete: Cascade)
+  items       PackageSectionItem[]
+
+  @@map("package_sections")
+}
+
+model PackageSectionItem {
+  id               String   @id @default(cuid())
+  section_id       String   @map("section_id")
+  content          String   @db.Text
+  order            Int      @default(0)
+  ui_created_order Int      @default(0) @map("ui_created_order") // Order based on UI interaction sequence within section
+  active           Boolean  @default(true)
+  created_at       DateTime @default(now()) @map("created_at")
+  updated_at       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  section           PackageSection @relation(fields: [section_id], references: [id], onDelete: Cascade)
+
+  @@map("package_section_items")
+}
+
+model Lead {
+  id         String   @id @default(cuid())
+  name       String   @db.VarChar(255)
+  email      String   @db.VarChar(255)
+  phone      String   @db.VarChar(20)
+  city       String   @db.VarChar(100)
+  source     String   @default("website") @db.VarChar(50)
+  status     String   @default("new") @db.VarChar(20)
+  email_sent Boolean  @default(false) @map("email_sent")
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("leads")
+}
+
+model EmailTemplate {
+  id           String   @id @default(cuid())
+  name         String   @unique @db.VarChar(100)
+  subject      String   @db.VarChar(255)
+  body         String   @db.Text
+  category     String   @db.VarChar(50) // e.g., "form_submission", "follow_up", "welcome"
+  active       Boolean  @default(true)
+  created_at   DateTime @default(now()) @map("created_at")
+  updated_at   DateTime @updatedAt @map("updated_at")
+
+  @@map("email_templates")
+}
+
+model CompanySettings {
+  id                    String   @id @default(cuid())
+  company_name          String   @map("company_name") @db.VarChar(255)
+  contact_email         String   @map("contact_email") @db.VarChar(255)
+  contact_phone         String   @map("contact_phone") @db.VarChar(50)
+  
+  // Social Media Settings
+  show_facebook         Boolean  @default(false) @map("show_facebook")
+  facebook_url          String?  @map("facebook_url") @db.VarChar(500)
+  show_instagram        Boolean  @default(false) @map("show_instagram") 
+  instagram_url         String?  @map("instagram_url") @db.VarChar(500)
+  show_google           Boolean  @default(false) @map("show_google")
+  google_url            String?  @map("google_url") @db.VarChar(500)
+  show_youtube          Boolean  @default(false) @map("show_youtube")
+  youtube_url           String?  @map("youtube_url") @db.VarChar(500)
+  
+  // Legal Documents
+  terms_conditions      String?  @map("terms_conditions") @db.Text
+  privacy_policy        String?  @map("privacy_policy") @db.Text
+  
+  created_at            DateTime @default(now()) @map("created_at")
+  updated_at            DateTime @updatedAt @map("updated_at")
+
+  @@map("company_settings")
+}
+
+// Content Management Models - Simplified
+model PageContent {
+  id                    String   @id @default(cuid())
+  page_type             String   @map("page_type") @db.VarChar(50) // "main" only
+  section_type          String   @map("section_type") @db.VarChar(100) // "demo_video" only
+  
+  // Demo Video URL (for Build Your Dream Home section)
+  demo_video_url        String?  @map("demo_video_url") @db.VarChar(500)
+  
+  active                Boolean  @default(true)
+  created_at            DateTime @default(now()) @map("created_at")
+  updated_at            DateTime @updatedAt @map("updated_at")
+
+  @@unique([page_type, section_type])
+  @@map("page_content")
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  image_url   String   @map("image_url") @db.VarChar(500)
+  quote       String?  @db.Text // Quote text to display with the image
+  order_index Int      @default(0) @map("order_index")
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @updatedAt @map("updated_at")
+
+  @@map("gallery_images")
+}
+
+model Testimonial {
+  id                String   @id @default(cuid())
+  customer_name     String   @map("customer_name") @db.VarChar(255)
+  customer_role     String?  @map("customer_role") @db.VarChar(100)
+  company           String?  @db.VarChar(255)
+  rating            Int      @default(5) // 1-5 star rating
+  testimonial_text  String   @map("testimonial_text") @db.Text
+  project_type      String?  @map("project_type") @db.VarChar(100)
+  
+  // Media fields
+  customer_image    String?  @map("customer_image") @db.VarChar(500)
+  video_url         String?  @map("video_url") @db.VarChar(500) // YouTube, Vimeo, etc.
+  video_thumbnail   String?  @map("video_thumbnail") @db.VarChar(500)
+  
+  // Display settings
+  featured          Boolean  @default(false)
+  order_index       Int      @default(0) @map("order_index")
+  active            Boolean  @default(true)
+  created_at        DateTime @default(now()) @map("created_at")
+  updated_at        DateTime @updatedAt @map("updated_at")
+
+  @@map("testimonials")
+}
+
+// MainPageStats model removed - using static content in main app
+
+// Blog Management Models
+model BlogCategory {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(100)
+  description String?  @db.Text
+  slug        String   @unique @db.VarChar(100)
+  color       String   @default("#3B82F6") @db.VarChar(7) // Hex color
+  order_index Int      @default(0) @map("order_index")
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  blog_posts  BlogPost[]
+
+  @@map("blog_categories")
+}
+
+model BlogPost {
+  id               String      @id @default(cuid())
+  title            String      @db.VarChar(255)
+  slug             String      @unique @db.VarChar(255)
+  excerpt          String?     @db.Text
+  content          String      @db.Text
+  author           String      @default("Sunbrix Team") @db.VarChar(100)
+  publish_date     DateTime    @map("publish_date")
+  featured_image   String?     @map("featured_image") @db.VarChar(500)
+  category_id      String      @map("category_id")
+  tags             String[]    @default([])
+  status           String      @default("draft") @db.VarChar(20) // draft, published, archived
+  meta_title       String?     @map("meta_title") @db.VarChar(255)
+  meta_description String?     @map("meta_description") @db.VarChar(500)
+  reading_time     Int         @default(5) @map("reading_time") // minutes
+  featured         Boolean     @default(false)
+  order_index      Int         @default(0) @map("order_index")
+  active           Boolean     @default(true)
+  created_at       DateTime    @default(now()) @map("created_at")
+  updated_at       DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  category         BlogCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@map("blog_posts")
+}
+
+model BlogPageContent {
+  id                String   @id @default(cuid())
+  page_title        String   @default("Blogs & Articles") @map("page_title") @db.VarChar(255)
+  page_subtitle     String   @default("Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.") @map("page_subtitle") @db.Text
+  cta_title         String   @default("Stay Updated with Our Latest Insights") @map("cta_title") @db.VarChar(255)
+  cta_description   String   @default("Subscribe to our newsletter for industry updates and expert tips") @map("cta_description") @db.Text
+  cta_button_text   String   @default("Subscribe Now") @map("cta_button_text") @db.VarChar(100)
+  cta_button_link   String   @default("/newsletter") @map("cta_button_link") @db.VarChar(255)
+  active            Boolean  @default(true)
+  created_at        DateTime @default(now()) @map("created_at")
+  updated_at        DateTime @updatedAt @map("updated_at")
+
+  @@map("blog_page_content")
+}
+
+// FAQ Management Models
+model FaqCategory {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(100)
+  description String?  @db.Text
+  order_index Int      @default(0) @map("order_index")
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  faqs        Faq[]
+
+  @@map("faq_categories")
+}
+
+model Faq {
+  id          String      @id @default(cuid())
+  question    String      @db.VarChar(500)
+  answer      String      @db.Text
+  category_id String      @map("category_id")
+  order_index Int         @default(0) @map("order_index")
+  active      Boolean     @default(true)
+  created_at  DateTime    @default(now()) @map("created_at")
+  updated_at  DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  category    FaqCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@map("faqs")
+}
+
+model FaqPageContent {
+  id                String   @id @default(cuid())
+  page_title        String   @default("Frequently Asked Questions") @map("page_title") @db.VarChar(255)
+  page_subtitle     String   @default("Find answers to common questions about Sunbrix, our construction process, materials, and services.") @map("page_subtitle") @db.Text
+  cta_title         String   @default("Still Have Questions?") @map("cta_title") @db.VarChar(255)
+  cta_description   String   @default("Contact us for personalized assistance and detailed information") @map("cta_description") @db.Text
+  cta_button_text   String   @default("Contact Us") @map("cta_button_text") @db.VarChar(100)
+  cta_button_link   String   @default("/contact") @map("cta_button_link") @db.VarChar(255)
+  active            Boolean  @default(true)
+  created_at        DateTime @default(now()) @map("created_at")
+  updated_at        DateTime @updatedAt @map("updated_at")
+
+  @@map("faq_page_content")
+}

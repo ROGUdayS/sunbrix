@@ -82,14 +82,14 @@ export default function About() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {/* Quality */}
             <div className="text-center">
-              <div className="bg-orange-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                <Image
+                  src="/icons/about-us/Quality First.svg"
+                  alt="Quality First"
+                  width={80}
+                  height={80}
+                  className="w-16 h-16 sm:w-20 sm:h-20"
+                />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                 Quality First
@@ -102,19 +102,14 @@ export default function About() {
 
             {/* Transparency */}
             <div className="text-center">
-              <div className="bg-orange-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                  <path
-                    fillRule="evenodd"
-                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+              <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                <Image
+                  src="/icons/about-us/Transparency.svg"
+                  alt="Transparency"
+                  width={80}
+                  height={80}
+                  className="w-16 h-16 sm:w-20 sm:h-20"
+                />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                 Transparency
@@ -127,18 +122,14 @@ export default function About() {
 
             {/* Innovation */}
             <div className="text-center">
-              <div className="bg-orange-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+              <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                <Image
+                  src="/icons/about-us/Innovation.svg"
+                  alt="Innovation"
+                  width={80}
+                  height={80}
+                  className="w-16 h-16 sm:w-20 sm:h-20"
+                />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                 Innovation
@@ -151,14 +142,14 @@ export default function About() {
 
             {/* Customer Focus */}
             <div className="text-center">
-              <div className="bg-orange-100 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <svg
-                  className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
-                </svg>
+              <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                <Image
+                  src="/icons/about-us/Customer Focus.svg"
+                  alt="Customer Focus"
+                  width={80}
+                  height={80}
+                  className="w-16 h-16 sm:w-20 sm:h-20"
+                />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                 Customer Focus
