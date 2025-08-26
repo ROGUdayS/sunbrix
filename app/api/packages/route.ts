@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Enable caching for better performance
-export const revalidate = 300; // Cache for 5 minutes
+// Disable caching completely to ensure fresh data
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   try {
@@ -237,7 +238,9 @@ export async function GET(request: NextRequest) {
     // Return in the expected frontend format
     return NextResponse.json(responseData, {
       headers: {
-        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
         "Cache-Tag": "packages",
       },
     });

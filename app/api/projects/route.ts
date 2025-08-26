@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// Remove force-dynamic to allow Next.js caching
-// export const dynamic = "force-dynamic"; 
-export const revalidate = 300; // Cache for 5 minutes
+export const dynamic = "force-dynamic"; // Always fetch fresh data from database
 
 export async function GET(request: NextRequest) {
   try {
@@ -61,8 +59,9 @@ export async function GET(request: NextRequest) {
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
-          "Cache-Tag": "projects",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
         },
       }
     );
