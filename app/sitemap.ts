@@ -1,7 +1,17 @@
 import { MetadataRoute } from "next";
-import projectsData from "../data/projects.json";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+interface Project {
+  id: string;
+  title: string;
+  updated_at?: string;
+  created_at: string;
+}
+
+interface ProjectsResponse {
+  projects: Project[];
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sunbrix.netlify.app"; // Netlify deployment URL
 
   // Base pages
@@ -68,13 +78,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Dynamic project pages
-  const projectPages = projectsData.projects.map((project) => ({
-    url: `${baseUrl}/projects/${project.id}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  // Fetch projects from API
+  let projectPages: MetadataRoute.Sitemap = [];
+  try {
+    const response = await fetch(`${baseUrl}/api/projects?active=true`);
+    if (response.ok) {
+      const data = await response.json() as ProjectsResponse;
+      projectPages = data.projects.map((project: Project) => ({
+        url: `${baseUrl}/projects/${project.id}`,
+        lastModified: new Date(project.updated_at || project.created_at),
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching projects for sitemap:", error);
+  }
 
   return [...basePages, ...projectPages];
 }

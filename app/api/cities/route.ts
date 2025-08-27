@@ -48,23 +48,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error fetching cities:", error);
-
-    // Fallback to static data if database fails
-    try {
-      const citiesData = await import("@/data/cities.json");
-      return NextResponse.json(citiesData.default, {
-        headers: {
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
-          Expires: "0",
-        },
-      });
-    } catch (fallbackError) {
-      console.error("Fallback data also failed:", fallbackError);
-      return NextResponse.json(
-        { error: "Failed to fetch cities" },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(
+      { error: "Failed to fetch cities" },
+      { status: 500 }
+    );
   }
 }
