@@ -2,7 +2,24 @@
 
 import Header from "../components/Header";
 import Link from "next/link";
-import projectsData from "../../data/projects.json";
+import { useEffect, useState } from "react";
+
+interface ProjectData {
+  id: string;
+  title: string;
+  location: string;
+  year: string;
+  plotSize: string;
+  facing: string;
+  property_type: string;
+  image: string;
+  images: string[];
+  description: string;
+  specifications: any;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 interface SitemapSection {
   title: string;
@@ -15,6 +32,24 @@ interface SitemapSection {
 }
 
 export default function SitemapPage() {
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch("/api/projects?active=true");
+        if (response.ok) {
+          const data = await response.json();
+          setProjects(data.projects || []);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   const sitemapSections: SitemapSection[] = [
     {
       title: "Main Pages",
@@ -90,13 +125,13 @@ export default function SitemapPage() {
   ];
 
   // Add dynamic project pages
-  const projectPages = projectsData.projects.map((project) => ({
-    title: project.title,
-    url: `/projects/${project.id}`,
-    description: `View details of ${project.title}`,
-  }));
+  if (projects.length > 0) {
+    const projectPages = projects.map((project) => ({
+      title: project.title,
+      url: `/projects/${project.id}`,
+      description: `View details of ${project.title}`,
+    }));
 
-  if (projectPages.length > 0) {
     sitemapSections.push({
       title: "Individual Projects",
       description: "Detailed pages for each completed project",

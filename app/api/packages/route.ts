@@ -246,22 +246,12 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error fetching packages:", error);
-
-    // Fallback to static data if database fails
-    try {
-      const packagesData = await import("@/data/packages.json");
-      return NextResponse.json(packagesData.default, {
-        headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
-          "Cache-Tag": "packages",
-        },
-      });
-    } catch (fallbackError) {
-      console.error("Fallback data also failed:", fallbackError);
-      return NextResponse.json(
-        { packages: { construction: {} } },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(
+      { 
+        packages: { construction: {} },
+        error: "Failed to fetch packages"
+      },
+      { status: 500 }
+    );
   }
 }
