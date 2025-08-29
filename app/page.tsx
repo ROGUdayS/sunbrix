@@ -695,9 +695,7 @@ export default function Home() {
                   Design & Strength
                 </h3>
                 <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  At Sunbrix, we build homes with timeless designs, using time
-                  tested traditional practices to ensure lasting strength and
-                  durability.
+                  At Sunbrix, we build and designs, using time tested practices.
                 </p>
               </div>
               <div className="text-center">
