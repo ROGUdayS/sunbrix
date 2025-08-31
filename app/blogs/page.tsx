@@ -15,46 +15,23 @@ interface BlogPost {
   date: string;
   image: string;
   tags: string[];
-  category: string;
-  categorySlug: string;
-  categoryColor: string;
   readingTime: number;
   featured: boolean;
-}
-
-interface BlogCategory {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  color: string;
-  postCount: number;
 }
 
 interface PageContent {
   page_title: string;
   page_subtitle: string;
-  cta_title: string;
-  cta_description: string;
-  cta_button_text: string;
-  cta_button_link: string;
 }
 
 export default function Blogs() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [allBlogPosts, setAllBlogPosts] = useState<BlogPost[]>([]);
-  const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [pageContent, setPageContent] = useState<PageContent>({
     page_title: "Blogs & Articles",
     page_subtitle:
       "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.",
-    cta_title: "You Dream. We Deliver.",
-    cta_description:
-      "Ready to build your dream home? Schedule a free consultation today and begin the journey of turning your dream into reality.",
-    cta_button_text: "Book a Meeting",
-    cta_button_link: "/contact",
   });
   const [loading, setLoading] = useState(true);
 
@@ -65,22 +42,15 @@ export default function Blogs() {
 
   const loadBlogData = async () => {
     try {
-      // Load blog posts, categories, and page content in parallel
-      const [blogPostsResponse, categoriesResponse, pageContentResponse] =
-        await Promise.all([
-          fetch("/api/content/blogs"),
-          fetch("/api/content/blogs/categories"),
-          fetch("/api/content/blogs/page-content"),
-        ]);
+      // Load blog posts and page content in parallel
+      const [blogPostsResponse, pageContentResponse] = await Promise.all([
+        fetch("/api/content/blogs"),
+        fetch("/api/content/blogs/page-content"),
+      ]);
 
       if (blogPostsResponse.ok) {
         const blogPostsData = await blogPostsResponse.json();
         setAllBlogPosts(blogPostsData);
-      }
-
-      if (categoriesResponse.ok) {
-        const categoriesData = await categoriesResponse.json();
-        setCategories(categoriesData);
       }
 
       if (pageContentResponse.ok) {
@@ -98,11 +68,6 @@ export default function Blogs() {
   const filterAndSearchPosts = () => {
     let filtered = allBlogPosts;
 
-    // Filter by category
-    if (selectedCategory !== "All") {
-      filtered = filtered.filter((post) => post.category === selectedCategory);
-    }
-
     // Search by title, excerpt, content, and tags
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
@@ -119,7 +84,6 @@ export default function Blogs() {
   };
 
   const filteredPosts = filterAndSearchPosts();
-  const allCategories = ["All", ...categories.map((cat) => cat.name)];
 
   // Pagination
   const postsPerPage = 9;
@@ -131,11 +95,6 @@ export default function Blogs() {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setCurrentPage(1); // Reset to first page when searching
-  };
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1); // Reset to first page when changing category
   };
 
   const handlePageChange = (page: number) => {
@@ -199,7 +158,7 @@ export default function Blogs() {
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search blogs by title, content, tags, or author..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors text-gray-900 placeholder-gray-500"
               />
               {searchQuery && (
                 <button
@@ -223,40 +182,6 @@ export default function Blogs() {
               )}
             </div>
           </div>
-
-          {/* Category Filters */}
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-            {allCategories.map((category) => (
-              <button
-                key={category}
-                onClick={() => handleCategoryChange(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  selectedCategory === category
-                    ? "bg-orange-500 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                {category}
-                {category !== "All" && (
-                  <span className="ml-1 text-xs opacity-75">
-                    (
-                    {categories.find((cat) => cat.name === category)
-                      ?.postCount || 0}
-                    )
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Results Info */}
-          {searchQuery && (
-            <div className="text-center mt-4 text-sm text-gray-600">
-              Showing {filteredPosts.length} result
-              {filteredPosts.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}
-              &rdquo;
-            </div>
-          )}
         </div>
       </section>
 
@@ -284,9 +209,7 @@ export default function Blogs() {
                 No blog posts found
               </h3>
               <p className="text-gray-500">
-                {selectedCategory === "All"
-                  ? "There are no published blog posts yet."
-                  : `No blog posts found in the "${selectedCategory}" category.`}
+                There are no published blog posts yet.
               </p>
             </div>
           ) : (
@@ -321,15 +244,6 @@ export default function Blogs() {
                               />
                             </svg>
                           </div>
-                          <span
-                            className="text-sm font-medium text-orange-600 bg-orange-100 px-3 py-1 rounded-full"
-                            style={{
-                              backgroundColor: `${post.categoryColor}20`,
-                              color: post.categoryColor,
-                            }}
-                          >
-                            {post.category}
-                          </span>
                         </div>
                       </div>
                     )}
@@ -352,17 +266,6 @@ export default function Blogs() {
                           Featured
                         </span>
                       )}
-                    </div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span
-                        className="text-xs font-medium px-2 py-1 rounded-full"
-                        style={{
-                          backgroundColor: `${post.categoryColor}20`,
-                          color: post.categoryColor,
-                        }}
-                      >
-                        {post.category}
-                      </span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors duration-200 line-clamp-2">
                       {post.title}
@@ -491,24 +394,6 @@ export default function Blogs() {
               {searchQuery && ` for "${searchQuery}"`}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-orange-50 to-amber-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-            {pageContent.cta_title}
-          </h2>
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-            {pageContent.cta_description}
-          </p>
-          <Link
-            href={pageContent.cta_button_link}
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-          >
-            {pageContent.cta_button_text}
-          </Link>
         </div>
       </section>
 

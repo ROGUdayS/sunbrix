@@ -4,46 +4,30 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
+import MarkdownRenderer, {
+  markdownStyles,
+} from "../components/MarkdownRenderer";
 
 interface FAQItem {
   id: string;
   question: string;
   answer: string;
-  category: string;
-}
-
-interface FAQCategory {
-  id: string;
-  name: string;
-  description: string;
-  faqCount: number;
 }
 
 interface PageContent {
   page_title: string;
   page_subtitle: string;
-  cta_title: string;
-  cta_description: string;
-  cta_button_text: string;
-  cta_button_link: string;
 }
 
 export default function FAQ() {
-  const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
   const [allFaqs, setAllFaqs] = useState<FAQItem[]>([]);
-  const [categories, setCategories] = useState<FAQCategory[]>([]);
   const [pageContent, setPageContent] = useState<PageContent>({
     page_title: "Frequently Asked Questions",
     page_subtitle:
       "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
-    cta_title: "Still Have Questions?",
-    cta_description:
-      "Contact us for personalized assistance and detailed information",
-    cta_button_text: "Contact Us",
-    cta_button_link: "/contact",
   });
   const [loading, setLoading] = useState(true);
 
@@ -54,23 +38,16 @@ export default function FAQ() {
 
   const loadFaqData = async () => {
     try {
-      // Load FAQs, categories, and page content in parallel
-      const [faqsResponse, categoriesResponse, pageContentResponse] =
-        await Promise.all([
-          fetch("/api/content/faqs"),
-          fetch("/api/content/faqs/categories"),
-          fetch("/api/content/faqs/page-content"),
-        ]);
+      // Load FAQs and page content in parallel
+      const [faqsResponse, pageContentResponse] = await Promise.all([
+        fetch("/api/content/faqs"),
+        fetch("/api/content/faqs/page-content"),
+      ]);
 
       if (faqsResponse.ok) {
         const faqsData = await faqsResponse.json();
         setFaqs(faqsData);
         setAllFaqs(faqsData);
-      }
-
-      if (categoriesResponse.ok) {
-        const categoriesData = await categoriesResponse.json();
-        setCategories(categoriesData);
       }
 
       if (pageContentResponse.ok) {
@@ -88,11 +65,6 @@ export default function FAQ() {
   const filterAndSearchFaqs = () => {
     let filtered = allFaqs;
 
-    // Filter by category
-    if (activeCategory !== "All") {
-      filtered = filtered.filter((faq) => faq.category === activeCategory);
-    }
-
     // Search by question and answer
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
@@ -107,7 +79,6 @@ export default function FAQ() {
   };
 
   const filteredFAQs = filterAndSearchFaqs();
-  const allCategories = ["All", ...categories.map((cat) => cat.name)];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -130,6 +101,11 @@ export default function FAQ() {
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
+      {/* Inject markdown styles */}
+      <style jsx global>
+        {markdownStyles}
+      </style>
+
       {/* Header */}
       <Header />
 
@@ -171,7 +147,7 @@ export default function FAQ() {
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search FAQs by question or answer..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors text-gray-900 placeholder-gray-500"
               />
               {searchQuery && (
                 <button
@@ -195,40 +171,6 @@ export default function FAQ() {
               )}
             </div>
           </div>
-
-          {/* Category Filters */}
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-            {allCategories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  activeCategory === category
-                    ? "bg-orange-500 text-white shadow-lg"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                {category}
-                {category !== "All" && (
-                  <span className="ml-1 text-xs opacity-75">
-                    (
-                    {categories.find((cat) => cat.name === category)
-                      ?.faqCount || 0}
-                    )
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Search Results Info */}
-          {searchQuery && (
-            <div className="text-center mt-4 text-sm text-gray-600">
-              Showing {filteredFAQs.length} result
-              {filteredFAQs.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}
-              &rdquo;
-            </div>
-          )}
         </div>
       </section>
 
@@ -255,11 +197,7 @@ export default function FAQ() {
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 No FAQs found
               </h3>
-              <p className="text-gray-500">
-                {activeCategory === "All"
-                  ? "There are no FAQs available yet."
-                  : `No FAQs found in the &ldquo;${activeCategory}&rdquo; category.`}
-              </p>
+              <p className="text-gray-500">There are no FAQs available yet.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -276,11 +214,6 @@ export default function FAQ() {
                       <h3 className="text-lg font-semibold text-gray-900 pr-4">
                         {faq.question}
                       </h3>
-                      <div className="flex items-center mt-2">
-                        <span className="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">
-                          {faq.category}
-                        </span>
-                      </div>
                     </div>
                     <div className="flex-shrink-0 ml-4">
                       <svg
@@ -303,11 +236,7 @@ export default function FAQ() {
                   {expandedFAQ === faq.id && (
                     <div className="px-6 pb-4 border-t border-gray-100">
                       <div className="pt-4 text-gray-700 leading-relaxed">
-                        {faq.answer.split("\n").map((paragraph, index) => (
-                          <p key={index} className={index > 0 ? "mt-4" : ""}>
-                            {paragraph}
-                          </p>
-                        ))}
+                        <MarkdownRenderer content={faq.answer} />
                       </div>
                     </div>
                   )}
@@ -315,71 +244,6 @@ export default function FAQ() {
               ))}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Statistics Section */}
-      {faqs.length > 0 && (
-        <section className="py-12 bg-white border-t border-gray-200">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              <div className="bg-orange-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-orange-600 mb-1">
-                  {faqs.length}
-                </div>
-                <div className="text-sm text-gray-600">Total FAQs</div>
-              </div>
-              <div className="bg-amber-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-amber-600 mb-1">
-                  {categories.length}
-                </div>
-                <div className="text-sm text-gray-600">Categories</div>
-              </div>
-              <div className="bg-green-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-green-600 mb-1">
-                  {Math.round(
-                    faqs.reduce((acc, faq) => acc + faq.answer.length, 0) /
-                      faqs.length /
-                      10
-                  )}
-                  s
-                </div>
-                <div className="text-sm text-gray-600">Avg Read Time</div>
-              </div>
-              <div className="bg-blue-50 rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-600 mb-1">
-                  24/7
-                </div>
-                <div className="text-sm text-gray-600">Support</div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-orange-50 to-amber-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-            {pageContent.cta_title}
-          </h2>
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-            {pageContent.cta_description}
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href={pageContent.cta_button_link}
-              className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-            >
-              {pageContent.cta_button_text}
-            </a>
-            <a
-              href="tel:+918023404080"
-              className="inline-block bg-white hover:bg-gray-50 text-orange-600 border-2 border-orange-500 px-8 py-4 rounded-lg font-semibold text-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
-            >
-              Call Us Now
-            </a>
-          </div>
         </div>
       </section>
 
