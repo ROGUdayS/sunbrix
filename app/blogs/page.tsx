@@ -250,17 +250,7 @@ export default function Blogs() {
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2 text-sm text-gray-500">
-                        <span>{post.date}</span>
-                        <span>•</span>
-                        <span>{post.readingTime} min read</span>
-                        {post.author && (
-                          <>
-                            <span>•</span>
-                            <span>{post.author}</span>
-                          </>
-                        )}
-                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-gray-500"></div>
                       {post.featured && (
                         <span className="text-xs font-medium text-orange-600 bg-orange-100 px-2 py-1 rounded-full">
                           Featured

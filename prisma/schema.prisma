@@ -229,7 +229,7 @@ model BlogPost {
   author           String      @default("Sunbrix Team") @db.VarChar(100)
   publish_date     DateTime    @map("publish_date")
   featured_image   String?     @map("featured_image") @db.VarChar(500)
-  category_id      String      @map("category_id")
+  category_id      String?     @map("category_id")
   tags             String[]    @default([])
   status           String      @default("draft") @db.VarChar(20) // draft, published, archived
   meta_title       String?     @map("meta_title") @db.VarChar(255)
@@ -242,7 +242,7 @@ model BlogPost {
   updated_at       DateTime    @updatedAt @map("updated_at")
 
   // Relations
-  category         BlogCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category         BlogCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
 
   @@map("blog_posts")
 }
