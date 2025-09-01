@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const where: {
       active: boolean;
       status: string;
-      category?: { slug: string; active: boolean };
+      category?: { slug: string; active: boolean } | null;
       featured?: boolean;
     } = {
       active: true,
@@ -62,9 +62,9 @@ export async function GET(request: NextRequest) {
       date: post.publish_date.toISOString().split("T")[0],
       image: post.featured_image || "/images/blog-placeholder.jpg",
       tags: post.tags,
-      category: post.category.name,
-      categorySlug: post.category.slug,
-      categoryColor: post.category.color,
+      category: post.category?.name || "General",
+      categorySlug: post.category?.slug || "general",
+      categoryColor: post.category?.color || "#3B82F6",
       readingTime: post.reading_time,
       featured: post.featured,
     }));
