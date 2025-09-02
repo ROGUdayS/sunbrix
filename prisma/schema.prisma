@@ -32,6 +32,7 @@ model Project {
 model City {
   id             String   @id @default(cuid())
   name           String   @unique @db.VarChar(100)
+  display_order  Int      @default(0) @map("display_order")
   active         Boolean  @default(true)
   created_at     DateTime @default(now()) @map("created_at")
   updated_at     DateTime @updatedAt @map("updated_at")
@@ -49,6 +50,7 @@ model Package {
   price            Decimal  @db.Decimal(10, 2)
   package_data     Json?    @map("package_data") // JSON structure for simplified package management
   ui_created_order Int      @default(0) @map("ui_created_order") // Order based on UI interaction sequence
+  display_order    Int      @default(0) @map("display_order") // User-controlled display order
   active           Boolean  @default(true)
   created_at       DateTime @default(now()) @map("created_at")
   updated_at       DateTime @updatedAt @map("updated_at")
@@ -66,6 +68,7 @@ model PackageSection {
   title            String   @db.VarChar(255)
   order            Int      @default(0)
   ui_created_order Int      @default(0) @map("ui_created_order") // Order based on UI interaction sequence across all packages in city
+  display_order    Int      @default(0) @map("display_order") // User-controlled display order
   active           Boolean  @default(true)
   created_at       DateTime @default(now()) @map("created_at")
   updated_at       DateTime @updatedAt @map("updated_at")
@@ -83,6 +86,7 @@ model PackageSectionItem {
   content          String   @db.Text
   order            Int      @default(0)
   ui_created_order Int      @default(0) @map("ui_created_order") // Order based on UI interaction sequence within section
+  display_order    Int      @default(0) @map("display_order") // User-controlled display order
   active           Boolean  @default(true)
   created_at       DateTime @default(now()) @map("created_at")
   updated_at       DateTime @updatedAt @map("updated_at")

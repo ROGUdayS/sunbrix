@@ -30,19 +30,19 @@ export async function GET(request: NextRequest) {
           include: {
             sections: {
               where: { active: true },
-              orderBy: { order: "asc" },
+              orderBy: { display_order: "asc" },
               include: {
                 items: {
                   where: { active: true },
-                  orderBy: { order: "asc" },
+                  orderBy: { display_order: "asc" },
                 },
               },
             },
           },
-          orderBy: { name: "asc" },
+          orderBy: { display_order: "asc" },
         },
       },
-      orderBy: { name: "asc" },
+      orderBy: { display_order: "asc" },
     });
 
     console.log(`[LANDER] 📈 Found ${cities.length} cities with packages`);
@@ -115,46 +115,38 @@ export async function GET(request: NextRequest) {
             );
           }
 
-          // Use sections from JSON data if available
-          if (jsonData.sections) {
-            // Instead of overwriting, merge sections intelligently
-            // Priority: Use the sections from the package with more recent updates
-            const currentSections = packages[packageKey].sections as Record<
-              string,
-              unknown
-            >;
-            const newSections = jsonData.sections;
+          // Use sections from relational data (ordered by display_order) instead of JSON data
+          // This ensures consistent ordering between dashboard and lander
+          const currentSections = packages[packageKey].sections as Record<
+            string,
+            unknown
+          >;
 
-            // If no existing sections, use new ones directly
-            if (!currentSections || Object.keys(currentSections).length === 0) {
-              packages[packageKey].sections = newSections;
-              console.log(
-                `[LANDER] 📋 Initial sections for ${packageKey} from ${city.name}:`,
-                Object.keys(newSections)
-              );
-            } else {
-              // Compare update timestamps or merge based on city priority
-              // For now, prioritize the package with more recent update_at
-              const existingPackage = packages[packageKey];
-              if (
-                pkg.updated_at >
-                ((existingPackage.updated_at as Date) || new Date(0))
-              ) {
-                packages[packageKey].sections = newSections;
-                packages[packageKey].updated_at = pkg.updated_at;
-                console.log(
-                  `[LANDER] 📋 Updated sections for ${packageKey} from ${city.name} (more recent):`,
-                  Object.keys(newSections)
-                );
-              } else {
-                console.log(
-                  `[LANDER] 📋 Keeping existing sections for ${packageKey} (current is more recent than ${city.name})`
-                );
-              }
-            }
+          // Only process sections if we haven't processed this package yet or if this is more recent
+          if (!currentSections || Object.keys(currentSections).length === 0 || 
+              pkg.updated_at > ((packages[packageKey].updated_at as Date) || new Date(0))) {
+            
+            const orderedSections: Record<string, unknown> = {};
+            
+            // Convert relational sections to the expected format, maintaining display_order
+            pkg.sections.forEach((section) => {
+              const sectionKey = section.title.toLowerCase().replace(/\s+/g, "-");
+              orderedSections[sectionKey] = {
+                title: section.title,
+                items: section.items.map((item) => item.content),
+              };
+            });
+
+            packages[packageKey].sections = orderedSections;
+            packages[packageKey].updated_at = pkg.updated_at;
+            
+            console.log(
+              `[LANDER] 📋 Using relational sections for ${packageKey} from ${city.name}:`,
+              Object.keys(orderedSections)
+            );
           } else {
             console.log(
-              `[LANDER] ⚠️  No sections in JSON data for ${packageKey} from ${city.name}`
+              `[LANDER] 📋 Keeping existing sections for ${packageKey} (current is more recent than ${city.name})`
             );
           }
         } else {
