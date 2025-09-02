@@ -24,19 +24,19 @@ export async function GET(request: NextRequest) {
           include: {
             sections: {
               where: { active: true },
-              orderBy: { order: "asc" },
+              orderBy: { display_order: "asc" },
               include: {
                 items: {
                   where: { active: true },
-                  orderBy: { order: "asc" },
+                  orderBy: { display_order: "asc" },
                 },
               },
             },
           },
-          orderBy: { name: "asc" },
+          orderBy: { display_order: "asc" },
         },
       },
-      orderBy: { name: "asc" },
+      orderBy: { display_order: "asc" },
     });
 
     return NextResponse.json(cities, {
