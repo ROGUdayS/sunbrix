@@ -154,16 +154,17 @@ model CompanySettings {
 
 // Content Management Models - Simplified
 model PageContent {
-  id                    String   @id @default(cuid())
-  page_type             String   @map("page_type") @db.VarChar(50) // "main" only
-  section_type          String   @map("section_type") @db.VarChar(100) // "demo_video" only
-  
-  // Demo Video URL (for Build Your Dream Home section)
-  demo_video_url        String?  @map("demo_video_url") @db.VarChar(500)
-  
-  active                Boolean  @default(true)
-  created_at            DateTime @default(now()) @map("created_at")
-  updated_at            DateTime @updatedAt @map("updated_at")
+  id             String   @id @default(cuid())
+  page_type      String   @map("page_type") @db.VarChar(50)
+  section_type   String   @map("section_type") @db.VarChar(100)
+  demo_video_url String?  @map("demo_video_url") @db.VarChar(500)
+  title          String?  @db.VarChar(255)
+  subtitle       String?  @db.VarChar(500)
+  description    String?
+  content_data   Json?    @map("content_data")
+  active         Boolean  @default(true)
+  created_at     DateTime @default(now()) @map("created_at")
+  updated_at     DateTime @updatedAt @map("updated_at")
 
   @@unique([page_type, section_type])
   @@map("page_content")

@@ -105,6 +105,59 @@ export default function Home() {
     }[]
   >([]);
 
+  // New dynamic content states
+  const [heroStats, setHeroStats] = useState([
+    { value: "25", label: "Years" },
+    { value: "100+", label: "Homes" },
+    { value: "100%", label: "Transparent" },
+    { value: "100%", label: "On-Time" },
+  ]);
+
+  const [commitmentSection, setCommitmentSection] = useState({
+    title: "Our Commitment to Quality",
+    description:
+      "At Sunbrix, quality isn't a feature, it's the foundation of everything we do. For over 20 years, we've crafted homes that last and function with purpose, building each one with care in every corner and meaning in every brick laid.",
+    features: [
+      {
+        icon: "/icons/commitment-to-quality/Design & Strength.svg",
+        title: "Design & Strength",
+        description:
+          "At Sunbrix, we build and designs, using time tested practices.",
+      },
+      {
+        icon: "/icons/commitment-to-quality/20 Year Warranty.svg",
+        title: "20 year warranty",
+        description:
+          "At Sunbrix, we proudly offer a 20 year warranty on our homes.",
+      },
+      {
+        icon: "/icons/commitment-to-quality/On time Delivery.svg",
+        title: "100% On time delivery",
+        description:
+          "The past 20 years, Sunbrix has never delayed a single project.",
+      },
+      {
+        icon: "/icons/commitment-to-quality/High quality materials.svg",
+        title: "High quality materials",
+        description:
+          "At Sunbrix, Using the best quality materials is simply the norm.",
+      },
+    ],
+  });
+
+  const [gallerySection, setGallerySection] = useState({
+    title: "Gallery",
+  });
+
+  const [packagesSection, setPackagesSection] = useState({
+    title: "Packages",
+  });
+
+  const [testimonialsSection, setTestimonialsSection] = useState({
+    title: "Testimonials",
+    subtitle: "See what our customers have to say.",
+  });
+
   // Add gallery transition state
   const [isGalleryTransitioning, setIsGalleryTransitioning] = useState(false);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -241,16 +294,23 @@ export default function Home() {
     };
   }, []);
 
-  // Fetch dynamic content from database (simplified)
+  // Fetch dynamic content from database
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        // Fetch main page content (demo video + gallery)
+        // Fetch main page content (demo video + gallery + all sections)
         const contentResponse = await fetch("/api/content/main-page");
         if (contentResponse.ok) {
           const content = await contentResponse.json();
           setDemoVideoUrl(content.demoVideoUrl || "/videos/video_demo.mp4");
           setDynamicGalleryImages(content.galleryImages || []);
+          setHeroStats(content.heroStats || heroStats);
+          setCommitmentSection(content.commitmentSection || commitmentSection);
+          setGallerySection(content.gallerySection || gallerySection);
+          setPackagesSection(content.packagesSection || packagesSection);
+          setTestimonialsSection(
+            content.testimonialsSection || testimonialsSection
+          );
         }
 
         // Fetch testimonials
@@ -258,7 +318,9 @@ export default function Home() {
         if (testimonialsResponse.ok) {
           const data = await testimonialsResponse.json();
           // The API returns the testimonials array directly, not wrapped in data.testimonials
-          setDynamicTestimonials(Array.isArray(data) ? data : data.testimonials || []);
+          setDynamicTestimonials(
+            Array.isArray(data) ? data : data.testimonials || []
+          );
         }
       } catch (error) {
         console.error("Error fetching dynamic content:", error);
@@ -614,38 +676,19 @@ export default function Home() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white pb-16 sm:pb-20">
           {/* Key Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
-              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
-                25
+            {heroStats.map((stat, index) => (
+              <div
+                key={index}
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20"
+              >
+                <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-sm sm:text-sm lg:text-base font-medium">
+                  {stat.label}
+                </div>
               </div>
-              <div className="text-sm sm:text-sm lg:text-base font-medium">
-                Years
-              </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
-              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
-                100+
-              </div>
-              <div className="text-sm sm:text-sm lg:text-base font-medium">
-                Homes
-              </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
-              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
-                100%
-              </div>
-              <div className="text-sm sm:text-sm lg:text-base font-medium">
-                Transparent
-              </div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20">
-              <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
-                100%
-              </div>
-              <div className="text-sm sm:text-sm lg:text-base font-medium">
-                On-Time
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
@@ -672,85 +715,32 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
-              Our Commitment to Quality
+              {commitmentSection.title}
             </h2>
             <p className="text-lg sm:text-xl text-amber-800 mb-6 sm:mb-8 lg:mb-10">
-              At Sunbrix, quality isn&apos;t a feature, it&apos;s the foundation
-              of everything we do. For over 20 years, we&apos;ve crafted homes
-              that last and function with purpose, building each one with care
-              in every corner and meaning in every brick laid.
+              {commitmentSection.description}
             </p>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-              <div className="text-center">
-                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
-                  <Image
-                    src="/icons/commitment-to-quality/Design & Strength.svg"
-                    alt="Design & Strength"
-                    width={80}
-                    height={80}
-                    className="w-16 h-16 sm:w-20 sm:h-20"
-                  />
+              {commitmentSection.features.map((feature, index) => (
+                <div key={index} className="text-center">
+                  <div className="flex justify-center mx-auto mb-3 sm:mb-4">
+                    <Image
+                      src={feature.icon}
+                      alt={feature.title}
+                      width={80}
+                      height={80}
+                      className="w-16 h-16 sm:w-20 sm:h-20"
+                    />
+                  </div>
+                  <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm lg:text-base text-amber-700">
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  Design & Strength
-                </h3>
-                <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  At Sunbrix, we build and designs, using time tested practices.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
-                  <Image
-                    src="/icons/commitment-to-quality/20 Year Warranty.svg"
-                    alt="20 Year Warranty"
-                    width={80}
-                    height={80}
-                    className="w-16 h-16 sm:w-20 sm:h-20"
-                  />
-                </div>
-                <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  20 year warranty
-                </h3>
-                <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  At Sunbrix, we proudly offer a 20 year warranty on our homes.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
-                  <Image
-                    src="/icons/commitment-to-quality/On time Delivery.svg"
-                    alt="On Time Delivery"
-                    width={80}
-                    height={80}
-                    className="w-16 h-16 sm:w-20 sm:h-20"
-                  />
-                </div>
-                <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  100% On time delivery
-                </h3>
-                <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  The past 20 years, Sunbrix has never delayed a single project.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="flex justify-center mx-auto mb-3 sm:mb-4">
-                  <Image
-                    src="/icons/commitment-to-quality/High quality materials.svg"
-                    alt="High Quality Materials"
-                    width={80}
-                    height={80}
-                    className="w-16 h-16 sm:w-20 sm:h-20"
-                  />
-                </div>
-                <h3 className="text-sm sm:text-lg lg:text-xl font-semibold text-amber-900 mb-2">
-                  High quality materials
-                </h3>
-                <p className="text-xs sm:text-sm lg:text-base text-amber-700">
-                  At Sunbrix, Using the best quality materials is simply the
-                  norm.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -761,7 +751,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-4 sm:mb-6 lg:mb-8">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-2 sm:mb-3">
-              Gallery
+              {gallerySection.title}
             </h2>
           </div>
 
@@ -1069,7 +1059,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-4 sm:mb-6 lg:mb-8">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-3">
-              Packages
+              {packagesSection.title}
             </h2>
           </div>
 
@@ -1946,10 +1936,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
-              Testimonials
+              {testimonialsSection.title}
             </h2>
             <p className="text-lg sm:text-xl text-amber-800">
-              See what our customers have to say.
+              {testimonialsSection.subtitle}
             </p>
           </div>
 
