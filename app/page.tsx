@@ -257,7 +257,8 @@ export default function Home() {
         const testimonialsResponse = await fetch("/api/content/testimonials");
         if (testimonialsResponse.ok) {
           const data = await testimonialsResponse.json();
-          setDynamicTestimonials(data.testimonials || []);
+          // The API returns the testimonials array directly, not wrapped in data.testimonials
+          setDynamicTestimonials(Array.isArray(data) ? data : data.testimonials || []);
         }
       } catch (error) {
         console.error("Error fetching dynamic content:", error);
