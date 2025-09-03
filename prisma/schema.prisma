@@ -286,30 +286,28 @@ model FaqCategory {
 model Faq {
   id          String      @id @default(cuid())
   question    String      @db.VarChar(500)
-  answer      String      @db.Text
-  category_id String      @map("category_id")
+  answer      String
+  category_id String?     @map("category_id")
   order_index Int         @default(0) @map("order_index")
   active      Boolean     @default(true)
   created_at  DateTime    @default(now()) @map("created_at")
   updated_at  DateTime    @updatedAt @map("updated_at")
-
-  // Relations
-  category    FaqCategory @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category    FaqCategory? @relation(fields: [category_id], references: [id], onDelete: SetNull)
 
   @@map("faqs")
 }
 
 model FaqPageContent {
-  id                String   @id @default(cuid())
-  page_title        String   @default("Frequently Asked Questions") @map("page_title") @db.VarChar(255)
-  page_subtitle     String   @default("Find answers to common questions about Sunbrix, our construction process, materials, and services.") @map("page_subtitle") @db.Text
-  cta_title         String   @default("Still Have Questions?") @map("cta_title") @db.VarChar(255)
-  cta_description   String   @default("Contact us for personalized assistance and detailed information") @map("cta_description") @db.Text
-  cta_button_text   String   @default("Contact Us") @map("cta_button_text") @db.VarChar(100)
-  cta_button_link   String   @default("/contact") @map("cta_button_link") @db.VarChar(255)
-  active            Boolean  @default(true)
-  created_at        DateTime @default(now()) @map("created_at")
-  updated_at        DateTime @updatedAt @map("updated_at")
+  id              String   @id @default(cuid())
+  page_title      String   @default("Frequently Asked Questions") @map("page_title") @db.VarChar(255)
+  page_subtitle   String   @default("Find answers to common questions about Sunbrix, our construction process, materials, and services.") @map("page_subtitle")
+  cta_title       String   @default("Still Have Questions?") @map("cta_title") @db.VarChar(255)
+  cta_description String   @default("Contact us for personalized assistance and detailed information") @map("cta_description")
+  cta_button_text String   @default("Contact Us") @map("cta_button_text") @db.VarChar(100)
+  cta_button_link String   @default("/contact") @map("cta_button_link") @db.VarChar(255)
+  active          Boolean  @default(true)
+  created_at      DateTime @default(now()) @map("created_at")
+  updated_at      DateTime @updatedAt @map("updated_at")
 
   @@map("faq_page_content")
 }

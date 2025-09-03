@@ -23,29 +23,21 @@ export async function GET(request: NextRequest) {
       };
     }
 
-    const faqs = await prisma.faq.findMany({
-      where,
-      include: {
-        category: {
-          select: {
-            id: true,
-            name: true,
-            description: true,
-          },
-        },
-      },
-      orderBy: [
-        { order_index: 'asc' },
-        { created_at: 'desc' },
-      ],
-    });
+    // Temporary fix: Use raw query to handle null category_id values
+    // until database schema is properly updated
+    const faqs = await prisma.$queryRaw`
+      SELECT id, question, answer, category_id, order_index, active, created_at, updated_at
+      FROM faqs 
+      WHERE active = true
+      ORDER BY order_index ASC, created_at DESC
+    `;
 
-    // Transform data for frontend
-    const transformedFaqs = faqs.map(faq => ({
+    // Transform data for frontend - simplified without category for now
+    const transformedFaqs = (faqs as any[]).map((faq: any) => ({
       id: faq.id,
       question: faq.question,
       answer: faq.answer,
-      category: faq.category.name,
+      order_index: faq.order_index,
     }));
 
     return NextResponse.json(transformedFaqs);
