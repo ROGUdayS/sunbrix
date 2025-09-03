@@ -21,11 +21,11 @@ export async function GET(request: NextRequest) {
     // Build query options
     const queryOptions: {
       where: { active?: boolean };
-      orderBy: { created_at: "desc" };
+      orderBy: { display_order: "asc" };
       take?: number;
     } = {
       where,
-      orderBy: { created_at: "desc" },
+      orderBy: { display_order: "asc" },
     };
 
     if (limit) {

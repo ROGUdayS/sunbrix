@@ -22,6 +22,7 @@ model Project {
   description   String   @db.Text
   specifications Json    @default("{}")
   images        String[]
+  display_order Int      @default(0) @map("display_order")
   active        Boolean  @default(true)
   created_at    DateTime @default(now()) @map("created_at")
   updated_at    DateTime @updatedAt @map("updated_at")
