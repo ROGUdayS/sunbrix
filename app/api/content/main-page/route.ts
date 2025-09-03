@@ -1,54 +1,153 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// GET - Fetch main page content for the frontend (gallery with quotes only)
+// GET - Fetch main page content for the frontend
 export async function GET() {
   try {
-    const [demoVideoContent, galleryImages] = await Promise.all([
+    const [
+      demoVideoContent,
+      galleryImages,
+      heroStats,
+      commitmentSection,
+      gallerySection,
+      packagesSection,
+      testimonialsSection,
+    ] = await Promise.all([
       prisma.pageContent.findUnique({
-        where: { 
-          page_type_section_type: { page_type: "main", section_type: "demo_video" },
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "demo_video",
+          },
         },
-        select: {
-          demo_video_url: true
-        }
       }),
       prisma.galleryImage.findMany({
         where: { active: true },
-        orderBy: [{ order_index: 'asc' }, { created_at: 'desc' }],
+        orderBy: [{ order_index: "asc" }, { created_at: "desc" }],
         select: {
           id: true,
           image_url: true,
           quote: true,
-          order_index: true
-        }
-      })
+          order_index: true,
+        },
+      }),
+      prisma.pageContent.findUnique({
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "hero_stats",
+          },
+        },
+      }),
+      prisma.pageContent.findUnique({
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "commitment_quality",
+          },
+        },
+      }),
+      prisma.pageContent.findUnique({
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "gallery",
+          },
+        },
+      }),
+      prisma.pageContent.findUnique({
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "packages",
+          },
+        },
+      }),
+      prisma.pageContent.findUnique({
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "testimonials",
+          },
+        },
+      }),
     ]);
 
     // Transform the data to match expected frontend format
     const response = {
-      demoVideoUrl: demoVideoContent?.demo_video_url || "/videos/video_demo.mp4",
-      galleryImages: galleryImages.map(image => ({
+      demoVideoUrl:
+        demoVideoContent?.demo_video_url || "/videos/video_demo.mp4",
+      galleryImages: galleryImages.map((image) => ({
         id: image.id,
         image: image.image_url,
         image_url: image.image_url, // Keep both for compatibility
         quote: image.quote,
-        order_index: image.order_index
-      }))
+        order_index: image.order_index,
+      })),
+      heroStats: heroStats?.content_data || [
+        { value: "25", label: "Years" },
+        { value: "100+", label: "Homes" },
+        { value: "100%", label: "Transparent" },
+        { value: "100%", label: "On-Time" },
+      ],
+      commitmentSection: {
+        title: commitmentSection?.title || "Our Commitment to Quality",
+        description:
+          commitmentSection?.description ||
+          "At Sunbrix, quality isn't a feature, it's the foundation of everything we do. For over 20 years, we've crafted homes that last and function with purpose, building each one with care in every corner and meaning in every brick laid.",
+        features: commitmentSection?.content_data || [
+          {
+            icon: "/icons/commitment-to-quality/Design & Strength.svg",
+            title: "Design & Strength",
+            description:
+              "At Sunbrix, we build and designs, using time tested practices.",
+          },
+          {
+            icon: "/icons/commitment-to-quality/20 Year Warranty.svg",
+            title: "20 year warranty",
+            description:
+              "At Sunbrix, we proudly offer a 20 year warranty on our homes.",
+          },
+          {
+            icon: "/icons/commitment-to-quality/On time Delivery.svg",
+            title: "100% On time delivery",
+            description:
+              "The past 20 years, Sunbrix has never delayed a single project.",
+          },
+          {
+            icon: "/icons/commitment-to-quality/High quality materials.svg",
+            title: "High quality materials",
+            description:
+              "At Sunbrix, Using the best quality materials is simply the norm.",
+          },
+        ],
+      },
+      gallerySection: {
+        title: gallerySection?.title || "Gallery",
+      },
+      packagesSection: {
+        title: packagesSection?.title || "Packages",
+      },
+      testimonialsSection: {
+        title: testimonialsSection?.title || "Testimonials",
+        subtitle:
+          testimonialsSection?.subtitle ||
+          "See what our customers have to say.",
+      },
     };
 
     // Set cache headers for better performance
     const headers = {
-      'Cache-Control': 'public, max-age=300, stale-while-revalidate=60', // 5 minutes cache
+      "Cache-Control": "no-cache, no-store, must-revalidate", // Disable caching for development
     };
 
     return NextResponse.json(response, { headers });
   } catch (error) {
-    console.error('Error fetching main page content:', error);
+    console.error("Error fetching main page content:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch main page content' },
+      { error: "Failed to fetch main page content" },
       { status: 500 }
     );
   }

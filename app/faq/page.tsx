@@ -46,8 +46,12 @@ export default function FAQ() {
 
       if (faqsResponse.ok) {
         const faqsData = await faqsResponse.json();
-        setFaqs(faqsData);
-        setAllFaqs(faqsData);
+        // Sort FAQs by order_index to maintain admin-configured order
+        const sortedFaqs = (faqsData.faqs || faqsData || []).sort((a: any, b: any) => 
+          (a.order_index || 0) - (b.order_index || 0)
+        );
+        setFaqs(sortedFaqs);
+        setAllFaqs(sortedFaqs);
       }
 
       if (pageContentResponse.ok) {
