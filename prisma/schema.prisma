@@ -162,6 +162,16 @@ model PageContent {
   subtitle       String?  @db.VarChar(500)
   description    String?
   content_data   Json?    @map("content_data")
+  // SEO Meta fields
+  meta_title     String?  @map("meta_title") @db.VarChar(60)
+  meta_description String? @map("meta_description") @db.VarChar(160)
+  meta_keywords  String?  @map("meta_keywords") @db.VarChar(255)
+  og_title       String?  @map("og_title") @db.VarChar(60)
+  og_description String?  @map("og_description") @db.VarChar(160)
+  og_image       String?  @map("og_image") @db.VarChar(500)
+  twitter_title  String?  @map("twitter_title") @db.VarChar(60)
+  twitter_description String? @map("twitter_description") @db.VarChar(160)
+  twitter_image  String?  @map("twitter_image") @db.VarChar(500)
   active         Boolean  @default(true)
   created_at     DateTime @default(now()) @map("created_at")
   updated_at     DateTime @updatedAt @map("updated_at")
