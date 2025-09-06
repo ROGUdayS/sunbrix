@@ -15,26 +15,16 @@ export async function GET(request: NextRequest) {
       where.active = active === "true";
     }
 
-    // Get all active cities with their packages
+    // Get all active cities (basic info only)
     const cities = await prisma.city.findMany({
       where,
-      include: {
-        packages: {
-          where: { active: true },
-          include: {
-            sections: {
-              where: { active: true },
-              orderBy: { display_order: "asc" },
-              include: {
-                items: {
-                  where: { active: true },
-                  orderBy: { display_order: "asc" },
-                },
-              },
-            },
-          },
-          orderBy: { display_order: "asc" },
-        },
+      select: {
+        id: true,
+        name: true,
+        display_order: true,
+        active: true,
+        created_at: true,
+        updated_at: true,
       },
       orderBy: { display_order: "asc" },
     });

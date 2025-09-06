@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
+    "build:static": "NEXT_PUBLIC_USE_API_DATA=false prisma generate && next build",
+    "build:api": "NEXT_PUBLIC_USE_API_DATA=true prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },

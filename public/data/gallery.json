@@ -1,0 +1,23 @@
+[
+  {
+    "id": "cmf8m6x9200ffos5ysy5gg5d0",
+    "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
+    "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
+    "quote": "Your dream home awaits - where modern design meets uncompromising quality.",
+    "order_index": 1
+  },
+  {
+    "id": "cmf8m6xdb00fgos5ym8uts3ai",
+    "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
+    "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
+    "quote": "Excellence is not a skill, it's an attitude - and it shows in every detail.",
+    "order_index": 2
+  },
+  {
+    "id": "cmf8m6xhh00fhos5ypsshf46x",
+    "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg",
+    "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg",
+    "quote": "Building more than homes - we're crafting your future.",
+    "order_index": 3
+  }
+]

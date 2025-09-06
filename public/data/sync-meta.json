@@ -1,0 +1,73 @@
+{
+  "lastSync": "2025-09-06T19:16:56.239Z",
+  "version": "1.0.0",
+  "source": "dashboard-sync",
+  "totalRecords": {
+    "projects": 4,
+    "cities": 2,
+    "packages": 3,
+    "testimonials": 3,
+    "galleryImages": 3,
+    "mainPageContent": 0,
+    "blogs": 4,
+    "faqs": 17
+  },
+  "files": [
+    "projects.json",
+    "cities.json",
+    "packages.json",
+    "testimonials.json",
+    "gallery.json",
+    "faqs.json",
+    "blogs.json",
+    "main-page-content.json",
+    "company-settings.json"
+  ],
+  "writeResults": [
+    {
+      "filename": "projects.json",
+      "size": 4459,
+      "records": 2
+    },
+    {
+      "filename": "cities.json",
+      "size": 232,
+      "records": 2
+    },
+    {
+      "filename": "packages.json",
+      "size": 7897,
+      "records": 3
+    },
+    {
+      "filename": "testimonials.json",
+      "size": 1789,
+      "records": 3
+    },
+    {
+      "filename": "gallery.json",
+      "size": 1315,
+      "records": 3
+    },
+    {
+      "filename": "faqs.json",
+      "size": 13548,
+      "records": 17
+    },
+    {
+      "filename": "blogs.json",
+      "size": 12408,
+      "records": 4
+    },
+    {
+      "filename": "main-page-content.json",
+      "size": 2553,
+      "records": 7
+    },
+    {
+      "filename": "company-settings.json",
+      "size": 2,
+      "records": 0
+    }
+  ]
+}

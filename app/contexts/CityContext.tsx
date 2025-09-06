@@ -7,19 +7,12 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-
-interface City {
-  id: string;
-  name: string;
-  active: boolean;
-  created_at: string;
-  updated_at: string;
-}
+import { getCities, CityData } from "@/lib/data-provider-client";
 
 interface CityContextType {
-  selectedCity: City | null;
+  selectedCity: CityData | null;
   selectedCityId: string;
-  cities: City[];
+  cities: CityData[];
   loading: boolean;
   error: string | null;
   setSelectedCity: (cityId: string) => void;
@@ -31,7 +24,7 @@ interface CityContextType {
 const CityContext = createContext<CityContextType | undefined>(undefined);
 
 export function CityProvider({ children }: { children: React.ReactNode }) {
-  const [cities, setCities] = useState<City[]>([]);
+  const [cities, setCities] = useState<CityData[]>([]);
   const [selectedCityId, setSelectedCityId] = useState<string>("");
   const [showCityModal, setShowCityModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -46,12 +39,7 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/cities?active=true");
-      if (!response.ok) {
-        throw new Error("Failed to fetch cities");
-      }
-
-      const citiesData = await response.json();
+      const citiesData = await getCities(true);
       setCities(citiesData);
 
       // Set default city if none selected

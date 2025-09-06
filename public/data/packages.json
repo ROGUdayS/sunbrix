@@ -1,0 +1,305 @@
+{
+  "standard": {
+    "title": "Standard",
+    "popular": false,
+    "pricing": {
+      "cmf8m59ld0000os5y8eqdsie8": {
+        "price": "₹ 1,850",
+        "startingAt": false
+      },
+      "cmf8m59pt0001os5yrknwbnlj": {
+        "price": "₹ 1,650",
+        "startingAt": false
+      }
+    },
+    "sections": {
+      "design": {
+        "items": [
+          "Digital plot and contour survey",
+          "2D floor plan & 3D Elevation",
+          "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
+          "RCC drawings",
+          "Electrical & Plumbing drawings"
+        ],
+        "title": "Design"
+      },
+      "painting": {
+        "items": [
+          "Interior wall painting",
+          "Exterior wall painting",
+          "Standard finish"
+        ],
+        "title": "Painting"
+      },
+      "plumbing": {
+        "items": [
+          "Basic plumbing system",
+          "Standard pipes",
+          "Essential connections"
+        ],
+        "title": "Plumbing"
+      },
+      "structure": {
+        "items": [
+          "Sunbrix OPC 53, Sunbrix Max super PPC",
+          "Sunbrix Neo Steel 550D",
+          "10.5' Ceiling Height",
+          "2' elevated Plinth level"
+        ],
+        "title": "Structure"
+      },
+      "electrical": {
+        "items": [
+          "Basic wiring",
+          "Standard switches",
+          "Essential points"
+        ],
+        "title": "Electrical"
+      },
+      "door-and-windows": {
+        "items": [
+          "Standard wooden doors",
+          "UPVC windows",
+          "Basic hardware"
+        ],
+        "title": "Door and windows"
+      },
+      "flooring-and-dado": {
+        "items": [
+          "2' X 2' Vetrified tiles",
+          "Granite for Staircase",
+          "Kitchen countertop"
+        ],
+        "title": "Flooring and dado"
+      },
+      "materials-provided": {
+        "items": [
+          "Sunbrix OPC 53, Sunbrix Max super PPC",
+          "Sunbrix Neo Steel 550D",
+          "2' X 2' Vetrified tiles",
+          "Standard wooden doors & UPVC windows"
+        ],
+        "title": "Materials Provided"
+      },
+      "plumbing-accessories": {
+        "items": [
+          "Basic fixtures",
+          "Standard fittings",
+          "Essential accessories"
+        ],
+        "title": "Plumbing accessories"
+      },
+      "railing-and-handrails": {
+        "items": [
+          "Standard railing",
+          "Basic handrails",
+          "Safety features"
+        ],
+        "title": "Railing and handrails"
+      }
+    },
+    "updated_at": "2025-09-06T18:44:32.194Z"
+  },
+  "premium": {
+    "title": "Premium",
+    "popular": false,
+    "pricing": {
+      "cmf8m59ld0000os5y8eqdsie8": {
+        "price": "₹ 2,250",
+        "startingAt": false
+      },
+      "cmf8m59pt0001os5yrknwbnlj": {
+        "price": "₹ 2,050",
+        "startingAt": false
+      }
+    },
+    "sections": {
+      "design": {
+        "items": [
+          "Digital plot and contour survey",
+          "2D floor plan & 3D Elevation",
+          "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
+          "RCC drawings",
+          "Electrical & Plumbing drawings"
+        ],
+        "title": "Design"
+      },
+      "painting": {
+        "items": [
+          "Premium interior painting",
+          "Weather-resistant exterior",
+          "Smooth finish"
+        ],
+        "title": "Painting"
+      },
+      "plumbing": {
+        "items": [
+          "Premium plumbing system",
+          "Quality pipes",
+          "Enhanced connections"
+        ],
+        "title": "Plumbing"
+      },
+      "structure": {
+        "items": [
+          "Sunbrix OPC 53, Sunbrix Max super PPC",
+          "Sunbrix Neo Steel 550D",
+          "10.5' Ceiling Height",
+          "2' elevated Plinth level"
+        ],
+        "title": "Structure"
+      },
+      "electrical": {
+        "items": [
+          "Premium wiring",
+          "Modular switches",
+          "Additional points"
+        ],
+        "title": "Electrical"
+      },
+      "door-and-windows": {
+        "items": [
+          "Premium wooden doors",
+          "UPVC windows with grills",
+          "Quality hardware"
+        ],
+        "title": "Door and windows"
+      },
+      "flooring-and-dado": {
+        "items": [
+          "4' X 2' Premium Vetrified tiles",
+          "Jaguar Continental series",
+          "Wall mounted EWC"
+        ],
+        "title": "Flooring and dado"
+      },
+      "materials-provided": {
+        "items": [
+          "Sunbrix OPC 53, Sunbrix Max super PPC",
+          "Sunbrix Neo Steel 550D",
+          "4' X 2' Premium Vetrified tiles",
+          "Premium wooden doors & UPVC windows with grills"
+        ],
+        "title": "Materials Provided"
+      },
+      "plumbing-accessories": {
+        "items": [
+          "Premium fixtures",
+          "Quality fittings",
+          "Enhanced accessories"
+        ],
+        "title": "Plumbing accessories"
+      },
+      "railing-and-handrails": {
+        "items": [
+          "Premium railing",
+          "Designer handrails",
+          "Enhanced safety"
+        ],
+        "title": "Railing and handrails"
+      }
+    },
+    "updated_at": "2025-09-06T18:44:42.869Z"
+  },
+  "luxury": {
+    "title": "Luxury",
+    "popular": false,
+    "pricing": {
+      "cmf8m59ld0000os5y8eqdsie8": {
+        "price": "₹ 2,850",
+        "startingAt": false
+      },
+      "cmf8m59pt0001os5yrknwbnlj": {
+        "price": "₹ 2,650",
+        "startingAt": false
+      }
+    },
+    "sections": {
+      "design": {
+        "items": [
+          "Digital plot and contour survey",
+          "2D floor plan & 3D Elevation",
+          "GFC -Good for construction drawings (Section,Elevation, architectural drawings, cross section, details etc.)",
+          "RCC drawings",
+          "Electrical & Plumbing drawings"
+        ],
+        "title": "Design"
+      },
+      "painting": {
+        "items": [
+          "Luxury interior painting",
+          "Premium exterior finish",
+          "Designer textures"
+        ],
+        "title": "Painting"
+      },
+      "plumbing": {
+        "items": [
+          "Luxury plumbing system",
+          "Premium pipes",
+          "Designer connections"
+        ],
+        "title": "Plumbing"
+      },
+      "structure": {
+        "items": [
+          "Sunbrix OPC 53, Sunbrix Max super PPC",
+          "Sunbrix Neo Steel 550D",
+          "10.5' Ceiling Height",
+          "2' elevated Plinth level"
+        ],
+        "title": "Structure"
+      },
+      "electrical": {
+        "items": [
+          "Premium wiring system",
+          "Designer switches",
+          "Smart home ready"
+        ],
+        "title": "Electrical"
+      },
+      "door-and-windows": {
+        "items": [
+          "Luxury wooden doors",
+          "Premium UPVC windows",
+          "Designer hardware"
+        ],
+        "title": "Door and windows"
+      },
+      "flooring-and-dado": {
+        "items": [
+          "6' X 4' Marble flooring",
+          "Jaguar Premium series",
+          "Toughened glass railing"
+        ],
+        "title": "Flooring and dado"
+      },
+      "materials-provided": {
+        "items": [
+          "Sunbrix OPC 53, Sunbrix Max super PPC",
+          "Sunbrix Neo Steel 550D",
+          "6' X 4' Marble flooring",
+          "Luxury wooden doors & Premium UPVC windows"
+        ],
+        "title": "Materials Provided"
+      },
+      "plumbing-accessories": {
+        "items": [
+          "Luxury fixtures",
+          "Premium fittings",
+          "Designer accessories"
+        ],
+        "title": "Plumbing accessories"
+      },
+      "railing-and-handrails": {
+        "items": [
+          "Designer railing",
+          "Luxury handrails",
+          "Premium safety features"
+        ],
+        "title": "Railing and handrails"
+      }
+    },
+    "updated_at": "2025-09-06T18:44:53.793Z"
+  }
+}

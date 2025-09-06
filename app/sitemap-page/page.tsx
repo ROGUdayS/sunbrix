@@ -37,7 +37,7 @@ export default function SitemapPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("/api/projects?active=true");
+        const response = await fetch("/data/projects.json");
         if (response.ok) {
           const data = await response.json();
           setProjects(data.projects || []);

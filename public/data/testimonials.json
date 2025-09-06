@@ -1,0 +1,50 @@
+[
+  {
+    "id": "cmf8m6wx200fcos5yyg2ki7tp",
+    "name": "Mr. Suryanarayanan Karthikeyan",
+    "role": "Homeowner",
+    "company": "Residential Project",
+    "rating": 5,
+    "quote": "Most people struggle with delays, finances, or contractors. I didn't face even 1% of that. Sunbrix made my home journey smooth and hassle-free.",
+    "projectType": null,
+    "image": null,
+    "videoUrl": "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
+    "videoThumbnail": null,
+    "featured": true,
+    "published": true,
+    "created_at": "2025-09-06T18:45:48.710Z",
+    "updated_at": "2025-09-06T18:45:48.710Z"
+  },
+  {
+    "id": "cmf8m6x1400fdos5ytc65cyue",
+    "name": "Mr. Gururaj Naik",
+    "role": "Homeowner",
+    "company": "Residential Project",
+    "rating": 5,
+    "quote": "Sunbrix's expert team guided me at every step. Their quality gave me total confidence throughout the journey.",
+    "projectType": null,
+    "image": null,
+    "videoUrl": "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
+    "videoThumbnail": null,
+    "featured": true,
+    "published": true,
+    "created_at": "2025-09-06T18:45:48.857Z",
+    "updated_at": "2025-09-06T18:45:48.857Z"
+  },
+  {
+    "id": "cmf8m6x5100feos5yk5vcrzfg",
+    "name": "Mr. Hariharasudan",
+    "role": "Homeowner",
+    "company": "Residential Project",
+    "rating": 5,
+    "quote": "Sunbrix Homes exceeded our expectations! The construction quality and timely delivery were remarkable. Truly a dream home.",
+    "projectType": null,
+    "image": null,
+    "videoUrl": "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
+    "videoThumbnail": null,
+    "featured": true,
+    "published": true,
+    "created_at": "2025-09-06T18:45:48.997Z",
+    "updated_at": "2025-09-06T18:45:48.997Z"
+  }
+]
