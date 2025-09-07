@@ -16,7 +16,6 @@ interface BlogPost {
   date: string;
   featured_image: string;
   tags: string[];
-  readingTime: number;
   featured: boolean;
   order_index: number; // For maintaining dashboard order
 }
@@ -57,10 +56,9 @@ export default function Blogs() {
         slug: post.slug,
         excerpt: post.excerpt,
         author: post.author,
-        date: post.publish_date,
-        featured_image: post.featured_image,
+        date: post.date || post.updated_at,
+        featured_image: post.image || post.featured_image,
         tags: post.tags || [],
-        readingTime: post.reading_time || 5,
         featured: post.featured || false,
         order_index: post.order_index || 999, // Include order_index for sorting
       }));

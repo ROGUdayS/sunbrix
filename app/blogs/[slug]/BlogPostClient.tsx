@@ -20,7 +20,6 @@ interface BlogPost {
   category: string;
   categorySlug: string;
   categoryColor: string;
-  readingTime: number;
   featured: boolean;
   metaTitle?: string;
   metaDescription?: string;
@@ -33,7 +32,6 @@ interface RelatedPost {
   excerpt: string;
   image: string;
   category: string;
-  readingTime: number;
 }
 
 export default function BlogPostClient({ slug }: { slug: string }) {
@@ -175,7 +173,6 @@ export default function BlogPostClient({ slug }: { slug: string }) {
     keywords: blogPost.tags.join(", "),
     articleSection: blogPost.category,
     wordCount: blogPost.content.split(" ").length,
-    timeRequired: `PT${blogPost.readingTime}M`,
   };
 
   return (
@@ -192,9 +189,35 @@ export default function BlogPostClient({ slug }: { slug: string }) {
       <Header />
 
       {/* Breadcrumb */}
-      <nav className="pt-24 sm:pt-28 lg:pt-32 pb-6 bg-gray-50 border-b border-gray-200">
+      <nav className="pt-24 sm:pt-28 lg:pt-32 pb-4 sm:pb-6 bg-gray-50 border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
+          {/* Mobile: Back button + title */}
+          <div className="sm:hidden">
+            <div className="flex items-center space-x-3 mb-2">
+              <Link
+                href="/blogs"
+                className="flex items-center text-orange-600 hover:text-orange-700 transition-colors"
+              >
+                <svg
+                  className="w-4 h-4 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+                Back to Blogs
+              </Link>
+            </div>
+          </div>
+
+          {/* Desktop: Full breadcrumb */}
+          <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-600">
             <Link href="/" className="hover:text-orange-600 transition-colors">
               Home
             </Link>
@@ -206,7 +229,9 @@ export default function BlogPostClient({ slug }: { slug: string }) {
               Blogs
             </Link>
             <span>•</span>
-            <span className="text-gray-900 font-medium">{blogPost.title}</span>
+            <span className="text-gray-900 font-medium line-clamp-1">
+              {blogPost.title}
+            </span>
           </div>
         </div>
       </nav>
@@ -215,9 +240,9 @@ export default function BlogPostClient({ slug }: { slug: string }) {
       <article className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <header className="mb-8">
-            <div className="flex items-center space-x-4 mb-6">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
               <span
-                className="text-sm font-medium px-3 py-1 rounded-full"
+                className="text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full"
                 style={{
                   backgroundColor: `${blogPost.categoryColor}20`,
                   color: blogPost.categoryColor,
@@ -226,29 +251,27 @@ export default function BlogPostClient({ slug }: { slug: string }) {
                 {blogPost.category}
               </span>
               {blogPost.featured && (
-                <span className="text-sm font-medium text-orange-600 bg-orange-100 px-3 py-1 rounded-full">
+                <span className="text-xs sm:text-sm font-medium text-orange-600 bg-orange-100 px-2 sm:px-3 py-1 rounded-full">
                   Featured
                 </span>
               )}
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="hidden sm:block text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               {blogPost.title}
             </h1>
 
-            <div className="flex items-center justify-between text-sm text-gray-600 mb-6">
-              <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-600 mb-6 space-y-2 sm:space-y-0">
+              <div className="flex items-center space-x-2 sm:space-x-4">
                 <span>By {blogPost.author}</span>
-                <span>•</span>
-                <time dateTime={blogPost.date}>
+                <span className="hidden sm:inline">•</span>
+                <time dateTime={blogPost.date} className="block sm:inline">
                   {formatDate(blogPost.date)}
                 </time>
-                <span>•</span>
-                <span>{blogPost.readingTime} min read</span>
               </div>
 
               {/* Social Share Buttons */}
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 mt-2 sm:mt-0">
                 <button
                   onClick={() => {
                     if (navigator.share) {
@@ -414,10 +437,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
                     <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
                       {post.excerpt}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">
-                        {post.readingTime} min read
-                      </span>
+                    <div className="flex items-center justify-end">
                       <Link
                         href={`/blogs/${post.slug}`}
                         className="text-orange-600 hover:text-orange-700 font-medium transition-colors duration-200"

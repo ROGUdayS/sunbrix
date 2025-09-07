@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
       orderBy: [
         { featured: "desc" },
         { order_index: "asc" },
-        { publish_date: "desc" },
+        { updated_at: "desc" },
       ],
       take: limit ? parseInt(limit) : undefined,
     });
@@ -59,13 +59,12 @@ export async function GET(request: NextRequest) {
       slug: post.slug,
       excerpt: post.excerpt,
       author: post.author,
-      date: post.publish_date.toISOString().split("T")[0],
+      date: post.updated_at.toISOString().split("T")[0],
       image: post.featured_image || "/images/blog-placeholder.jpg",
       tags: post.tags,
       category: post.category?.name || "General",
       categorySlug: post.category?.slug || "general",
       categoryColor: post.category?.color || "#3B82F6",
-      readingTime: post.reading_time,
       featured: post.featured,
     }));
 

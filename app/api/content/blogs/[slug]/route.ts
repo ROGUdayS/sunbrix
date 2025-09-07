@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +14,7 @@ export async function GET(
       where: {
         slug: slug,
         active: true,
-        status: 'published', // Only show published posts on frontend
+        status: "published", // Only show published posts on frontend
       },
       include: {
         category: {
@@ -30,7 +30,7 @@ export async function GET(
 
     if (!blogPost) {
       return NextResponse.json(
-        { error: 'Blog post not found' },
+        { error: "Blog post not found" },
         { status: 404 }
       );
     }
@@ -43,13 +43,12 @@ export async function GET(
       excerpt: blogPost.excerpt,
       content: blogPost.content,
       author: blogPost.author,
-      date: blogPost.publish_date.toISOString().split('T')[0],
+      date: blogPost.updated_at.toISOString().split("T")[0],
       image: blogPost.featured_image || "/images/blog-placeholder.jpg",
       tags: blogPost.tags,
-      category: blogPost.category.name,
-      categorySlug: blogPost.category.slug,
-      categoryColor: blogPost.category.color,
-      readingTime: blogPost.reading_time,
+      category: blogPost.category?.name || "General",
+      categorySlug: blogPost.category?.slug || "general",
+      categoryColor: blogPost.category?.color || "#3B82F6",
       featured: blogPost.featured,
       metaTitle: blogPost.meta_title,
       metaDescription: blogPost.meta_description,
@@ -57,9 +56,9 @@ export async function GET(
 
     return NextResponse.json(transformedPost);
   } catch (error) {
-    console.error('Error fetching blog post:', error);
+    console.error("Error fetching blog post:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch blog post' },
+      { error: "Failed to fetch blog post" },
       { status: 500 }
     );
   }
