@@ -1,38 +1,35 @@
 [
   {
-    "id": "cmf9rqi3h00fnosol5lx782jc",
+    "id": "cmf9zkto500fnosr8z65xscbk",
     "title": "Essential Construction Tips for First-Time Home Builders",
     "slug": "essential-construction-tips-first-time-builders",
     "excerpt": "Building your first home can be overwhelming. Here are the essential tips every first-time builder should know to ensure a smooth construction process.",
     "content": "# Essential Construction Tips for First-Time Home Builders\n\nBuilding your first home is an exciting journey, but it can also be overwhelming without proper guidance. Here are the essential tips every first-time builder should know.\n\n## 1. Plan Thoroughly Before Breaking Ground\n\nBefore any construction begins, ensure you have:\n- Detailed architectural plans approved by local authorities\n- Clear understanding of local building codes and regulations\n- Realistic timeline and budget with 15-20% contingency\n- All necessary permits and approvals\n\n## 2. Choose the Right Construction Team\n\nYour success depends heavily on your team:\n- Research contractors thoroughly and check references\n- Ensure all team members are licensed and insured\n- Establish clear communication channels\n- Set expectations early and document everything\n\n## 3. Quality Materials Matter\n\n- Invest in quality materials for structural elements\n- Don't compromise on foundation and roofing materials\n- Consider long-term maintenance costs\n- Balance cost with quality for non-structural elements\n\n## 4. Regular Site Inspections\n\n- Visit the site regularly during construction\n- Schedule professional inspections at key milestones\n- Document progress with photos\n- Address issues immediately to avoid costly fixes later\n\n## 5. Communication is Key\n\n- Maintain open communication with your contractor\n- Ask questions if you don't understand something\n- Keep detailed records of all communications\n- Be involved but trust the experts\n\nBuilding your dream home requires patience, planning, and the right team. With these tips, you'll be well-prepared for your construction journey.",
     "author": "Sunbrix Construction Team",
-    "publish_date": "2024-01-15T00:00:00.000Z",
-    "featured_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sample/how-it-works.webp",
+    "featured_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/content/blog-images/1757267522425-um1x576l20g.jpg",
     "tags": [
       "construction",
       "first-time-builders",
       "home-building",
       "tips"
     ],
-    "category_id": "cmf9rqh8g00fiosolpte1ct3q",
+    "category_id": null,
     "status": "published",
     "meta_title": "Essential Construction Tips for First-Time Home Builders | Sunbrix",
     "meta_description": "Expert construction tips for first-time home builders. Learn about planning, team selection, materials, and more from Sunbrix construction experts.",
-    "reading_time": 7,
     "featured": true,
     "order_index": 1,
     "active": true,
-    "created_at": "2025-09-07T14:08:46.877Z",
-    "updated_at": "2025-09-07T14:08:46.877Z"
+    "created_at": "2025-09-07T17:48:18.870Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   },
   {
-    "id": "cmf9rqi8c00fposolyy4hiafr",
+    "id": "cmf9zktt300fposr8e3h5yli1",
     "title": "Modern Home Design Trends to Watch in 2024",
     "slug": "modern-home-design-trends-2024",
     "excerpt": "Discover the latest home design trends that are shaping modern architecture in 2024, from sustainable materials to smart home integration.",
     "content": "# Modern Home Design Trends to Watch in 2024\n\nThe world of home design is constantly evolving, and 2024 brings exciting new trends that combine functionality with aesthetic appeal.\n\n## 1. Sustainable and Eco-Friendly Materials\n\n- Reclaimed wood and recycled materials\n- Low-VOC paints and finishes\n- Energy-efficient windows and insulation\n- Solar panels and green roofing systems\n\n## 2. Biophilic Design Elements\n\nBringing nature indoors is more popular than ever:\n- Living walls and indoor gardens\n- Natural light optimization\n- Organic shapes and textures\n- Water features and natural stone\n\n## 3. Flexible Living Spaces\n\nPost-pandemic living has changed how we use our homes:\n- Multi-functional rooms that adapt to different needs\n- Home offices integrated into living spaces\n- Outdoor living areas as extensions of indoor spaces\n- Modular furniture and storage solutions\n\n## 4. Smart Home Integration\n\nTechnology seamlessly integrated into design:\n- Voice-controlled lighting and climate systems\n- Smart security and monitoring systems\n- Automated blinds and window treatments\n- Integrated charging stations and hidden cables\n\n## 5. Bold Color Choices\n\nMoving away from all-white minimalism:\n- Rich, warm earth tones\n- Statement accent walls\n- Colorful kitchen cabinets\n- Mixed metal finishes\n\nThese trends reflect our desire for homes that are not just beautiful, but also functional, sustainable, and adaptable to our changing lifestyles.",
     "author": "Sunbrix Design Team",
-    "publish_date": "2024-01-20T00:00:00.000Z",
     "featured_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sample/HomeHeroWebImage.webp",
     "tags": [
       "design",
@@ -41,25 +38,23 @@
       "modern",
       "architecture"
     ],
-    "category_id": "cmf9rqhco00fjosolm3ijy4w5",
+    "category_id": null,
     "status": "published",
     "meta_title": "Modern Home Design Trends to Watch in 2024 | Sunbrix",
     "meta_description": "Discover the latest home design trends for 2024 including sustainable materials, biophilic design, flexible spaces, and smart home integration.",
-    "reading_time": 6,
     "featured": true,
     "order_index": 2,
     "active": true,
-    "created_at": "2025-09-07T14:08:47.052Z",
-    "updated_at": "2025-09-07T14:08:47.052Z"
+    "created_at": "2025-09-07T17:48:19.047Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   },
   {
-    "id": "cmf9rqick00frosoldcy405ce",
+    "id": "cmf9zktxk00frosr8qeoojucq",
     "title": "Understanding Different Types of Construction Materials",
     "slug": "understanding-construction-materials-types",
     "excerpt": "A comprehensive guide to different construction materials, their properties, uses, and how to choose the right materials for your project.",
     "content": "# Understanding Different Types of Construction Materials\n\nChoosing the right construction materials is crucial for the success, durability, and cost-effectiveness of your building project.\n\n## Concrete and Masonry Materials\n\n### Concrete\n- **Properties**: Strong in compression, versatile, durable\n- **Uses**: Foundations, slabs, structural elements\n- **Pros**: Cost-effective, fire-resistant, long-lasting\n- **Cons**: Weak in tension, can crack over time\n\n### Brick\n- **Properties**: Good insulation, weather-resistant\n- **Uses**: Walls, facades, decorative elements\n- **Pros**: Aesthetic appeal, low maintenance\n- **Cons**: Heavy, labor-intensive installation\n\n## Steel and Metal Materials\n\n### Structural Steel\n- **Properties**: High strength-to-weight ratio, flexible\n- **Uses**: Frames, beams, columns\n- **Pros**: Fast construction, design flexibility\n- **Cons**: Susceptible to corrosion, requires fire protection\n\n### Aluminum\n- **Properties**: Lightweight, corrosion-resistant\n- **Uses**: Windows, doors, roofing\n- **Pros**: Low maintenance, recyclable\n- **Cons**: Higher initial cost, thermal expansion\n\n## Wood Materials\n\n### Engineered Wood\n- **Properties**: Consistent quality, strong\n- **Uses**: Structural framing, flooring\n- **Pros**: Sustainable option, good insulation\n- **Cons**: Moisture sensitivity, fire risk\n\n### Hardwood\n- **Properties**: Dense, durable, attractive\n- **Uses**: Flooring, furniture, decorative elements\n- **Pros**: Long lifespan, renewable resource\n- **Cons**: Higher cost, installation complexity\n\n## Choosing the Right Material\n\nConsider these factors:\n1. **Climate and environment**\n2. **Building codes and regulations**\n3. **Budget constraints**\n4. **Maintenance requirements**\n5. **Aesthetic preferences**\n6. **Sustainability goals**\n\nThe right material choice depends on your specific project requirements, budget, and long-term goals.",
     "author": "Sunbrix Technical Team",
-    "publish_date": "2024-01-25T00:00:00.000Z",
     "featured_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sample/motions-background.webp",
     "tags": [
       "materials",
@@ -68,25 +63,23 @@
       "steel",
       "wood"
     ],
-    "category_id": "cmf9rqhi000fkosolmlgzm74f",
+    "category_id": null,
     "status": "published",
     "meta_title": "Understanding Different Types of Construction Materials | Sunbrix",
     "meta_description": "Complete guide to construction materials including concrete, steel, wood, and their properties, uses, and selection criteria.",
-    "reading_time": 8,
     "featured": false,
     "order_index": 3,
     "active": true,
-    "created_at": "2025-09-07T14:08:47.205Z",
-    "updated_at": "2025-09-07T14:08:47.205Z"
+    "created_at": "2025-09-07T17:48:19.208Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   },
   {
-    "id": "cmf9rqih200ftosolv21nead6",
+    "id": "cmf9zku2i00ftosr8y5za1rwd",
     "title": "Project Spotlight: Modern Villa in Bengaluru",
     "slug": "project-spotlight-modern-villa-bengaluru",
     "excerpt": "Take a behind-the-scenes look at our recent modern villa project in Bengaluru, showcasing innovative design and superior construction quality.",
     "content": "# Project Spotlight: Modern Villa in Bengaluru\n\nWe're excited to showcase one of our recent projects - a stunning modern villa in Bengaluru that perfectly exemplifies our commitment to quality and innovation.\n\n## Project Overview\n\n**Location**: Whitefield, Bengaluru\n**Plot Size**: 40x60 sq.ft\n**Built-up Area**: 3,200 sq.ft\n**Bedrooms**: 4 BHK\n**Project Duration**: 14 months\n**Completion**: December 2023\n\n## Design Philosophy\n\nThe design focused on:\n- **Maximizing natural light** through strategic window placement\n- **Indoor-outdoor connectivity** with seamless transitions\n- **Modern aesthetic** with clean lines and contemporary materials\n- **Sustainable features** including rainwater harvesting\n\n## Key Features\n\n### Architectural Highlights\n- Double-height living room with feature wall\n- Floating staircase with glass railings\n- Large sliding doors opening to the garden\n- Rooftop terrace with 360-degree views\n\n### Sustainable Elements\n- Solar panels for renewable energy\n- Rainwater harvesting system\n- Energy-efficient LED lighting throughout\n- Natural ventilation design to reduce AC usage\n\n### Premium Finishes\n- Italian marble flooring in common areas\n- Wooden flooring in bedrooms\n- Modular kitchen with premium appliances\n- Designer bathrooms with premium fixtures\n\n## Construction Challenges\n\n### Site Constraints\n- Narrow access road required careful material planning\n- Rocky soil conditions needed specialized foundation work\n- Adjacent construction required noise management\n\n### Solutions Implemented\n- Detailed logistics planning for material delivery\n- Advanced foundation techniques for rocky terrain\n- Coordinated construction schedule with neighbors\n\n## Client Experience\n\n*\"Working with Sunbrix was an absolute pleasure. Their attention to detail and commitment to timelines made our dream home a reality without any stress.\"* - Mr. and Mrs. Sharma, Homeowners\n\n## Project Timeline\n\n- **Month 1-2**: Site preparation and foundation\n- **Month 3-8**: Structural work and roofing\n- **Month 9-12**: Interior work and utilities\n- **Month 13-14**: Finishing and landscaping\n\n## Results\n\nThe project was completed on schedule and within budget, delivering:\n- 100% client satisfaction\n- Zero construction defects at handover\n- Energy-efficient home with 30% reduced power consumption\n- Increased property value by 25%\n\nThis project demonstrates our capability to handle complex residential projects while maintaining our high standards of quality and client service.",
     "author": "Sunbrix Project Team",
-    "publish_date": "2024-01-30T00:00:00.000Z",
     "featured_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sample/HomeHeroWebImage.webp",
     "tags": [
       "project-update",
@@ -95,15 +88,14 @@
       "modern-design",
       "case-study"
     ],
-    "category_id": "cmf9rqhml00flosol3pgju3i3",
+    "category_id": null,
     "status": "published",
     "meta_title": "Project Spotlight: Modern Villa in Bengaluru | Sunbrix",
     "meta_description": "Behind-the-scenes look at our modern villa project in Bengaluru featuring innovative design, sustainable elements, and premium finishes.",
-    "reading_time": 9,
     "featured": false,
     "order_index": 4,
     "active": true,
-    "created_at": "2025-09-07T14:08:47.366Z",
-    "updated_at": "2025-09-07T14:08:47.366Z"
+    "created_at": "2025-09-07T17:48:19.387Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   }
 ]
