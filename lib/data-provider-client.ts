@@ -55,6 +55,28 @@ export interface MainPageContent {
   testimonialsSection?: any;
 }
 
+export interface AboutUsContent {
+  heroSection?: {
+    title: string;
+    subtitle: string;
+  };
+  storySection?: {
+    title: string;
+    image: string;
+    paragraphs: string[];
+  };
+  valuesSection?: {
+    title: string;
+    subtitle: string;
+    values: Array<{
+      id: string;
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
+}
+
 export interface PackageData {
   [cityName: string]: {
     [packageName: string]: any;
@@ -287,6 +309,16 @@ export async function getFaqContent(): Promise<any[]> {
   } else {
     const data = await fetchStaticData<any>("main-page-content.json");
     return data?.faqs || [];
+  }
+}
+
+export async function getAboutUsContent(): Promise<AboutUsContent> {
+  if (USE_API_DATA) {
+    const data = await fetchFromAPI<AboutUsContent>("/api/content/about-us");
+    return data || {};
+  } else {
+    const data = await fetchStaticData<AboutUsContent>("about-us-content.json");
+    return data || {};
   }
 }
 

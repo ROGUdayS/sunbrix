@@ -1,7 +1,7 @@
 {
   "projects": [
     {
-      "id": "cmf8m6n3k00f2os5y82qmpt59",
+      "id": "cmf9rq8gb00f2osol129qffb1",
       "title": "Modern 3-BHK Villa",
       "location": "Bengaluru",
       "year": "2024",
@@ -19,33 +19,11 @@
         "bedrooms": 3
       },
       "active": true,
-      "created_at": "2025-09-06T18:45:35.984Z",
-      "updated_at": "2025-09-06T18:45:35.984Z"
+      "created_at": "2025-09-07T14:08:34.379Z",
+      "updated_at": "2025-09-07T14:08:34.379Z"
     },
     {
-      "id": "cmf8m6n8q00f3os5y4epl22kj",
-      "title": "Luxury 4-BHK Duplex",
-      "location": "Bengaluru",
-      "year": "2024",
-      "plotSize": "40x60 sq. ft",
-      "facing": "North",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/exterior-1.jpg",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/exterior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/interior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg"
-      ],
-      "description": "A luxury duplex designed for large families with premium finishes and spacious interiors.",
-      "specifications": {
-        "bedrooms": 4
-      },
-      "active": true,
-      "created_at": "2025-09-06T18:45:35.984Z",
-      "updated_at": "2025-09-06T18:45:35.984Z"
-    },
-    {
-      "id": "cmf8m6ndh00f4os5y2pbqsv5b",
+      "id": "cmf9rq8l700f3osolq0gjtlg0",
       "title": "Cozy 2-BHK Home",
       "location": "Bellary",
       "year": "2023",
@@ -63,11 +41,33 @@
         "bedrooms": 2
       },
       "active": true,
-      "created_at": "2025-09-06T18:45:35.984Z",
-      "updated_at": "2025-09-06T18:45:35.984Z"
+      "created_at": "2025-09-07T14:08:34.379Z",
+      "updated_at": "2025-09-07T14:08:34.379Z"
     },
     {
-      "id": "cmf8m6ni800f5os5y8mpq53a7",
+      "id": "cmf9rq8q900f4osol7uw09s09",
+      "title": "Luxury 4-BHK Duplex",
+      "location": "Bengaluru",
+      "year": "2024",
+      "plotSize": "40x60 sq. ft",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/exterior-1.jpg",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/exterior-1.jpg",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/interior-1.jpg",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg"
+      ],
+      "description": "A luxury duplex designed for large families with premium finishes and spacious interiors.",
+      "specifications": {
+        "bedrooms": 4
+      },
+      "active": true,
+      "created_at": "2025-09-07T14:08:34.379Z",
+      "updated_at": "2025-09-07T14:08:34.379Z"
+    },
+    {
+      "id": "cmf9rq8v000f5osolvnactmu6",
       "title": "Compact 2-BHK Apartment",
       "location": "Bellary",
       "year": "2023",
@@ -85,8 +85,8 @@
         "bedrooms": 2
       },
       "active": true,
-      "created_at": "2025-09-06T18:45:35.984Z",
-      "updated_at": "2025-09-06T18:45:35.984Z"
+      "created_at": "2025-09-07T14:08:34.379Z",
+      "updated_at": "2025-09-07T14:08:34.379Z"
     }
   ],
   "count": 4

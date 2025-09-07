@@ -846,7 +846,7 @@ export default function Home() {
                               />
                             )}
                             {/* Quote overlay */}
-                            {image.quote && (
+                            {/* {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
@@ -854,7 +854,7 @@ export default function Home() {
                                   </blockquote>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       ))}
@@ -875,7 +875,7 @@ export default function Home() {
                                 className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
                               />
                             )}
-                            {/* Quote overlay */}
+                            {/* Quote overlay
                             {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
@@ -884,7 +884,7 @@ export default function Home() {
                                   </blockquote>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       ))}
@@ -906,7 +906,7 @@ export default function Home() {
                               />
                             )}
                             {/* Quote overlay */}
-                            {image.quote && (
+                            {/* {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
@@ -914,7 +914,7 @@ export default function Home() {
                                   </blockquote>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       ))}
