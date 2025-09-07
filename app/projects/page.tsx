@@ -6,20 +6,9 @@ import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
 import ImageModal from "../components/ImageModal";
+import { getProjects, ProjectData } from "@/lib/data-provider-client";
 
-interface Project {
-  id: string;
-  title: string;
-  location: string;
-  plotSize: string;
-  facing: string;
-  property_type: string;
-  image: string;
-  images?: string[];
-  description: string;
-  specifications: {
-    bedrooms: number;
-  };
+interface Project extends ProjectData {
   yearBuilt: string;
   bhk: string;
   siteDimension: string;
@@ -38,32 +27,31 @@ export default function ProjectGallery() {
   const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
 
-  // Fetch projects from API
+  // Fetch projects using data provider
   useEffect(() => {
     async function fetchProjects() {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await fetch("/api/projects?active=true");
+        const data = await getProjects(true);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch projects");
+        if (data && data.projects) {
+          // Transform projects to match expected format
+          const transformedProjects = data.projects.map(
+            (project: ProjectData) => ({
+              ...project,
+              yearBuilt:
+                project.year ||
+                new Date(project.created_at).getFullYear().toString(),
+              bhk: `${project.specifications?.bedrooms || 2}BHK`,
+              siteDimension: project.plotSize,
+              residential: project.property_type || "Residential",
+            })
+          );
+
+          setProjects(transformedProjects);
         }
-        const data = await response.json();
-
-        // Transform projects to match expected format
-        const transformedProjects = data.projects.map((project: any) => ({
-          ...project,
-          yearBuilt:
-            project.year ||
-            new Date(project.created_at).getFullYear().toString(),
-          bhk: `${project.specifications?.bedrooms || 2}BHK`,
-          siteDimension: project.plotSize,
-          residential: project.property_type || "Residential",
-        }));
-
-        setProjects(transformedProjects);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load projects"
@@ -318,13 +306,15 @@ export default function ProjectGallery() {
                       openModal(projectImages, project.title, currentIndex)
                     }
                   >
-                    <Image
-                      src={projectImages[currentIndex]}
-                      alt={project.title}
-                      width={500}
-                      height={320}
-                      className="w-full h-48 sm:h-56 lg:h-64 object-cover"
-                    />
+                    {projectImages[currentIndex] && (
+                      <Image
+                        src={projectImages[currentIndex]}
+                        alt={project.title}
+                        width={500}
+                        height={320}
+                        className="w-full h-48 sm:h-56 lg:h-64 object-cover"
+                      />
+                    )}
 
                     {/* Location overlay */}
                     <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-white/90 backdrop-blur-sm rounded-lg px-2 sm:px-3 py-1 sm:py-2 flex items-center space-x-1 sm:space-x-2">

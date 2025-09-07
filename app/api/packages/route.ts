@@ -123,14 +123,19 @@ export async function GET(request: NextRequest) {
           >;
 
           // Only process sections if we haven't processed this package yet or if this is more recent
-          if (!currentSections || Object.keys(currentSections).length === 0 || 
-              pkg.updated_at > ((packages[packageKey].updated_at as Date) || new Date(0))) {
-            
+          if (
+            !currentSections ||
+            Object.keys(currentSections).length === 0 ||
+            pkg.updated_at >
+              ((packages[packageKey].updated_at as Date) || new Date(0))
+          ) {
             const orderedSections: Record<string, unknown> = {};
-            
+
             // Convert relational sections to the expected format, maintaining display_order
             pkg.sections.forEach((section) => {
-              const sectionKey = section.title.toLowerCase().replace(/\s+/g, "-");
+              const sectionKey = section.title
+                .toLowerCase()
+                .replace(/\s+/g, "-");
               orderedSections[sectionKey] = {
                 title: section.title,
                 items: section.items.map((item) => item.content),
@@ -139,7 +144,7 @@ export async function GET(request: NextRequest) {
 
             packages[packageKey].sections = orderedSections;
             packages[packageKey].updated_at = pkg.updated_at;
-            
+
             console.log(
               `[LANDER] 📋 Using relational sections for ${packageKey} from ${city.name}:`,
               Object.keys(orderedSections)
@@ -209,23 +214,7 @@ export async function GET(request: NextRequest) {
       cleanPackages[key] = cleanPackage;
     });
 
-    const responseData = {
-      packages: {
-        construction: cleanPackages,
-      },
-      _debug: {
-        timestamp: new Date().toISOString(),
-        totalPackages: finalPackageKeys.length,
-        packagesWithSections: finalPackageKeys.filter((key) => {
-          const sectionsCount = cleanPackages[key].sections
-            ? Object.keys(
-                cleanPackages[key].sections as Record<string, unknown>
-              ).length
-            : 0;
-          return sectionsCount > 0;
-        }).length,
-      },
-    };
+    const responseData = cleanPackages;
 
     // Return in the expected frontend format
     return NextResponse.json(responseData, {
@@ -239,9 +228,8 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching packages:", error);
     return NextResponse.json(
-      { 
-        packages: { construction: {} },
-        error: "Failed to fetch packages"
+      {
+        error: "Failed to fetch packages",
       },
       { status: 500 }
     );

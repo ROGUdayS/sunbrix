@@ -78,21 +78,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Fetch projects from API
+  // Fetch projects from static data
   let projectPages: MetadataRoute.Sitemap = [];
   try {
-    const response = await fetch(`${baseUrl}/api/projects?active=true`);
-    if (response.ok) {
-      const data = await response.json() as ProjectsResponse;
-      projectPages = data.projects.map((project: Project) => ({
-        url: `${baseUrl}/projects/${project.id}`,
-        lastModified: new Date(project.updated_at || project.created_at),
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      }));
-    }
+    const fs = await import("fs/promises");
+    const path = await import("path");
+    const projectsPath = path.join(
+      process.cwd(),
+      "public",
+      "data",
+      "projects.json"
+    );
+    const projectsData = await fs.readFile(projectsPath, "utf-8");
+    const data = JSON.parse(projectsData) as ProjectsResponse;
+
+    projectPages = data.projects.map((project: Project) => ({
+      url: `${baseUrl}/projects/${project.id}`,
+      lastModified: new Date(project.updated_at || project.created_at),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
   } catch (error) {
-    console.error("Error fetching projects for sitemap:", error);
+    console.error(
+      "Error reading projects from static data for sitemap:",
+      error
+    );
   }
 
   return [...basePages, ...projectPages];

@@ -1,0 +1,70 @@
+{
+  "demoVideoUrl": "/videos/video_demo.mp4",
+  "galleryImages": [
+    {
+      "id": "cmf9rqgub00ffosolmz7mnito",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
+      "quote": "Your dream home awaits - where modern design meets uncompromising quality.",
+      "order_index": 1
+    },
+    {
+      "id": "cmf9rqgzd00fgosolit0d59re",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
+      "quote": "Excellence is not a skill, it's an attitude - and it shows in every detail.",
+      "order_index": 2
+    },
+    {
+      "id": "cmf9rqh3m00fhosolk3qep7wd",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg",
+      "quote": "Building more than homes - we're crafting your future.",
+      "order_index": 3
+    }
+  ],
+  "heroStats": [
+    {
+      "value": "25",
+      "label": "Years"
+    },
+    {
+      "value": "100+",
+      "label": "Homes"
+    },
+    {
+      "value": "100%",
+      "label": "Transparent"
+    },
+    {
+      "value": "100%",
+      "label": "On-Time"
+    }
+  ],
+  "commitmentSection": {
+    "title": "Our Commitment to Quality",
+    "description": "At Sunbrix, quality isn't a feature, it's the foundation of everything we do. For over 20 years, we've crafted homes that last and function with purpose, building each one with care in every corner and meaning in every brick laid.",
+    "features": [
+      {
+        "icon": "/icons/commitment-to-quality/Design & Strength.svg",
+        "title": "Design & Strength",
+        "description": "At Sunbrix, we build and designs, using time tested practices."
+      },
+      {
+        "icon": "/icons/commitment-to-quality/20 Year Warranty.svg",
+        "title": "20 year warranty",
+        "description": "At Sunbrix, we proudly offer a 20 year warranty on our homes."
+      },
+      {
+        "icon": "/icons/commitment-to-quality/On time Delivery.svg",
+        "title": "100% On time delivery",
+        "description": "The past 20 years, Sunbrix has never delayed a single project."
+      },
+      {
+        "icon": "/icons/commitment-to-quality/High quality materials.svg",
+        "title": "High quality materials",
+        "description": "At Sunbrix, Using the best quality materials is simply the norm."
+      }
+    ]
+  },
+  "gallerySection": {},
+  "packagesSection": {},
+  "testimonialsSection": {}
+}

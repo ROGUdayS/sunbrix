@@ -8,20 +8,17 @@ import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
 
 import { useCity } from "./contexts/CityContext";
+import {
+  getProjects,
+  getPackages,
+  getMainPageContent,
+  getTestimonials,
+  ProjectData,
+  getDataMode,
+} from "@/lib/data-provider-client";
+import DataModeIndicator from "./components/DataModeIndicator";
 
-interface ProjectData {
-  id: string;
-  title: string;
-  location: string;
-  plotSize: string;
-  facing: string;
-  image: string;
-  images?: string[];
-  description: string;
-  specifications: {
-    bedrooms: number;
-  };
-}
+// ProjectData is now imported from data-provider
 
 // Helper functions for YouTube URL handling
 const isYouTubeUrl = (url: string): boolean => {
@@ -67,9 +64,9 @@ export default function Home() {
   >([]);
 
   const [packagesData, setPackagesData] = useState<{
-    packages: { construction: Record<string, unknown> };
+    packages: Record<string, Record<string, unknown>>;
   }>({
-    packages: { construction: {} },
+    packages: {},
   });
 
   const [projectsData, setProjectsData] = useState<{
@@ -84,21 +81,19 @@ export default function Home() {
   );
   const [dynamicTestimonials, setDynamicTestimonials] = useState<
     {
-      id: number;
+      id: string;
       name: string;
-      role: string;
-      company: string;
+      location: string;
       rating: number;
-      quote: string;
-      projectType: string;
-      image: string;
-      videoUrl?: string;
-      videoThumbnail?: string;
-      featured: boolean;
+      review: string;
+      quote?: string;
+      image?: string;
+      active: boolean;
     }[]
   >([]);
   const [dynamicGalleryImages, setDynamicGalleryImages] = useState<
     {
+      id?: string;
       image?: string;
       image_url?: string;
       quote?: string;
@@ -180,15 +175,15 @@ export default function Home() {
     return shuffled;
   };
 
-  // Initialize projects and packages from API
+  // Initialize projects and packages using data provider
   useEffect(() => {
     async function fetchData() {
       try {
-        // Fetch projects
-        const projectsResponse = await fetch("/api/projects?active=true");
-        if (projectsResponse.ok) {
-          const projectsResult = await projectsResponse.json();
+        console.log(`🔄 Loading data in ${getDataMode()} mode`);
 
+        // Fetch projects
+        const projectsResult = await getProjects(true);
+        if (projectsResult && projectsResult.projects) {
           // Create gallery images from projects
           const allImages: {
             image: string;
@@ -225,16 +220,15 @@ export default function Home() {
         }
 
         // Fetch packages
-        const packagesResponse = await fetch("/api/packages?active=true");
-        if (packagesResponse.ok) {
-          const packagesResult = await packagesResponse.json();
-          setPackagesData(packagesResult);
+        const packagesResult = await getPackages(true);
+        if (packagesResult) {
+          setPackagesData({ packages: packagesResult });
         }
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Error fetching data:", error);
         // Fallback to empty data
         setProjects([]);
-        setPackagesData({ packages: { construction: {} } });
+        setPackagesData({ packages: {} });
         setProjectsData({ projects: [] });
       }
     }
@@ -294,18 +288,29 @@ export default function Home() {
     };
   }, []);
 
-  // Fetch dynamic content from database
+  // Fetch dynamic content using data provider
   useEffect(() => {
     const fetchContent = async () => {
       try {
         // Fetch main page content (demo video + gallery + all sections)
-        const contentResponse = await fetch("/api/content/main-page");
-        if (contentResponse.ok) {
-          const content = await contentResponse.json();
+        const content = await getMainPageContent();
+        if (content) {
           setDemoVideoUrl(content.demoVideoUrl || "/videos/video_demo.mp4");
           setDynamicGalleryImages(content.galleryImages || []);
-          setHeroStats(content.heroStats || heroStats);
-          setCommitmentSection(content.commitmentSection || commitmentSection);
+          // Ensure heroStats is always an array
+          setHeroStats(
+            Array.isArray(content.heroStats) ? content.heroStats : heroStats
+          );
+          // Ensure commitmentSection has features array
+          const updatedCommitmentSection =
+            content.commitmentSection || commitmentSection;
+          if (
+            updatedCommitmentSection &&
+            !Array.isArray(updatedCommitmentSection.features)
+          ) {
+            updatedCommitmentSection.features = commitmentSection.features;
+          }
+          setCommitmentSection(updatedCommitmentSection);
           setGallerySection(content.gallerySection || gallerySection);
           setPackagesSection(content.packagesSection || packagesSection);
           setTestimonialsSection(
@@ -314,13 +319,9 @@ export default function Home() {
         }
 
         // Fetch testimonials
-        const testimonialsResponse = await fetch("/api/content/testimonials");
-        if (testimonialsResponse.ok) {
-          const data = await testimonialsResponse.json();
-          // The API returns the testimonials array directly, not wrapped in data.testimonials
-          setDynamicTestimonials(
-            Array.isArray(data) ? data : data.testimonials || []
-          );
+        const testimonials = await getTestimonials();
+        if (testimonials) {
+          setDynamicTestimonials(testimonials);
         }
       } catch (error) {
         console.error("Error fetching dynamic content:", error);
@@ -332,13 +333,13 @@ export default function Home() {
   }, []);
 
   const nextSlide = () => {
-    if (projects.length === 0 || isGalleryTransitioning) return;
+    if (dynamicGalleryImages.length === 0 || isGalleryTransitioning) return;
     setIsGalleryTransitioning(true);
     setCurrentSlide((prev) => prev + 1);
   };
 
   const prevSlide = () => {
-    if (projects.length === 0 || isGalleryTransitioning) return;
+    if (dynamicGalleryImages.length === 0 || isGalleryTransitioning) return;
     setIsGalleryTransitioning(true);
     setCurrentSlide((prev) => prev - 1);
   };
@@ -377,8 +378,9 @@ export default function Home() {
     dynamicTestimonials.length > 0
       ? dynamicTestimonials.map((testimonial) => ({
           id: testimonial.id,
-          videoUrl: testimonial.videoUrl,
-          quote: testimonial.quote,
+          videoUrl:
+            "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk", // Default video URL
+          quote: testimonial.review || testimonial.quote || "",
           name: testimonial.name,
         }))
       : staticTestimonials;
@@ -473,10 +475,10 @@ export default function Home() {
     setDragOffset(0);
 
     if (type === "gallery") {
-      if (isLeftSwipe && projects.length > 0) {
+      if (isLeftSwipe && dynamicGalleryImages.length > 0) {
         nextSlide();
       }
-      if (isRightSwipe && projects.length > 0) {
+      if (isRightSwipe && dynamicGalleryImages.length > 0) {
         prevSlide();
       }
     } else if (type === "package") {
@@ -547,11 +549,11 @@ export default function Home() {
 
   // Handle infinite loop transitions for gallery
   useEffect(() => {
-    if (!isGalleryTransitioning || projects.length === 0) return;
+    if (!isGalleryTransitioning || dynamicGalleryImages.length === 0) return;
 
     const timer = setTimeout(() => {
       // Handle infinite loop reset without animation
-      if (currentSlide >= projects.length) {
+      if (currentSlide >= dynamicGalleryImages.length) {
         if (galleryRef.current) {
           galleryRef.current.style.transition = "none";
           setCurrentSlide(0);
@@ -565,7 +567,7 @@ export default function Home() {
       } else if (currentSlide < 0) {
         if (galleryRef.current) {
           galleryRef.current.style.transition = "none";
-          setCurrentSlide(projects.length - 1);
+          setCurrentSlide(dynamicGalleryImages.length - 1);
           // Force reflow and restore transition
           setTimeout(() => {
             if (galleryRef.current) {
@@ -578,7 +580,7 @@ export default function Home() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [currentSlide, isGalleryTransitioning, projects.length]);
+  }, [currentSlide, isGalleryTransitioning, dynamicGalleryImages.length]);
 
   // Handle infinite loop transitions for testimonials
   useEffect(() => {
@@ -617,11 +619,11 @@ export default function Home() {
 
   // Helper function to get packages filtered by selected city
   const getFilteredPackages = useCallback(() => {
-    if (!packagesData?.packages?.construction || !selectedCity) {
+    if (!packagesData?.packages || !selectedCity) {
       return {};
     }
 
-    const allPackages = packagesData.packages.construction;
+    const allPackages = packagesData.packages;
     const filteredPackages: Record<string, unknown> = {};
 
     Object.entries(allPackages).forEach(([packageKey, packageInfo]) => {
@@ -755,8 +757,8 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Only render carousel if projects are loaded */}
-          {projects.length > 0 && (
+          {/* Only render carousel if gallery images are loaded */}
+          {dynamicGalleryImages.length > 0 && (
             <>
               {/* Carousel Container with Side Previews */}
               <div className="relative max-w-7xl mx-auto">
@@ -771,16 +773,21 @@ export default function Home() {
                       <div className="relative w-full h-full">
                         <Image
                           src={
-                            projects[
-                              (currentSlide - 1 + projects.length) %
-                                projects.length
-                            ]?.image
+                            dynamicGalleryImages[
+                              (currentSlide - 1 + dynamicGalleryImages.length) %
+                                dynamicGalleryImages.length
+                            ]?.image_url ||
+                            dynamicGalleryImages[
+                              (currentSlide - 1 + dynamicGalleryImages.length) %
+                                dynamicGalleryImages.length
+                            ]?.image ||
+                            ""
                           }
                           alt={
-                            projects[
-                              (currentSlide - 1 + projects.length) %
-                                projects.length
-                            ]?.quote || "Previous"
+                            dynamicGalleryImages[
+                              (currentSlide - 1 + dynamicGalleryImages.length) %
+                                dynamicGalleryImages.length
+                            ]?.quote || "Previous image"
                           }
                           fill
                           className="object-cover object-right"
@@ -814,7 +821,7 @@ export default function Home() {
                       }`}
                       style={{
                         transform: `translateX(calc(-${
-                          (currentSlide + projects.length) * 100
+                          (currentSlide + dynamicGalleryImages.length) * 100
                         }% + ${dragOffset}px))`,
                         touchAction: "pan-y",
                       }}
@@ -823,82 +830,91 @@ export default function Home() {
                       onTouchEnd={() => handleTouchEnd("gallery")}
                     >
                       {/* Previous set for seamless left scrolling */}
-                      {projects.map((project) => (
+                      {dynamicGalleryImages.map((image, index) => (
                         <div
-                          key={`prev-${project.id}`}
+                          key={`prev-${image.id || index}`}
                           className="w-full flex-shrink-0"
                         >
                           <div className="relative">
-                            <Image
-                              src={project.image}
-                              alt={project.quote || "Gallery image"}
-                              width={900}
-                              height={600}
-                              className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                            />
+                            {(image.image_url || image.image) && (
+                              <Image
+                                src={image.image_url || image.image}
+                                alt={image.quote || "Gallery image"}
+                                width={900}
+                                height={600}
+                                className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                              />
+                            )}
                             {/* Quote overlay */}
-                            {project.quote && (
+                            {/* {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
-                                    &ldquo;{project.quote}&rdquo;
+                                    &ldquo;{image.quote}&rdquo;
                                   </blockquote>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       ))}
 
-                      {/* Current set - main projects */}
-                      {projects.map((project) => (
-                        <div key={project.id} className="w-full flex-shrink-0">
+                      {/* Current set - main gallery images */}
+                      {dynamicGalleryImages.map((image, index) => (
+                        <div
+                          key={image.id || index}
+                          className="w-full flex-shrink-0"
+                        >
                           <div className="relative">
-                            <Image
-                              src={project.image}
-                              alt={project.quote || "Gallery image"}
-                              width={900}
-                              height={600}
-                              className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                            />
-                            {/* Quote overlay */}
-                            {project.quote && (
+                            {(image.image_url || image.image) && (
+                              <Image
+                                src={image.image_url || image.image}
+                                alt={image.quote || "Gallery image"}
+                                width={900}
+                                height={600}
+                                className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                              />
+                            )}
+                            {/* Quote overlay
+                            {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
-                                    &ldquo;{project.quote}&rdquo;
+                                    &ldquo;{image.quote}&rdquo;
                                   </blockquote>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       ))}
 
                       {/* Next set for seamless right scrolling */}
-                      {projects.map((project) => (
+                      {dynamicGalleryImages.map((image, index) => (
                         <div
-                          key={`next-${project.id}`}
+                          key={`next-${image.id || index}`}
                           className="w-full flex-shrink-0"
                         >
                           <div className="relative">
-                            <Image
-                              src={project.image}
-                              alt={project.quote || "Gallery image"}
-                              width={900}
-                              height={600}
-                              className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                            />
+                            {(image.image_url || image.image) && (
+                              <Image
+                                src={image.image_url || image.image}
+                                alt={image.quote || "Gallery image"}
+                                width={900}
+                                height={600}
+                                className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                              />
+                            )}
                             {/* Quote overlay */}
-                            {project.quote && (
+                            {/* {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
-                                    &ldquo;{project.quote}&rdquo;
+                                    &ldquo;{image.quote}&rdquo;
                                   </blockquote>
                                 </div>
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       ))}
@@ -914,12 +930,18 @@ export default function Home() {
                       <div className="relative w-full h-full">
                         <Image
                           src={
-                            projects[(currentSlide + 1) % projects.length]
-                              ?.image
+                            dynamicGalleryImages[
+                              (currentSlide + 1) % dynamicGalleryImages.length
+                            ]?.image_url ||
+                            dynamicGalleryImages[
+                              (currentSlide + 1) % dynamicGalleryImages.length
+                            ]?.image ||
+                            ""
                           }
                           alt={
-                            projects[(currentSlide + 1) % projects.length]
-                              ?.quote || "Next"
+                            dynamicGalleryImages[
+                              (currentSlide + 1) % dynamicGalleryImages.length
+                            ]?.quote || "Next image"
                           }
                           fill
                           className="object-cover object-left"
@@ -957,19 +979,21 @@ export default function Home() {
                     </svg>
                   </div>
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
-                    {projects[
-                      ((currentSlide % projects.length) + projects.length) %
-                        projects.length
-                    ]?.description || "Loading..."}
+                    {dynamicGalleryImages[
+                      ((currentSlide % dynamicGalleryImages.length) +
+                        dynamicGalleryImages.length) %
+                        dynamicGalleryImages.length
+                    ]?.quote || "Loading..."}
                   </p>
                 </div>
 
                 {/* Pagination Dots */}
                 <div className="flex justify-center mt-3 sm:mt-4 lg:mt-5 space-x-2">
-                  {projects.map((_, index) => {
+                  {dynamicGalleryImages.map((_, index) => {
                     const actualCurrentSlide =
-                      ((currentSlide % projects.length) + projects.length) %
-                      projects.length;
+                      ((currentSlide % dynamicGalleryImages.length) +
+                        dynamicGalleryImages.length) %
+                      dynamicGalleryImages.length;
                     return (
                       <button
                         key={index}
@@ -1000,8 +1024,8 @@ export default function Home() {
             </>
           )}
 
-          {/* Loading state while projects are being loaded */}
-          {projects.length === 0 && (
+          {/* Loading state while gallery images are being loaded */}
+          {dynamicGalleryImages.length === 0 && (
             <div className="text-center py-8">
               <div className="animate-pulse max-w-5xl mx-auto">
                 <div className="bg-gray-200 rounded-xl h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] mb-4"></div>
@@ -2010,14 +2034,16 @@ export default function Home() {
                     >
                       <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                         <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                          <iframe
-                            className="w-full h-full"
-                            src={testimonial.videoUrl}
-                            title={`Customer Testimonial ${testimonial.id}`}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                          ></iframe>
+                          {testimonial.videoUrl && (
+                            <iframe
+                              className="w-full h-full"
+                              src={testimonial.videoUrl}
+                              title={`Customer Testimonial ${testimonial.id}`}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                            ></iframe>
+                          )}
                         </div>
                         <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                           <div className="flex items-center justify-center mb-4">
@@ -2045,14 +2071,16 @@ export default function Home() {
                     <div key={testimonial.id} className="w-full flex-shrink-0">
                       <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                         <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                          <iframe
-                            className="w-full h-full"
-                            src={testimonial.videoUrl}
-                            title={`Customer Testimonial ${testimonial.id}`}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                          ></iframe>
+                          {testimonial.videoUrl && (
+                            <iframe
+                              className="w-full h-full"
+                              src={testimonial.videoUrl}
+                              title={`Customer Testimonial ${testimonial.id}`}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                            ></iframe>
+                          )}
                         </div>
                         <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                           <div className="flex items-center justify-center mb-4">
@@ -2083,14 +2111,16 @@ export default function Home() {
                     >
                       <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                         <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                          <iframe
-                            className="w-full h-full"
-                            src={testimonial.videoUrl}
-                            title={`Customer Testimonial ${testimonial.id}`}
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                          ></iframe>
+                          {testimonial.videoUrl && (
+                            <iframe
+                              className="w-full h-full"
+                              src={testimonial.videoUrl}
+                              title={`Customer Testimonial ${testimonial.id}`}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                            ></iframe>
+                          )}
                         </div>
                         <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                           <div className="flex items-center justify-center mb-4">
@@ -2124,14 +2154,16 @@ export default function Home() {
                   className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
                 >
                   <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                    <iframe
-                      className="w-full h-full"
-                      src={testimonial.videoUrl}
-                      title={`Customer Testimonial ${index + 1}`}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    ></iframe>
+                    {testimonial.videoUrl && (
+                      <iframe
+                        className="w-full h-full"
+                        src={testimonial.videoUrl}
+                        title={`Customer Testimonial ${index + 1}`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      ></iframe>
+                    )}
                   </div>
                   <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                     <div className="flex items-center justify-center mb-4">
@@ -2185,6 +2217,9 @@ export default function Home() {
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />
+
+      {/* Data Mode Indicator (development only) */}
+      <DataModeIndicator />
     </div>
   );
 }

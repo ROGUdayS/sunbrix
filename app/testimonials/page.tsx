@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
+import { getTestimonials } from "@/lib/data-provider-client";
 
 interface Testimonial {
   id: number;
@@ -34,19 +35,31 @@ export default function Testimonials() {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Load testimonials from API
+  // Load testimonials using data provider
   useEffect(() => {
     const loadTestimonials = async () => {
       try {
-        const response = await fetch('/api/content/testimonials');
-        if (response.ok) {
-          const data = await response.json();
-          setTestimonials(data);
-        } else {
-          console.error('Failed to load testimonials');
-        }
+        const data = await getTestimonials();
+        // Map TestimonialData to Testimonial interface
+        const mappedTestimonials = data.map((item, index) => ({
+          id: index + 1,
+          originalId: item.id,
+          name: item.name,
+          role: item.location,
+          company: undefined,
+          rating: item.rating,
+          quote: item.review || item.quote || "",
+          testimonial: item.review || item.quote || "",
+          projectType: null,
+          image: item.image || null,
+          videoUrl:
+            "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk", // Default video URL
+          videoThumbnail: null,
+          featured: item.active,
+        }));
+        setTestimonials(mappedTestimonials);
       } catch (error) {
-        console.error('Error loading testimonials:', error);
+        console.error("Error loading testimonials:", error);
       } finally {
         setLoading(false);
       }
@@ -169,7 +182,9 @@ export default function Testimonials() {
       <div className="min-h-screen bg-[#fdfdf8]">
         <Header />
         <div className="flex items-center justify-center h-64 pt-32">
-          <div className="text-lg text-gray-600">No testimonials available.</div>
+          <div className="text-lg text-gray-600">
+            No testimonials available.
+          </div>
         </div>
       </div>
     );
@@ -235,26 +250,32 @@ export default function Testimonials() {
               {/* Video Container */}
               <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg border border-orange-100">
                 <div className="relative aspect-video bg-gray-900 rounded-t-xl sm:rounded-t-2xl overflow-hidden">
-                  <iframe
-                    className="w-full h-full"
-                    src={
-                      testimonials[
-                        ((currentTestimonial % testimonials.length) +
-                          testimonials.length) %
-                          testimonials.length
-                      ].videoUrl
-                    }
-                    title={`Customer Testimonial - ${
-                      testimonials[
-                        ((currentTestimonial % testimonials.length) +
-                          testimonials.length) %
-                          testimonials.length
-                      ].name
-                    }`}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
+                  {testimonials[
+                    ((currentTestimonial % testimonials.length) +
+                      testimonials.length) %
+                      testimonials.length
+                  ].videoUrl && (
+                    <iframe
+                      className="w-full h-full"
+                      src={
+                        testimonials[
+                          ((currentTestimonial % testimonials.length) +
+                            testimonials.length) %
+                            testimonials.length
+                        ].videoUrl
+                      }
+                      title={`Customer Testimonial - ${
+                        testimonials[
+                          ((currentTestimonial % testimonials.length) +
+                            testimonials.length) %
+                            testimonials.length
+                        ].name
+                      }`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
+                  )}
                 </div>
                 <div className="p-4 sm:p-6 lg:p-8 bg-white">
                   <div className="flex items-center justify-center mb-4 sm:mb-6">
@@ -303,11 +324,17 @@ export default function Testimonials() {
                             testimonials.length) %
                             testimonials.length
                         ].company && (
-                          <> • {testimonials[
-                            ((currentTestimonial % testimonials.length) +
-                              testimonials.length) %
-                              testimonials.length
-                          ].company}</>
+                          <>
+                            {" "}
+                            •{" "}
+                            {
+                              testimonials[
+                                ((currentTestimonial % testimonials.length) +
+                                  testimonials.length) %
+                                  testimonials.length
+                              ].company
+                            }
+                          </>
                         )}
                       </div>
                     )}
@@ -343,14 +370,16 @@ export default function Testimonials() {
                   >
                     <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                       <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                        <iframe
-                          className="w-full h-full"
-                          src={testimonial.videoUrl}
-                          title={`Customer Testimonial ${testimonial.id}`}
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                        ></iframe>
+                        {testimonial.videoUrl && (
+                          <iframe
+                            className="w-full h-full"
+                            src={testimonial.videoUrl}
+                            title={`Customer Testimonial ${testimonial.id}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          ></iframe>
+                        )}
                       </div>
                       <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                         <div className="flex items-center justify-center mb-4">
@@ -388,14 +417,16 @@ export default function Testimonials() {
                   <div key={testimonial.id} className="w-full flex-shrink-0">
                     <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                       <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                        <iframe
-                          className="w-full h-full"
-                          src={testimonial.videoUrl}
-                          title={`Customer Testimonial ${testimonial.id}`}
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                        ></iframe>
+                        {testimonial.videoUrl && (
+                          <iframe
+                            className="w-full h-full"
+                            src={testimonial.videoUrl}
+                            title={`Customer Testimonial ${testimonial.id}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          ></iframe>
+                        )}
                       </div>
                       <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                         <div className="flex items-center justify-center mb-4">
@@ -436,14 +467,16 @@ export default function Testimonials() {
                   >
                     <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                       <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                        <iframe
-                          className="w-full h-full"
-                          src={testimonial.videoUrl}
-                          title={`Customer Testimonial ${testimonial.id}`}
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                        ></iframe>
+                        {testimonial.videoUrl && (
+                          <iframe
+                            className="w-full h-full"
+                            src={testimonial.videoUrl}
+                            title={`Customer Testimonial ${testimonial.id}`}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                          ></iframe>
+                        )}
                       </div>
                       <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
                         <div className="flex items-center justify-center mb-4">

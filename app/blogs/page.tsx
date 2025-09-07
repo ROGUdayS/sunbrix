@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
 import Link from "next/link";
+import { getBlogs, getBlogContent } from "@/lib/data-provider-client";
 
 interface BlogPost {
   id: string;
@@ -13,10 +14,11 @@ interface BlogPost {
   excerpt: string;
   author: string;
   date: string;
-  image: string;
+  featured_image: string;
   tags: string[];
   readingTime: number;
   featured: boolean;
+  order_index: number; // For maintaining dashboard order
 }
 
 interface PageContent {
@@ -42,23 +44,48 @@ export default function Blogs() {
 
   const loadBlogData = async () => {
     try {
-      // Load blog posts and page content in parallel
-      const [blogPostsResponse, pageContentResponse] = await Promise.all([
-        fetch("/api/content/blogs"),
-        fetch("/api/content/blogs/page-content"),
+      // Load blog posts and page content in parallel using data provider
+      const [blogPostsData, pageData] = await Promise.all([
+        getBlogs(),
+        getBlogContent(),
       ]);
 
-      if (blogPostsResponse.ok) {
-        const blogPostsData = await blogPostsResponse.json();
-        setAllBlogPosts(blogPostsData);
-      }
+      // Transform the data to match the interface
+      const transformedBlogPosts = blogPostsData.map((post: any) => ({
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        author: post.author,
+        date: post.publish_date,
+        featured_image: post.featured_image,
+        tags: post.tags || [],
+        readingTime: post.reading_time || 5,
+        featured: post.featured || false,
+        order_index: post.order_index || 999, // Include order_index for sorting
+      }));
 
-      if (pageContentResponse.ok) {
-        const pageData = await pageContentResponse.json();
-        setPageContent(pageData);
-      }
+      // Sort blogs by order_index (ascending) to match dashboard order
+      const sortedBlogPosts = transformedBlogPosts.sort(
+        (a: any, b: any) => (a.order_index || 999) - (b.order_index || 999)
+      );
+
+      setAllBlogPosts(sortedBlogPosts);
+      setPageContent(
+        pageData || {
+          page_title: "Blogs & Articles",
+          page_subtitle:
+            "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.",
+        }
+      );
     } catch (error) {
       console.error("Error loading blog data:", error);
+      // Set fallback content on error
+      setPageContent({
+        page_title: "Blogs & Articles",
+        page_subtitle:
+          "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.",
+      });
     } finally {
       setLoading(false);
     }
@@ -102,16 +129,11 @@ export default function Blogs() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#fdfdf8]">
-        <Header />
-        <div className="flex items-center justify-center h-64 pt-32">
-          <div className="text-lg">Loading...</div>
-        </div>
-      </div>
-    );
-  }
+  // Show content immediately with fallback data
+  const displayContent = pageContent.page_title || "Blogs & Articles";
+  const displaySubtitle =
+    pageContent.page_subtitle ||
+    "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.";
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
@@ -123,10 +145,10 @@ export default function Blogs() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
-              {pageContent.page_title}
+              {displayContent}
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              {pageContent.page_subtitle}
+              {displaySubtitle}
             </p>
           </div>
         </div>
@@ -220,9 +242,9 @@ export default function Blogs() {
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    {post.image ? (
+                    {post.featured_image ? (
                       <img
-                        src={post.image}
+                        src={post.featured_image}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />

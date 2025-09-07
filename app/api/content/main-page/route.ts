@@ -14,6 +14,7 @@ export async function GET() {
       gallerySection,
       packagesSection,
       testimonialsSection,
+      metaContent,
     ] = await Promise.all([
       prisma.pageContent.findUnique({
         where: {
@@ -70,6 +71,14 @@ export async function GET() {
           page_type_section_type: {
             page_type: "main",
             section_type: "testimonials",
+          },
+        },
+      }),
+      prisma.pageContent.findUnique({
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "meta",
           },
         },
       }),
@@ -135,6 +144,32 @@ export async function GET() {
         subtitle:
           testimonialsSection?.subtitle ||
           "See what our customers have to say.",
+      },
+      metaContent: {
+        meta_title:
+          metaContent?.meta_title ||
+          "Sunbrix - Premium Home Construction Services",
+        meta_description:
+          metaContent?.meta_description ||
+          "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty. Get your free quote today!",
+        meta_keywords:
+          metaContent?.meta_keywords ||
+          "home construction, building contractors, house builders, construction services, premium homes",
+        og_title:
+          metaContent?.og_title ||
+          "Sunbrix - Premium Home Construction Services",
+        og_description:
+          metaContent?.og_description ||
+          "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty.",
+        og_image: metaContent?.og_image || "/images/og-image.jpg",
+        twitter_title:
+          metaContent?.twitter_title ||
+          "Sunbrix - Premium Home Construction Services",
+        twitter_description:
+          metaContent?.twitter_description ||
+          "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty.",
+        twitter_image:
+          metaContent?.twitter_image || "/images/twitter-image.jpg",
       },
     };
 

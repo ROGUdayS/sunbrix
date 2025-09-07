@@ -75,14 +75,16 @@ export default function ImageModal({
         {/* Image Container */}
         <div className="relative bg-white rounded-lg overflow-hidden shadow-2xl">
           <div className="relative">
-            <Image
-              src={images[currentIndex]}
-              alt={`${title} - Image ${currentIndex + 1}`}
-              width={1200}
-              height={800}
-              className="w-full h-auto max-h-[90vh] object-contain"
-              priority
-            />
+            {images[currentIndex] && (
+              <Image
+                src={images[currentIndex]}
+                alt={`${title} - Image ${currentIndex + 1}`}
+                width={1200}
+                height={800}
+                className="w-full h-auto max-h-[90vh] object-contain"
+                priority
+              />
+            )}
 
             {/* Close Button - Overlay on image */}
             <button

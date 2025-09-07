@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
+import { getFaqs, getFaqContent } from "@/lib/data-provider-client";
 import MarkdownRenderer, {
   markdownStyles,
 } from "../components/MarkdownRenderer";
@@ -38,26 +39,29 @@ export default function FAQ() {
 
   const loadFaqData = async () => {
     try {
-      // Load FAQs and page content in parallel
-      const [faqsResponse, pageContentResponse] = await Promise.all([
-        fetch("/api/content/faqs"),
-        fetch("/api/content/faqs/page-content"),
+      // Load FAQs and page content in parallel using data provider
+      const [faqsData, pageData] = await Promise.all([
+        getFaqs(),
+        getFaqContent(),
       ]);
 
-      if (faqsResponse.ok) {
-        const faqsData = await faqsResponse.json();
-        // Sort FAQs by order_index to maintain admin-configured order
-        const sortedFaqs = (faqsData.faqs || faqsData || []).sort((a: any, b: any) => 
-          (a.order_index || 0) - (b.order_index || 0)
-        );
-        setFaqs(sortedFaqs);
-        setAllFaqs(sortedFaqs);
-      }
+      // Sort FAQs by order_index to maintain admin-configured order
+      const sortedFaqs = (faqsData || []).sort(
+        (a: any, b: any) => (a.order_index || 0) - (b.order_index || 0)
+      );
+      setFaqs(sortedFaqs);
+      setAllFaqs(sortedFaqs);
 
-      if (pageContentResponse.ok) {
-        const pageData = await pageContentResponse.json();
-        setPageContent(pageData);
-      }
+      // Handle pageData - it might be an array, so take the first item or use default
+      const pageContentData =
+        Array.isArray(pageData) && pageData.length > 0
+          ? pageData[0]
+          : {
+              page_title: "Frequently Asked Questions",
+              page_subtitle:
+                "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
+            };
+      setPageContent(pageContentData);
     } catch (error) {
       console.error("Error loading FAQ data:", error);
     } finally {
