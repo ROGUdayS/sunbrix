@@ -97,6 +97,7 @@ export default function Home() {
       image?: string;
       image_url?: string;
       quote?: string;
+      alt_text?: string;
     }[]
   >([]);
 
@@ -899,7 +900,11 @@ export default function Home() {
                             {(image.image_url || image.image) && (
                               <Image
                                 src={image.image_url || image.image}
-                                alt={image.quote || "Gallery image"}
+                                alt={
+                                  image.alt_text ||
+                                  image.quote ||
+                                  "Gallery image"
+                                }
                                 width={900}
                                 height={600}
                                 className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"

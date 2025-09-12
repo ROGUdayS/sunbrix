@@ -16,6 +16,7 @@ export interface ProjectData {
   property_type: string;
   image: string;
   images?: string[];
+  image_alt_texts?: string[];
   description: string;
   specifications: {
     bedrooms: number;
@@ -89,6 +90,7 @@ export interface GalleryImage {
   image_url: string;
   quote: string;
   order_index: number;
+  alt_text?: string;
 }
 
 // Configuration
