@@ -95,11 +95,16 @@ export interface GalleryImage {
 
 // Configuration
 const USE_API_DATA = process.env.NEXT_PUBLIC_USE_API_DATA === "true";
+const DASHBOARD_URL =
+  process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000";
 
 // Helper function to make API calls
 async function fetchFromAPI<T>(endpoint: string): Promise<T | null> {
   try {
-    const response = await fetch(endpoint);
+    const fullUrl = endpoint.startsWith("http")
+      ? endpoint
+      : `${DASHBOARD_URL}${endpoint}`;
+    const response = await fetch(fullUrl);
 
     if (!response.ok) {
       throw new Error(`API call failed: ${response.status}`);
@@ -269,8 +274,9 @@ export async function getFAQs(): Promise<any[]> {
 
 export async function getBlogs(): Promise<any[]> {
   if (USE_API_DATA) {
-    const data = await fetchFromAPI<any[]>("/api/content/blogs");
-    return data || [];
+    const data = await fetchFromAPI<any>("/api/content/blogs");
+    // Extract blogPosts array from the API response
+    return data?.blogPosts || [];
   } else {
     const data = await fetchStaticData<any[]>("blogs.json");
     if (!data || !Array.isArray(data)) return [];

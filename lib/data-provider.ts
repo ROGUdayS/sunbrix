@@ -68,6 +68,7 @@ export interface AboutUsContent {
   storySection?: {
     title: string;
     image: string;
+    imageAlt: string;
     paragraphs: string[];
   };
   valuesSection?: {
@@ -78,6 +79,7 @@ export interface AboutUsContent {
       title: string;
       description: string;
       icon: string;
+      iconAlt?: string;
     }>;
   };
 }
@@ -127,7 +129,7 @@ async function fetchFromAPI<T>(endpoint: string): Promise<T | null> {
     const baseUrl =
       typeof window !== "undefined"
         ? ""
-        : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+        : process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3002";
     const response = await fetch(`${baseUrl}${endpoint}`);
 
     if (!response.ok) {
