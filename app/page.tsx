@@ -97,6 +97,7 @@ export default function Home() {
       image?: string;
       image_url?: string;
       quote?: string;
+      altText?: string;
     }[]
   >([]);
 
@@ -191,6 +192,7 @@ export default function Home() {
             description: string;
             id: number;
             quote?: string;
+            altText?: string;
           }[] = [];
           projectsResult.projects.forEach(
             (project: ProjectData, projectIndex: number) => {
@@ -201,6 +203,8 @@ export default function Home() {
                     title: project.title,
                     description: project.description,
                     id: projectIndex * 100 + imageIndex,
+                    altText:
+                      project.image_alt_texts?.[imageIndex] || project.title,
                   });
                 });
               } else if (project.image) {
@@ -209,6 +213,7 @@ export default function Home() {
                   title: project.title,
                   description: project.description,
                   id: projectIndex * 100,
+                  altText: project.image_alt_texts?.[0] || project.title,
                 });
               }
             }
@@ -839,7 +844,11 @@ export default function Home() {
                             {(image.image_url || image.image) && (
                               <Image
                                 src={image.image_url || image.image}
-                                alt={image.quote || "Gallery image"}
+                                alt={
+                                  image.altText ||
+                                  image.quote ||
+                                  "Gallery image"
+                                }
                                 width={900}
                                 height={600}
                                 className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
@@ -869,7 +878,11 @@ export default function Home() {
                             {(image.image_url || image.image) && (
                               <Image
                                 src={image.image_url || image.image}
-                                alt={image.quote || "Gallery image"}
+                                alt={
+                                  image.altText ||
+                                  image.quote ||
+                                  "Gallery image"
+                                }
                                 width={900}
                                 height={600}
                                 className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
@@ -899,7 +912,11 @@ export default function Home() {
                             {(image.image_url || image.image) && (
                               <Image
                                 src={image.image_url || image.image}
-                                alt={image.quote || "Gallery image"}
+                                alt={
+                                  image.altText ||
+                                  image.quote ||
+                                  "Gallery image"
+                                }
                                 width={900}
                                 height={600}
                                 className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
