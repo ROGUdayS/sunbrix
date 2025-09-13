@@ -1,30 +1,30 @@
 [
   {
-    "id": "cmfh403wu00fnosqyx5fkwo2i",
+    "id": "cmf9zkto500fnosr8z65xscbk",
     "title": "Essential Construction Tips for First-Time Home Builders",
     "slug": "essential-construction-tips-first-time-builders",
     "excerpt": "Building your first home can be overwhelming. Here are the essential tips every first-time builder should know to ensure a smooth construction process.",
     "content": "# Essential Construction Tips for First-Time Home Builders\n\nBuilding your first home is an exciting journey, but it can also be overwhelming without proper guidance. Here are the essential tips every first-time builder should know.\n\n## 1. Plan Thoroughly Before Breaking Ground\n\nBefore any construction begins, ensure you have:\n- Detailed architectural plans approved by local authorities\n- Clear understanding of local building codes and regulations\n- Realistic timeline and budget with 15-20% contingency\n- All necessary permits and approvals\n\n## 2. Choose the Right Construction Team\n\nYour success depends heavily on your team:\n- Research contractors thoroughly and check references\n- Ensure all team members are licensed and insured\n- Establish clear communication channels\n- Set expectations early and document everything\n\n## 3. Quality Materials Matter\n\n- Invest in quality materials for structural elements\n- Don't compromise on foundation and roofing materials\n- Consider long-term maintenance costs\n- Balance cost with quality for non-structural elements\n\n## 4. Regular Site Inspections\n\n- Visit the site regularly during construction\n- Schedule professional inspections at key milestones\n- Document progress with photos\n- Address issues immediately to avoid costly fixes later\n\n## 5. Communication is Key\n\n- Maintain open communication with your contractor\n- Ask questions if you don't understand something\n- Keep detailed records of all communications\n- Be involved but trust the experts\n\nBuilding your dream home requires patience, planning, and the right team. With these tips, you'll be well-prepared for your construction journey.",
     "author": "Sunbrix Construction Team",
-    "featured_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/sample/how-it-works.webp",
+    "featured_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/content/blog-images/1757267522425-um1x576l20g.jpg",
     "tags": [
       "construction",
       "first-time-builders",
       "home-building",
       "tips"
     ],
-    "category_id": "cmfh4034f00fiosqy286mnt8r",
+    "category_id": null,
     "status": "published",
     "meta_title": "Essential Construction Tips for First-Time Home Builders | Sunbrix",
     "meta_description": "Expert construction tips for first-time home builders. Learn about planning, team selection, materials, and more from Sunbrix construction experts.",
     "featured": true,
     "order_index": 1,
     "active": true,
-    "created_at": "2025-09-12T17:26:33.678Z",
-    "updated_at": "2025-09-12T17:26:33.678Z"
+    "created_at": "2025-09-07T17:48:18.870Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   },
   {
-    "id": "cmfh4041300fposqyvun7anqd",
+    "id": "cmf9zktt300fposr8e3h5yli1",
     "title": "Modern Home Design Trends to Watch in 2024",
     "slug": "modern-home-design-trends-2024",
     "excerpt": "Discover the latest home design trends that are shaping modern architecture in 2024, from sustainable materials to smart home integration.",
@@ -38,18 +38,18 @@
       "modern",
       "architecture"
     ],
-    "category_id": "cmfh4038p00fjosqy9dviqbcy",
+    "category_id": null,
     "status": "published",
     "meta_title": "Modern Home Design Trends to Watch in 2024 | Sunbrix",
     "meta_description": "Discover the latest home design trends for 2024 including sustainable materials, biophilic design, flexible spaces, and smart home integration.",
     "featured": true,
     "order_index": 2,
     "active": true,
-    "created_at": "2025-09-12T17:26:33.831Z",
-    "updated_at": "2025-09-12T17:26:33.831Z"
+    "created_at": "2025-09-07T17:48:19.047Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   },
   {
-    "id": "cmfh4045c00frosqy2a0i89f0",
+    "id": "cmf9zktxk00frosr8qeoojucq",
     "title": "Understanding Different Types of Construction Materials",
     "slug": "understanding-construction-materials-types",
     "excerpt": "A comprehensive guide to different construction materials, their properties, uses, and how to choose the right materials for your project.",
@@ -63,18 +63,18 @@
       "steel",
       "wood"
     ],
-    "category_id": "cmfh403cx00fkosqyc39nnxxm",
+    "category_id": null,
     "status": "published",
     "meta_title": "Understanding Different Types of Construction Materials | Sunbrix",
     "meta_description": "Complete guide to construction materials including concrete, steel, wood, and their properties, uses, and selection criteria.",
     "featured": false,
     "order_index": 3,
     "active": true,
-    "created_at": "2025-09-12T17:26:33.984Z",
-    "updated_at": "2025-09-12T17:26:33.984Z"
+    "created_at": "2025-09-07T17:48:19.208Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   },
   {
-    "id": "cmfh4049f00ftosqyg17hyc6a",
+    "id": "cmf9zku2i00ftosr8y5za1rwd",
     "title": "Project Spotlight: Modern Villa in Bengaluru",
     "slug": "project-spotlight-modern-villa-bengaluru",
     "excerpt": "Take a behind-the-scenes look at our recent modern villa project in Bengaluru, showcasing innovative design and superior construction quality.",
@@ -88,14 +88,14 @@
       "modern-design",
       "case-study"
     ],
-    "category_id": "cmfh403gr00flosqy4be96zuw",
+    "category_id": null,
     "status": "published",
     "meta_title": "Project Spotlight: Modern Villa in Bengaluru | Sunbrix",
     "meta_description": "Behind-the-scenes look at our modern villa project in Bengaluru featuring innovative design, sustainable elements, and premium finishes.",
     "featured": false,
     "order_index": 4,
     "active": true,
-    "created_at": "2025-09-12T17:26:34.131Z",
-    "updated_at": "2025-09-12T17:26:34.131Z"
+    "created_at": "2025-09-07T17:48:19.387Z",
+    "updated_at": "2025-09-07T17:52:05.926Z"
   }
 ]

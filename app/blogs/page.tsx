@@ -15,7 +15,6 @@ interface BlogPost {
   author: string;
   date: string;
   featured_image: string;
-  featured_image_alt_text?: string;
   tags: string[];
   featured: boolean;
   order_index: number; // For maintaining dashboard order
@@ -59,8 +58,6 @@ export default function Blogs() {
         author: post.author,
         date: post.date || post.updated_at,
         featured_image: post.image || post.featured_image,
-        featured_image_alt_text:
-          post.featured_image_alt_text || `Featured image for ${post.title}`,
         tags: post.tags || [],
         featured: post.featured || false,
         order_index: post.order_index || 999, // Include order_index for sorting
@@ -246,10 +243,7 @@ export default function Blogs() {
                     {post.featured_image ? (
                       <img
                         src={post.featured_image}
-                        alt={
-                          post.featured_image_alt_text ||
-                          `Featured image for ${post.title}`
-                        }
+                        alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (

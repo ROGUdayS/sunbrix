@@ -78,10 +78,7 @@ export default async function About() {
                     aboutContent.storySection?.image ||
                     "/images/HomeHeroWebImage.webp"
                   }
-                  alt={
-                    aboutContent.storySection?.imageAlt ||
-                    "Sunbrix construction site showcasing our expertise"
-                  }
+                  alt="Sunbrix construction site"
                   width={600}
                   height={400}
                   className="w-full h-auto object-cover"
@@ -111,7 +108,7 @@ export default async function About() {
                 <div className="flex justify-center mx-auto mb-3 sm:mb-4">
                   <Image
                     src={value.icon}
-                    alt={value.iconAlt || value.title}
+                    alt={value.title}
                     width={80}
                     height={80}
                     className="w-16 h-16 sm:w-20 sm:h-20"

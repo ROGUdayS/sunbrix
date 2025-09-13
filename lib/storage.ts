@@ -126,28 +126,14 @@ export function validateImageFile(file: File): {
   if (!allowedTypes.includes(file.type)) {
     return {
       valid: false,
-      error: `File type "${file.type}" is not supported. Only JPEG, PNG, and WebP images are allowed.`,
+      error: "Only JPEG, PNG, and WebP images are allowed",
     };
   }
 
   // Check file size (max 5MB)
   const maxSize = 5 * 1024 * 1024; // 5MB in bytes
   if (file.size > maxSize) {
-    return {
-      valid: false,
-      error: `File size (${(file.size / 1024 / 1024).toFixed(
-        2
-      )}MB) exceeds the maximum allowed size of 5MB.`,
-    };
-  }
-
-  // Check minimum file size (1KB)
-  const minSize = 1024; // 1KB
-  if (file.size < minSize) {
-    return {
-      valid: false,
-      error: "File appears to be corrupted or empty.",
-    };
+    return { valid: false, error: "File size must be less than 5MB" };
   }
 
   return { valid: true };
