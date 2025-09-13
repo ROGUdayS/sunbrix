@@ -22,7 +22,6 @@ model Project {
   description   String   @db.Text
   specifications Json    @default("{}")
   images        String[]
-  image_alt_texts String[] @map("image_alt_texts") @default([])
   display_order Int      @default(0) @map("display_order")
   active        Boolean  @default(true)
   created_at    DateTime @default(now()) @map("created_at")
@@ -184,7 +183,6 @@ model PageContent {
 model GalleryImage {
   id          String   @id @default(cuid())
   image_url   String   @map("image_url") @db.VarChar(500)
-  alt_text    String?  @map("alt_text") @db.VarChar(500)
   quote       String?  @db.Text // Quote text to display with the image
   order_index Int      @default(0) @map("order_index")
   active      Boolean  @default(true)
@@ -205,10 +203,8 @@ model Testimonial {
   
   // Media fields
   customer_image    String?  @map("customer_image") @db.VarChar(500)
-  customer_image_alt_text String? @map("customer_image_alt_text") @db.VarChar(500)
   video_url         String?  @map("video_url") @db.VarChar(500) // YouTube, Vimeo, etc.
   video_thumbnail   String?  @map("video_thumbnail") @db.VarChar(500)
-  video_thumbnail_alt_text String? @map("video_thumbnail_alt_text") @db.VarChar(500)
   
   // Display settings
   featured          Boolean  @default(false)
@@ -248,7 +244,6 @@ model BlogPost {
   content          String      @db.Text
   author           String      @default("Sunbrix Team") @db.VarChar(100)
   featured_image   String?     @map("featured_image") @db.VarChar(500)
-  featured_image_alt_text String? @map("featured_image_alt_text") @db.VarChar(500)
   category_id      String?     @map("category_id")
   tags             String[]    @default([])
   status           String      @default("draft") @db.VarChar(20) // draft, published, archived
