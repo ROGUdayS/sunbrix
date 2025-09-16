@@ -16,6 +16,7 @@ export interface ProjectData {
   property_type: string;
   image: string;
   images?: string[];
+  image_alt_texts?: string[];
   description: string;
   specifications: {
     bedrooms: number;
@@ -89,6 +90,7 @@ export interface GalleryImage {
   image_url: string;
   quote: string;
   order_index: number;
+  alt_text?: string;
 }
 
 // Configuration
@@ -267,8 +269,9 @@ export async function getFAQs(): Promise<any[]> {
 
 export async function getBlogs(): Promise<any[]> {
   if (USE_API_DATA) {
-    const data = await fetchFromAPI<any[]>("/api/content/blogs");
-    return data || [];
+    const data = await fetchFromAPI<any>("/api/content/blogs");
+    // Extract blogPosts array from the API response
+    return data?.blogPosts || [];
   } else {
     const data = await fetchStaticData<any[]>("blogs.json");
     if (!data || !Array.isArray(data)) return [];
