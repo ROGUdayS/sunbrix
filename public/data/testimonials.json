@@ -8,12 +8,14 @@
     "quote": "Most people struggle with delays, finances, or contractors. I didn't face even 1% of that. Sunbrix made my home journey smooth and hassle-free.",
     "projectType": null,
     "image": null,
+    "customer_image_alt_text": null,
     "videoUrl": "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     "videoThumbnail": null,
+    "video_thumbnail_alt_text": null,
     "featured": true,
     "published": true,
     "created_at": "2025-09-13T12:24:35.409Z",
-    "updated_at": "2025-09-13T12:24:35.409Z"
+    "updated_at": "2025-09-16T10:23:52.108Z"
   },
   {
     "id": "cmfi8nmm500fdosscpuu6ln4x",
@@ -24,12 +26,14 @@
     "quote": "Sunbrix's expert team guided me at every step. Their quality gave me total confidence throughout the journey.",
     "projectType": null,
     "image": null,
+    "customer_image_alt_text": null,
     "videoUrl": "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     "videoThumbnail": null,
+    "video_thumbnail_alt_text": null,
     "featured": true,
     "published": true,
     "created_at": "2025-09-13T12:24:35.646Z",
-    "updated_at": "2025-09-13T12:24:35.646Z"
+    "updated_at": "2025-09-16T10:23:52.108Z"
   },
   {
     "id": "cmfi8nmqp00feosscudmh30r8",
@@ -40,11 +44,13 @@
     "quote": "Sunbrix Homes exceeded our expectations! The construction quality and timely delivery were remarkable. Truly a dream home.",
     "projectType": null,
     "image": null,
+    "customer_image_alt_text": "Professional photo of satisfied customer",
     "videoUrl": "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
     "videoThumbnail": null,
+    "video_thumbnail_alt_text": null,
     "featured": true,
     "published": true,
     "created_at": "2025-09-13T12:24:35.809Z",
-    "updated_at": "2025-09-13T12:24:35.809Z"
+    "updated_at": "2025-09-16T10:23:52.108Z"
   }
 ]

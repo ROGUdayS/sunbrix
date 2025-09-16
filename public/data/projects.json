@@ -1,50 +1,6 @@
 {
   "projects": [
     {
-      "id": "cmfi8ng6f00f2ossc99qrzo39",
-      "title": "Modern 3-BHK Villa",
-      "location": "Bengaluru",
-      "year": "2024",
-      "plotSize": "30x50 sq. ft",
-      "facing": "East",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/interior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/elevation-1.jpg"
-      ],
-      "description": "A modern 3-story residence designed with contemporary architecture and optimal space utilization.",
-      "specifications": {
-        "bedrooms": 3
-      },
-      "active": true,
-      "created_at": "2025-09-13T12:24:27.303Z",
-      "updated_at": "2025-09-13T12:24:27.303Z"
-    },
-    {
-      "id": "cmfi8ngbd00f3osscq6pv31n2",
-      "title": "Cozy 2-BHK Home",
-      "location": "Bellary",
-      "year": "2023",
-      "plotSize": "30x40 sq. ft",
-      "facing": "East",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/exterior-1.jpg",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/exterior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/elevation-1.jpg"
-      ],
-      "description": "A cozy 2-story home designed for young families with efficient space planning.",
-      "specifications": {
-        "bedrooms": 2
-      },
-      "active": true,
-      "created_at": "2025-09-13T12:24:27.303Z",
-      "updated_at": "2025-09-13T12:24:27.303Z"
-    },
-    {
       "id": "cmfi8ngg200f4osscbhxjj69b",
       "title": "Compact 2-BHK Apartment",
       "location": "Bellary",
@@ -57,6 +13,11 @@
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/compact-2-bhk-apartment-bellary/exterior-1.jpg",
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/compact-2-bhk-apartment-bellary/interior-1.jpg",
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/compact-2-bhk-apartment-bellary/elevation-1.jpg"
+      ],
+      "image_alt_texts": [
+        "Compact 2-BHK Apartment - Exterior view showing modern architecture and South facing",
+        "Compact 2-BHK Apartment - Interior view showcasing spacious 2-BHK layout",
+        "Compact 2-BHK Apartment - Building elevation displaying contemporary design elements"
       ],
       "description": "A compact apartment designed for small families with smart space utilization and modern amenities.",
       "specifications": {
@@ -80,6 +41,11 @@
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/interior-1.jpg",
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg"
       ],
+      "image_alt_texts": [
+        "Luxury 4-BHK Duplex - Exterior view showing modern architecture and North facing",
+        "Luxury 4-BHK Duplex - Interior view showcasing spacious 4-BHK layout",
+        "Luxury 4-BHK Duplex - Building elevation displaying contemporary design elements"
+      ],
       "description": "A luxury duplex designed for large families with premium finishes and spacious interiors.",
       "specifications": {
         "bedrooms": 4
@@ -87,6 +53,60 @@
       "active": true,
       "created_at": "2025-09-13T12:24:27.303Z",
       "updated_at": "2025-09-13T12:24:27.303Z"
+    },
+    {
+      "id": "cmfi8ng6f00f2ossc99qrzo39",
+      "title": "Modern 3-BHK Villa",
+      "location": "Bengaluru",
+      "year": "2024",
+      "plotSize": "30x50 sq. ft",
+      "facing": "East",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/interior-1.jpg",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/elevation-1.jpg"
+      ],
+      "image_alt_texts": [
+        "Modern 3-BHK Villa exterior view",
+        "Spacious interior living room",
+        "Beautiful elevation design"
+      ],
+      "description": "A modern 3-story residence designed with contemporary architecture and optimal space utilization.",
+      "specifications": {
+        "bedrooms": 3
+      },
+      "active": true,
+      "created_at": "2025-09-13T12:24:27.303Z",
+      "updated_at": "2025-09-13T12:24:27.303Z"
+    },
+    {
+      "id": "cmfi8ngbd00f3osscq6pv31n2",
+      "title": "Cozy 2-BHK Home",
+      "location": "Bellary",
+      "year": "2023",
+      "plotSize": "30x40 sq. ft",
+      "facing": "East",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/exterior-1.jpg",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/exterior-1.jpg",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/elevation-1.jpg"
+      ],
+      "image_alt_texts": [
+        "checking alt tags",
+        "Cozy 2-BHK Home - Interior view showcasing spacious 2-BHK layout",
+        "Cozy 2-BHK Home - Building elevation displaying contemporary design elements"
+      ],
+      "description": "A cozy 2-story home designed for young families with efficient space planning.",
+      "specifications": {
+        "bedrooms": 2
+      },
+      "active": true,
+      "created_at": "2025-09-13T12:24:27.303Z",
+      "updated_at": "2025-09-16T12:38:25.292Z"
     }
   ],
   "count": 4

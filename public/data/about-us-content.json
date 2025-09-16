@@ -6,6 +6,8 @@
   "storySection": {
     "title": "Our Story",
     "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/content/about-us/1757256214633-exwufbfutnh.jpg",
+    "imageAlt": "testing alt tags",
+    "image_alt_text": "testing alt tags",
     "paragraphs": [
       "Sunbrix was launched in 2021 as part of the Sunbrix Group, a leading name in steel, cement, energy, and other core sectors. We recognized that building a home shouldn't be a stressful experience filled with uncertainty and delays.",
       "Our mission is simple: to offer independent homeowners a hassle-free home-building experience with complete transparency, quality materials, and trusted professionals. We believe that building your dream home should put you firmly in control.",
@@ -18,27 +20,31 @@
     "values": [
       {
         "id": "1",
+        "icon": "/icons/about-us/Quality First.svg",
         "title": "Quality First",
-        "description": "We use only certified-grade materials and work with trusted professionals to ensure the highest standards.",
-        "icon": "/icons/about-us/Quality First.svg"
+        "iconAlt": "Quality First icon",
+        "description": "We use only certified-grade materials and work with trusted professionals to ensure the highest standards."
       },
       {
         "id": "2",
+        "icon": "/icons/about-us/Transparency.svg",
         "title": "Transparency",
-        "description": "Clear pricing, regular updates, and no hidden surprises. You'll know exactly what to expect at every step.",
-        "icon": "/icons/about-us/Transparency.svg"
+        "iconAlt": "Transparency icon",
+        "description": "Clear pricing, regular updates, and no hidden surprises. You'll know exactly what to expect at every step."
       },
       {
         "id": "3",
+        "icon": "/icons/about-us/Innovation.svg",
         "title": "Innovation",
-        "description": "We leverage technology and modern construction methods to deliver better homes faster and more efficiently.",
-        "icon": "/icons/about-us/Innovation.svg"
+        "iconAlt": "Innovation icon",
+        "description": "We leverage technology and modern construction methods to deliver better homes faster and more efficiently."
       },
       {
         "id": "4",
+        "icon": "/icons/about-us/Customer Focus.svg",
         "title": "Customer Focus",
-        "description": "Your vision is our priority. We work closely with you to ensure your dream home becomes reality.",
-        "icon": "/icons/about-us/Customer Focus.svg"
+        "iconAlt": "Customer Focus icon",
+        "description": "Your vision is our priority. We work closely with you to ensure your dream home becomes reality."
       }
     ]
   }

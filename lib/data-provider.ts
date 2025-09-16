@@ -68,7 +68,8 @@ export interface AboutUsContent {
   storySection?: {
     title: string;
     image: string;
-    imageAlt: string;
+    imageAlt?: string;
+    image_alt_text?: string;
     paragraphs: string[];
   };
   valuesSection?: {

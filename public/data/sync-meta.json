@@ -1,5 +1,5 @@
 {
-  "lastSync": "2025-09-13T12:29:52.419Z",
+  "lastSync": "2025-09-16T12:53:51.515Z",
   "version": "1.0.0",
   "source": "dashboard-sync",
   "totalRecords": {
@@ -9,6 +9,7 @@
     "testimonials": 3,
     "galleryImages": 3,
     "mainPageContent": 0,
+    "pageContent": 10,
     "blogs": 4,
     "faqs": 17
   },
@@ -21,12 +22,13 @@
     "faqs.json",
     "blogs.json",
     "main-page-content.json",
+    "about-us-content.json",
     "company-settings.json"
   ],
   "writeResults": [
     {
       "filename": "projects.json",
-      "size": 4459,
+      "size": 5455,
       "records": 2
     },
     {
@@ -41,12 +43,12 @@
     },
     {
       "filename": "testimonials.json",
-      "size": 1789,
+      "size": 2052,
       "records": 3
     },
     {
       "filename": "gallery.json",
-      "size": 1315,
+      "size": 1644,
       "records": 3
     },
     {
@@ -56,13 +58,18 @@
     },
     {
       "filename": "blogs.json",
-      "size": 12124,
+      "size": 12493,
       "records": 4
     },
     {
       "filename": "main-page-content.json",
-      "size": 2553,
+      "size": 2888,
       "records": 7
+    },
+    {
+      "filename": "about-us-content.json",
+      "size": 2500,
+      "records": 3
     },
     {
       "filename": "company-settings.json",
