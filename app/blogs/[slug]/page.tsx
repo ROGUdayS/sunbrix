@@ -7,7 +7,7 @@ async function getBlogPost(slug: string) {
     const baseUrl =
       process.env.NODE_ENV === "production"
         ? "https://sunbrix.netlify.app"
-        : "http://localhost:3001";
+        : process.env.NEXT_PUBLIC_APP_URL;
 
     const response = await fetch(`${baseUrl}/api/content/blogs/${slug}`, {
       next: { revalidate: 3600 }, // Revalidate every hour

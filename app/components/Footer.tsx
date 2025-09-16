@@ -19,12 +19,9 @@ interface CompanySettings {
 
 async function getCompanySettings(): Promise<CompanySettings> {
   try {
-    // For server-side rendering, we need to use absolute URL
+    // For server-side rendering, we need to use absolute URL to dashboard
     const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      process.env.APP_URL ||
-      "http://localhost:3003" ||
-      "https://sunbrix.netlify.app";
+      process.env.NEXT_PUBLIC_DASHBOARD_URL;
     const url = `${baseUrl}/api/company-settings`;
 
     const response = await fetch(url, {

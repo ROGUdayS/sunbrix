@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
       property_type: project.property_type,
       image: project.images?.[0] || "/images/HomeHeroWebImage.webp",
       images: project.images,
+      image_alt_texts: project.image_alt_texts,
       description: project.description,
       specifications: project.specifications,
       active: project.active,

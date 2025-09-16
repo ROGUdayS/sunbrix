@@ -309,7 +309,10 @@ export default function ProjectGallery() {
                     {projectImages[currentIndex] && (
                       <Image
                         src={projectImages[currentIndex]}
-                        alt={project.title}
+                        alt={
+                          project.image_alt_texts?.[currentIndex] ||
+                          project.title
+                        }
                         width={500}
                         height={320}
                         className="w-full h-48 sm:h-56 lg:h-64 object-cover"
