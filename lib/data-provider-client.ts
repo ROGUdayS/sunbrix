@@ -272,8 +272,9 @@ export async function getFAQs(): Promise<any[]> {
 export async function getBlogs(): Promise<any[]> {
   if (USE_API_DATA) {
     const data = await fetchFromAPI<any>("/api/content/blogs");
-    // Extract blogPosts array from the API response
-    return data?.blogPosts || [];
+    // Support both current API (array) and legacy shape { blogPosts: [] }
+    if (!data) return [];
+    return Array.isArray(data) ? data : data.blogPosts || [];
   } else {
     const data = await fetchStaticData<any[]>("blogs.json");
     if (!data || !Array.isArray(data)) return [];
