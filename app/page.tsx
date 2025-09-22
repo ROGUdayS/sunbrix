@@ -410,6 +410,41 @@ export default function Home() {
     setExpandedSection((prev) => (prev === section ? null : section));
   };
 
+  // Bank logos data and mobile carousel state (3 logos per slide)
+  const bankLogos = [
+    { src: "/icons/banks-icons/HDFC.svg", alt: "HDFC Bank" },
+    { src: "/icons/banks-icons/ICICI.svg", alt: "ICICI Bank" },
+    { src: "/icons/banks-icons/SBI.svg", alt: "SBI Bank" },
+    { src: "/icons/banks-icons/Axis.svg", alt: "Axis Bank" },
+    { src: "/icons/banks-icons/BOB.svg", alt: "Bank of Baroda" },
+    { src: "/icons/banks-icons/First%20Bank.svg", alt: "First Bank" },
+    { src: "/icons/banks-icons/Tata%20Capital.svg", alt: "Tata Capital" },
+  ];
+  const bankSlides = bankLogos.length
+    ? Array.from({ length: bankLogos.length }, (_, i) => [
+        bankLogos[i % bankLogos.length],
+        bankLogos[(i + 1) % bankLogos.length],
+        bankLogos[(i + 2) % bankLogos.length],
+      ])
+    : [];
+  const [currentBankSlide, setCurrentBankSlide] = useState(0);
+  const [isBankTransitioning, setIsBankTransitioning] = useState(false);
+  const bankRef = useRef<HTMLDivElement | null>(null);
+
+  const nextBank = (step: number = 1) => {
+    if (isBankTransitioning) return;
+    if (bankSlides.length === 0) return;
+    setIsBankTransitioning(true);
+    setCurrentBankSlide((prev) => prev + step);
+  };
+
+  const prevBank = (step: number = 1) => {
+    if (isBankTransitioning) return;
+    if (bankSlides.length === 0) return;
+    setIsBankTransitioning(true);
+    setCurrentBankSlide((prev) => prev - step);
+  };
+
   // Package carousel navigation functions with infinite loop
   const nextPackage = () => {
     if (isTransitioning) return;
@@ -465,7 +500,9 @@ export default function Home() {
     }
   };
 
-  const handleTouchEnd = (type: "gallery" | "package" | "testimonial") => {
+  const handleTouchEnd = (
+    type: "gallery" | "package" | "testimonial" | "bank"
+  ) => {
     if (!touchStart || !touchEnd) {
       setIsDragging(false);
       setDragOffset(0);
@@ -499,6 +536,18 @@ export default function Home() {
       }
       if (isRightSwipe) {
         prevTestimonial();
+      }
+    } else if (type === "bank") {
+      const containerWidth =
+        bankRef.current?.parentElement?.clientWidth || window.innerWidth;
+      const longSwipeThreshold = containerWidth * 0.5; // treat as full scroll
+      const absDistance = Math.abs(distance);
+      if (isLeftSwipe) {
+        // short swipe -> move by 1 icon; long swipe -> move by 3 icons (next non-overlapping set)
+        nextBank(absDistance >= longSwipeThreshold ? 3 : 1);
+      }
+      if (isRightSwipe) {
+        prevBank(absDistance >= longSwipeThreshold ? 3 : 1);
       }
     }
 
@@ -621,6 +670,31 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, [currentTestimonial, isTestimonialTransitioning, testimonials.length]);
+
+  // Handle infinite loop transitions for bank carousel (mobile)
+  useEffect(() => {
+    if (!isBankTransitioning) return;
+
+    const totalSlides = bankSlides.length;
+    if (totalSlides === 0) return;
+
+    const timer = setTimeout(() => {
+      if (currentBankSlide >= totalSlides || currentBankSlide < 0) {
+        const normalized =
+          ((currentBankSlide % totalSlides) + totalSlides) % totalSlides;
+        if (bankRef.current) {
+          bankRef.current.style.transition = "none";
+          setCurrentBankSlide(normalized);
+          setTimeout(() => {
+            if (bankRef.current) bankRef.current.style.transition = "";
+          }, 50);
+        }
+      }
+      setIsBankTransitioning(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [currentBankSlide, isBankTransitioning, bankSlides.length]);
 
   // Helper function to get packages filtered by selected city
   const getFilteredPackages = useCallback(() => {
@@ -1943,31 +2017,101 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="flex justify-center items-center gap-4 sm:gap-8 lg:gap-12">
-            <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
-              <Image
-                src="/icons/banks-icons/hdfc.svg"
-                alt="HDFC Bank"
-                fill
-                className="object-contain"
-              />
+          {/* Mobile: seamless looping carousel (3 icons per slide) */}
+          <div className="md:hidden relative overflow-hidden rounded-lg">
+            <div
+              ref={bankRef}
+              className={`flex transition-transform duration-300 ease-out ${
+                isDragging ? "transition-none" : ""
+              }`}
+              style={{
+                transform: `translateX(calc(-${
+                  (currentBankSlide + bankSlides.length) * 100
+                }% + ${dragOffset}px))`,
+                touchAction: "pan-y",
+              }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={() => handleTouchEnd("bank")}
+            >
+              {/* previous set for seamless left scroll */}
+              {bankSlides.map((slide, i) => (
+                <div key={`prev-${i}`} className="w-full flex-shrink-0 px-2">
+                  <div className="flex justify-center items-center gap-6">
+                    {slide.map((bank) => (
+                      <div
+                        key={`prev-${bank.alt}`}
+                        className="w-24 h-12 relative"
+                      >
+                        <Image
+                          src={bank.src}
+                          alt={bank.alt}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {/* current set */}
+              {bankSlides.map((slide, i) => (
+                <div key={`cur-${i}`} className="w-full flex-shrink-0 px-2">
+                  <div className="flex justify-center items-center gap-6">
+                    {slide.map((bank) => (
+                      <div
+                        key={`cur-${bank.alt}`}
+                        className="w-24 h-12 relative"
+                      >
+                        <Image
+                          src={bank.src}
+                          alt={bank.alt}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {/* next set for seamless right scroll */}
+              {bankSlides.map((slide, i) => (
+                <div key={`next-${i}`} className="w-full flex-shrink-0 px-2">
+                  <div className="flex justify-center items-center gap-6">
+                    {slide.map((bank) => (
+                      <div
+                        key={`next-${bank.alt}`}
+                        className="w-24 h-12 relative"
+                      >
+                        <Image
+                          src={bank.src}
+                          alt={bank.alt}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
-              <Image
-                src="/icons/banks-icons/icici.svg"
-                alt="ICICI Bank"
-                fill
-                className="object-contain"
-              />
-            </div>
-            <div className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0">
-              <Image
-                src="/icons/banks-icons/sbi.svg"
-                alt="SBI Bank"
-                fill
-                className="object-contain"
-              />
-            </div>
+          </div>
+
+          {/* Desktop: static logos list */}
+          <div className="hidden md:flex justify-center items-center gap-4 sm:gap-8 lg:gap-12">
+            {bankLogos.map((bank) => (
+              <div
+                key={`desk-${bank.alt}`}
+                className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0"
+              >
+                <Image
+                  src={bank.src}
+                  alt={bank.alt}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
