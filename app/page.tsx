@@ -430,6 +430,62 @@ export default function Home() {
   const [currentBankSlide, setCurrentBankSlide] = useState(0);
   const [isBankTransitioning, setIsBankTransitioning] = useState(false);
   const bankRef = useRef<HTMLDivElement | null>(null);
+  // bank-specific touch state to avoid shaking other carousels
+  const [bankTouchStart, setBankTouchStart] = useState<number | null>(null);
+  const [bankTouchEnd, setBankTouchEnd] = useState<number | null>(null);
+  const [isBankDragging, setIsBankDragging] = useState(false);
+
+  // testimonial-specific touch state to avoid shaking
+  const [testimonialTouchStart, setTestimonialTouchStart] = useState<
+    number | null
+  >(null);
+  const [testimonialTouchEnd, setTestimonialTouchEnd] = useState<number | null>(
+    null
+  );
+  const [isTestimonialDragging, setIsTestimonialDragging] = useState(false);
+  const [testimonialDragOffset, setTestimonialDragOffset] = useState(0);
+
+  const testimonialHandleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    setTestimonialTouchEnd(null);
+    setTestimonialTouchStart(e.targetTouches[0].clientX);
+    setIsTestimonialDragging(false);
+    setTestimonialDragOffset(0);
+  };
+
+  const testimonialHandleTouchMove = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    if (!testimonialTouchStart) return;
+
+    const currentX = e.targetTouches[0].clientX;
+    const deltaX = currentX - testimonialTouchStart;
+
+    setTestimonialTouchEnd(currentX);
+    if (Math.abs(deltaX) > 10) {
+      setIsTestimonialDragging(true);
+      setTestimonialDragOffset(deltaX);
+      e.preventDefault();
+    }
+  };
+
+  const testimonialHandleTouchEnd = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    if (!testimonialTouchStart || !testimonialTouchEnd) {
+      setIsTestimonialDragging(false);
+      setTestimonialDragOffset(0);
+      return;
+    }
+
+    const distance = testimonialTouchStart - testimonialTouchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) nextTestimonial();
+    else if (isRightSwipe) prevTestimonial();
+
+    setIsTestimonialDragging(false);
+    setTestimonialDragOffset(0);
+  };
 
   const nextBank = (step: number = 1) => {
     if (isBankTransitioning) return;
@@ -443,6 +499,70 @@ export default function Home() {
     if (bankSlides.length === 0) return;
     setIsBankTransitioning(true);
     setCurrentBankSlide((prev) => prev - step);
+  };
+
+  const bankHandleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    setBankTouchEnd(null);
+    setBankTouchStart(e.targetTouches[0].clientX);
+    setIsBankDragging(true);
+    if (bankRef.current) {
+      bankRef.current.style.transition = "none";
+    }
+  };
+
+  const bankHandleTouchMove = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    if (!bankTouchStart) return;
+
+    const currentX = e.targetTouches[0].clientX;
+    const deltaX = currentX - bankTouchStart;
+
+    setBankTouchEnd(currentX);
+
+    if (Math.abs(deltaX) > 10) {
+      if (bankRef.current) {
+        bankRef.current.style.transform = `translate3d(calc(-${
+          (currentBankSlide + bankSlides.length) * 100
+        }% + ${deltaX}px), 0, 0)`;
+      }
+      e.preventDefault();
+    }
+  };
+
+  const bankHandleTouchEnd = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    if (!bankTouchStart || !bankTouchEnd) {
+      setIsBankDragging(false);
+      if (bankRef.current) {
+        bankRef.current.style.transition = "";
+        bankRef.current.style.transform = `translate3d(calc(-${
+          (currentBankSlide + bankSlides.length) * 100
+        }% + 0px), 0, 0)`;
+      }
+      return;
+    }
+
+    const distance = bankTouchStart - bankTouchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    const containerWidth =
+      bankRef.current?.parentElement?.clientWidth || window.innerWidth;
+    const longSwipeThreshold = containerWidth * 0.5;
+    const absDistance = Math.abs(distance);
+
+    if (bankRef.current) {
+      bankRef.current.style.transition = "";
+    }
+    if (isLeftSwipe) {
+      nextBank(absDistance >= longSwipeThreshold ? 3 : 1);
+    } else if (isRightSwipe) {
+      prevBank(absDistance >= longSwipeThreshold ? 3 : 1);
+    }
+
+    setIsBankDragging(false);
+    // base transform will update on next render via style below
   };
 
   // Package carousel navigation functions with infinite loop
@@ -2022,21 +2142,26 @@ export default function Home() {
             <div
               ref={bankRef}
               className={`flex transition-transform duration-300 ease-out ${
-                isDragging ? "transition-none" : ""
+                isBankDragging ? "transition-none" : ""
               }`}
               style={{
-                transform: `translateX(calc(-${
-                  (currentBankSlide + bankSlides.length) * 100
-                }% + ${dragOffset}px))`,
+                ...(isBankDragging
+                  ? {}
+                  : {
+                      transform: `translate3d(calc(-${
+                        (currentBankSlide + bankSlides.length) * 100
+                      }% + 0px), 0, 0)`,
+                    }),
                 touchAction: "pan-y",
+                willChange: "transform",
               }}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={() => handleTouchEnd("bank")}
+              onTouchStart={bankHandleTouchStart}
+              onTouchMove={bankHandleTouchMove}
+              onTouchEnd={bankHandleTouchEnd}
             >
               {/* previous set for seamless left scroll */}
               {bankSlides.map((slide, i) => (
-                <div key={`prev-${i}`} className="w-full flex-shrink-0 px-2">
+                <div key={`prev-${i}`} className="w-full flex-shrink-0">
                   <div className="flex justify-center items-center gap-6">
                     {slide.map((bank) => (
                       <div
@@ -2056,7 +2181,7 @@ export default function Home() {
               ))}
               {/* current set */}
               {bankSlides.map((slide, i) => (
-                <div key={`cur-${i}`} className="w-full flex-shrink-0 px-2">
+                <div key={`cur-${i}`} className="w-full flex-shrink-0">
                   <div className="flex justify-center items-center gap-6">
                     {slide.map((bank) => (
                       <div
@@ -2076,7 +2201,7 @@ export default function Home() {
               ))}
               {/* next set for seamless right scroll */}
               {bankSlides.map((slide, i) => (
-                <div key={`next-${i}`} className="w-full flex-shrink-0 px-2">
+                <div key={`next-${i}`} className="w-full flex-shrink-0">
                   <div className="flex justify-center items-center gap-6">
                     {slide.map((bank) => (
                       <div
@@ -2094,6 +2219,26 @@ export default function Home() {
                   </div>
                 </div>
               ))}
+            </div>
+            {/* Mobile Pagination Dots for bank carousel */}
+            <div className="flex justify-center mt-4 space-x-2">
+              {bankSlides.map((_, index) => {
+                const actualCurrentBank =
+                  ((currentBankSlide % bankSlides.length) + bankSlides.length) %
+                  bankSlides.length;
+                return (
+                  <button
+                    key={`bank-dot-${index}`}
+                    onClick={() => setCurrentBankSlide(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                      index === actualCurrentBank
+                        ? "bg-gray-800"
+                        : "bg-gray-300 hover:bg-gray-400"
+                    }`}
+                    aria-label={`Go to bank slide ${index + 1}`}
+                  />
+                );
+              })}
             </div>
           </div>
 
@@ -2175,17 +2320,18 @@ export default function Home() {
                 <div
                   ref={testimonialRef}
                   className={`flex transition-transform duration-300 ease-out ${
-                    isDragging ? "transition-none" : ""
+                    isTestimonialDragging ? "transition-none" : ""
                   }`}
                   style={{
-                    transform: `translateX(calc(-${
+                    transform: `translate3d(calc(-${
                       (currentTestimonial + testimonials.length) * 100
-                    }% + ${dragOffset}px))`,
+                    }% + ${testimonialDragOffset}px), 0, 0)`,
                     touchAction: "pan-y",
+                    willChange: "transform",
                   }}
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={() => handleTouchEnd("testimonial")}
+                  onTouchStart={testimonialHandleTouchStart}
+                  onTouchMove={testimonialHandleTouchMove}
+                  onTouchEnd={testimonialHandleTouchEnd}
                 >
                   {/* Previous set for seamless left scrolling */}
                   {testimonials.map((testimonial) => (
