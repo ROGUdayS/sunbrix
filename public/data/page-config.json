@@ -1,0 +1,47 @@
+[
+  {
+    "id": "page-config-1",
+    "pageId": "main-page",
+    "pageName": "Main Page",
+    "enabled": true,
+    "description": "Edit hero section, main content, and call-to-action elements",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "page-config-2",
+    "pageId": "about-us",
+    "pageName": "About Us",
+    "enabled": true,
+    "description": "Company information, team details, and company values",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "page-config-3",
+    "pageId": "testimonials",
+    "pageName": "Testimonials",
+    "enabled": true,
+    "description": "Customer reviews, ratings, and success stories",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "page-config-4",
+    "pageId": "faqs",
+    "pageName": "FAQs",
+    "enabled": true,
+    "description": "Frequently asked questions and answers",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "page-config-5",
+    "pageId": "blogs-articles",
+    "pageName": "Blogs & Articles",
+    "enabled": true,
+    "description": "Blog posts, articles, and content management",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]

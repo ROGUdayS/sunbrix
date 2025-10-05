@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCity } from "../contexts/CityContext";
 import { useState, useEffect } from "react";
+import { usePageConfigs } from "../hooks/usePageConfigs";
 
 interface HeaderProps {
   showCitySelector?: boolean;
@@ -19,6 +20,7 @@ export default function Header({
   const { selectedCity, setShowCityModal } = useCity();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { isPageEnabled } = usePageConfigs();
 
   // Handle scroll effect for sticky header
   useEffect(() => {
@@ -133,9 +135,11 @@ export default function Header({
 
           {/* Center - Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <Link href="/about" className={getLinkClassName("/about")}>
-              About Us
-            </Link>
+            {isPageEnabled("about-us") && (
+              <Link href="/about" className={getLinkClassName("/about")}>
+                About Us
+              </Link>
+            )}
             <Link href="/projects" className={getLinkClassName("/projects")}>
               Gallery
             </Link>
@@ -201,13 +205,15 @@ export default function Header({
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 shadow-xl">
             <div className="px-2 pt-4 pb-4 space-y-2">
-              <Link
-                href="/about"
-                className={getMobileLinkClassName("/about")}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
+              {isPageEnabled("about-us") && (
+                <Link
+                  href="/about"
+                  className={getMobileLinkClassName("/about")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  About Us
+                </Link>
+              )}
               <Link
                 href="/projects"
                 className={getMobileLinkClassName("/projects")}
