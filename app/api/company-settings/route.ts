@@ -2,21 +2,16 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 // Disable caching completely to ensure fresh data
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function GET() {
   try {
-    const timestamp = new Date().toISOString();
-    console.log(`[LANDER] 🔄 Fetching company settings at ${timestamp}`);
-    
     // Fetch company settings from database
     const settings = await prisma.companySettings.findFirst();
-    
+
     // If no settings found, return default fallback data
     if (!settings) {
-      console.log(`[LANDER] ⚠️  No company settings found, using fallback data`);
-      
       const fallbackSettings = {
         company_name: "SUNBRIX Constructions",
         contact_email: "sunbrix.co@gmail.com",
@@ -32,16 +27,16 @@ export async function GET() {
         terms_conditions: null,
         privacy_policy: null,
       };
-      
+
       return NextResponse.json(
         {
           success: true,
           settings: fallbackSettings,
           _debug: {
-            timestamp,
+            timestamp: new Date().toISOString(),
             source: "fallback",
-            message: "No settings found in database, using defaults"
-          }
+            message: "No settings found in database, using defaults",
+          },
         },
         {
           headers: {
@@ -51,10 +46,6 @@ export async function GET() {
         }
       );
     }
-
-    console.log(`[LANDER] ✅ Found company settings: ${settings.company_name}`);
-    console.log(`[LANDER] 📧 Contact: ${settings.contact_email}, ${settings.contact_phone}`);
-    console.log(`[LANDER] 📱 Social Media: FB:${settings.show_facebook}, IG:${settings.show_instagram}, G:${settings.show_google}, YT:${settings.show_youtube}`);
 
     // Transform and clean the data for frontend consumption
     const cleanSettings = {
@@ -78,10 +69,10 @@ export async function GET() {
         success: true,
         settings: cleanSettings,
         _debug: {
-          timestamp,
+          timestamp: new Date().toISOString(),
           source: "database",
           updated_at: settings.updated_at,
-        }
+        },
       },
       {
         headers: {
@@ -91,8 +82,8 @@ export async function GET() {
       }
     );
   } catch (error) {
-    console.error("[LANDER] ❌ Error fetching company settings:", error);
-    
+    console.error("[LANDER] Error fetching company settings:", error);
+
     // Fallback to hardcoded defaults if database fails
     const fallbackSettings = {
       company_name: "SUNBRIX Constructions",
@@ -117,8 +108,8 @@ export async function GET() {
         _debug: {
           timestamp: new Date().toISOString(),
           source: "error_fallback",
-          error: error instanceof Error ? error.message : "Unknown error"
-        }
+          error: error instanceof Error ? error.message : "Unknown error",
+        },
       },
       {
         status: 200, // Still return 200 with fallback data

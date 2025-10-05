@@ -65,9 +65,9 @@ export async function POST(request: NextRequest) {
 This is a test email from SUNBRIX to verify that our email system is working correctly.
 
 If you receive this email, it means:
-✅ SMTP connection is working
-✅ Gmail authentication is successful
-✅ Email delivery is functional
+SMTP connection is working
+Gmail authentication is successful
+Email delivery is functional
 
 Best regards,
 SUNBRIX Team
@@ -95,7 +95,7 @@ Test sent at: ${new Date().toISOString()}`,
       text: personalizedBody,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px;">
-          <h2 style="color: #e67e22;">🔧 Email System Test</h2>
+          <h2 style="color: #e67e22;">Email System Test</h2>
           ${personalizedHtml}
           <br><br>
           <div style="background: #f8f9fa; padding: 15px; border-left: 4px solid #e67e22;">

@@ -49,11 +49,6 @@ export default function ContactForm({
         city: cityName,
       };
 
-      console.log("Submitting form data:", {
-        ...submitData,
-        mobileNumber: "[REDACTED]",
-      });
-
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
