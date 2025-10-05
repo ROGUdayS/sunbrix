@@ -2247,11 +2247,11 @@ export default function Home() {
           </div>
 
           {/* Desktop: static logos list */}
-          <div className="hidden md:flex justify-center items-center gap-4 sm:gap-8 lg:gap-12">
+          <div className="hidden md:flex justify-center items-center gap-2 md:gap-3 lg:gap-4 xl:gap-6 2xl:gap-8 flex-wrap">
             {bankLogos.map((bank) => (
               <div
                 key={`desk-${bank.alt}`}
-                className="w-24 h-12 sm:w-32 sm:h-16 lg:w-40 lg:h-20 relative flex-shrink-0"
+                className="w-20 h-10 md:w-24 md:h-12 lg:w-28 lg:h-14 xl:w-32 xl:h-16 2xl:w-40 2xl:h-20 relative flex-shrink min-w-16 min-h-8"
               >
                 <Image
                   src={bank.src}
