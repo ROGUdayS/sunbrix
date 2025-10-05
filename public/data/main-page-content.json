@@ -2,24 +2,24 @@
   "demoVideoUrl": "/videos/video_demo.mp4",
   "galleryImages": [
     {
-      "id": "cmfi8nmuq00ffossc64gih35g",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
+      "id": "cmftunsr000ffos6jpahxqcro",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
       "alt_text": "Modern 3-BHK Villa exterior view showcasing contemporary architecture with East facing orientation",
-      "quote": "Your dream home awaits - where modern design meets uncompromising quality.",
+      "quote": "A house built for multipurpose somewhat designed to separate in blocks so that they can use it as a home now and in the future give it to the upcoming family. A house that is still connected to each other on the first floor.",
       "order_index": 1
     },
     {
-      "id": "cmfi8nmzg00fgossc2ng71kwn",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
+      "id": "cmftunswp00fgos6jehg51tbu",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal-house---sunbrix/LAL%20-1758532908777-mzpdytlyyk.png",
       "alt_text": "Cozy 2-BHK Home interior view displaying efficient space planning and modern amenities",
-      "quote": "Excellence is not a skill, it's an attitude - and it shows in every detail.",
+      "quote": "Built for three brothers and parents and inclusive house yet providing enough privacy and space to each family.",
       "order_index": 2
     },
     {
-      "id": "cmfi8nn4x00fhosscfaf2weqf",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg",
+      "id": "cmftunt0p00fhos6jf5vtx21u",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shashikala-house---sunbrix/Cropped-1758532505829-ddjmi4hf8mg.png",
       "alt_text": "Luxury 4-BHK Duplex building elevation featuring premium finishes and spacious design",
-      "quote": "Building more than homes - we're crafting your future.",
+      "quote": "Compact 3BHK home built on a 370 Sqft plot. A lot of design and expertise is required to build such homes and ensuring it fits a family comfortably was our goal.",
       "order_index": 3
     }
   ],

@@ -1,9 +1,9 @@
 {
-  "lastSync": "2025-09-16T12:53:51.515Z",
+  "lastSync": "2025-10-05T14:46:09.121Z",
   "version": "1.0.0",
   "source": "dashboard-sync",
   "totalRecords": {
-    "projects": 4,
+    "projects": 5,
     "cities": 2,
     "packages": 3,
     "testimonials": 3,
@@ -28,7 +28,7 @@
   "writeResults": [
     {
       "filename": "projects.json",
-      "size": 5455,
+      "size": 5069,
       "records": 2
     },
     {
@@ -43,12 +43,12 @@
     },
     {
       "filename": "testimonials.json",
-      "size": 2052,
+      "size": 2014,
       "records": 3
     },
     {
       "filename": "gallery.json",
-      "size": 1644,
+      "size": 2065,
       "records": 3
     },
     {
@@ -58,17 +58,17 @@
     },
     {
       "filename": "blogs.json",
-      "size": 12493,
+      "size": 12621,
       "records": 4
     },
     {
       "filename": "main-page-content.json",
-      "size": 2888,
+      "size": 3245,
       "records": 7
     },
     {
       "filename": "about-us-content.json",
-      "size": 2500,
+      "size": 2598,
       "records": 3
     },
     {
