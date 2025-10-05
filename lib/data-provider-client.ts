@@ -95,6 +95,16 @@ export interface GalleryImage {
   alt_text?: string;
 }
 
+export interface PageConfigData {
+  id: string;
+  pageId: string;
+  pageName: string;
+  enabled: boolean;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Configuration
 const USE_API_DATA = process.env.NEXT_PUBLIC_USE_API_DATA === "true";
 
@@ -326,6 +336,27 @@ export async function getAboutUsContent(): Promise<AboutUsContent> {
     const data = await fetchStaticData<AboutUsContent>("about-us-content.json");
     return data || {};
   }
+}
+
+export async function getPageConfigs(): Promise<PageConfigData[]> {
+  if (USE_API_DATA) {
+    // In API mode, use the API endpoint which will fetch from dashboard
+    const response = await fetchFromAPI<{
+      success: boolean;
+      data: PageConfigData[];
+    }>("/api/page-config");
+    return response?.data || [];
+  } else {
+    // In static mode, directly fetch the JSON file without API layer
+    const data = await fetchStaticData<PageConfigData[]>("page-config.json");
+    return data || [];
+  }
+}
+
+export async function isPageEnabled(pageId: string): Promise<boolean> {
+  const configs = await getPageConfigs();
+  const pageConfig = configs.find((config) => config.pageId === pageId);
+  return pageConfig ? pageConfig.enabled : true; // Default to enabled if not found
 }
 
 // Utility function to check current mode

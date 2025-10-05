@@ -16,6 +16,7 @@ import {
   ProjectData,
   getDataMode,
 } from "@/lib/data-provider-client";
+import { usePageConfigs } from "./hooks/usePageConfigs";
 import DataModeIndicator from "./components/DataModeIndicator";
 
 // ProjectData is now imported from data-provider
@@ -43,6 +44,9 @@ export default function Home() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   // City context is used by the Header component and CityModal
   const { selectedCity, setShowCityModal } = useCity();
+
+  // Page configuration hook for conditional rendering
+  const { isPageEnabled } = usePageConfigs();
 
   // Add accordion state for packages - simplified to track which section is open
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
@@ -2262,262 +2266,267 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-8 sm:py-10 lg:py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
-              {testimonialsSection.title}
-            </h2>
-            <p className="text-lg sm:text-xl text-amber-800">
-              {testimonialsSection.subtitle}
-            </p>
-          </div>
+      {isPageEnabled("testimonials") && (
+        <section className="py-8 sm:py-10 lg:py-12 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-amber-900 mb-4">
+                {testimonialsSection.title}
+              </h2>
+              <p className="text-lg sm:text-xl text-amber-800">
+                {testimonialsSection.subtitle}
+              </p>
+            </div>
 
-          {/* Video Testimonials Carousel */}
-          <div className="relative max-w-6xl mx-auto">
-            {/* Navigation Arrows - Desktop only */}
-            <button
-              onClick={prevTestimonial}
-              className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {/* Video Testimonials Carousel */}
+            <div className="relative max-w-6xl mx-auto">
+              {/* Navigation Arrows - Desktop only */}
+              <button
+                onClick={prevTestimonial}
+                className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={nextTestimonial}
-              className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-
-            {/* Video Testimonials - Single testimonial on mobile, 3 columns on desktop */}
-            <div className="block md:hidden">
-              {/* Mobile: Single testimonial carousel */}
-              <div className="relative overflow-hidden rounded-2xl carousel-container">
-                <div
-                  ref={testimonialRef}
-                  className={`flex transition-transform duration-300 ease-out ${
-                    isTestimonialDragging ? "transition-none" : ""
-                  }`}
-                  style={{
-                    transform: `translate3d(calc(-${
-                      (currentTestimonial + testimonials.length) * 100
-                    }% + ${testimonialDragOffset}px), 0, 0)`,
-                    touchAction: "pan-y",
-                    willChange: "transform",
-                  }}
-                  onTouchStart={testimonialHandleTouchStart}
-                  onTouchMove={testimonialHandleTouchMove}
-                  onTouchEnd={testimonialHandleTouchEnd}
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {/* Previous set for seamless left scrolling */}
-                  {testimonials.map((testimonial) => (
-                    <div
-                      key={`prev-${testimonial.id}`}
-                      className="w-full flex-shrink-0"
-                    >
-                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
-                        <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                          {testimonial.videoUrl && (
-                            <iframe
-                              className="w-full h-full"
-                              src={testimonial.videoUrl}
-                              title={`Customer Testimonial ${testimonial.id}`}
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                            ></iframe>
-                          )}
-                        </div>
-                        <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
-                          <div className="flex items-center justify-center mb-4">
-                            <svg
-                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                            </svg>
-                          </div>
-                          <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                            {testimonial.quote}
-                          </p>
-                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                            {testimonial.name}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={nextTestimonial}
+                className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
 
-                  {/* Current set - main testimonials */}
-                  {testimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="w-full flex-shrink-0">
-                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
-                        <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                          {testimonial.videoUrl && (
-                            <iframe
-                              className="w-full h-full"
-                              src={testimonial.videoUrl}
-                              title={`Customer Testimonial ${testimonial.id}`}
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                            ></iframe>
-                          )}
-                        </div>
-                        <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
-                          <div className="flex items-center justify-center mb-4">
-                            <svg
-                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                            </svg>
+              {/* Video Testimonials - Single testimonial on mobile, 3 columns on desktop */}
+              <div className="block md:hidden">
+                {/* Mobile: Single testimonial carousel */}
+                <div className="relative overflow-hidden rounded-2xl carousel-container">
+                  <div
+                    ref={testimonialRef}
+                    className={`flex transition-transform duration-300 ease-out ${
+                      isTestimonialDragging ? "transition-none" : ""
+                    }`}
+                    style={{
+                      transform: `translate3d(calc(-${
+                        (currentTestimonial + testimonials.length) * 100
+                      }% + ${testimonialDragOffset}px), 0, 0)`,
+                      touchAction: "pan-y",
+                      willChange: "transform",
+                    }}
+                    onTouchStart={testimonialHandleTouchStart}
+                    onTouchMove={testimonialHandleTouchMove}
+                    onTouchEnd={testimonialHandleTouchEnd}
+                  >
+                    {/* Previous set for seamless left scrolling */}
+                    {testimonials.map((testimonial) => (
+                      <div
+                        key={`prev-${testimonial.id}`}
+                        className="w-full flex-shrink-0"
+                      >
+                        <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                          <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                            {testimonial.videoUrl && (
+                              <iframe
+                                className="w-full h-full"
+                                src={testimonial.videoUrl}
+                                title={`Customer Testimonial ${testimonial.id}`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                              ></iframe>
+                            )}
                           </div>
-                          <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                            {testimonial.quote}
-                          </p>
-                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                            {testimonial.name}
+                          <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                            <div className="flex items-center justify-center mb-4">
+                              <svg
+                                className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                              </svg>
+                            </div>
+                            <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                              {testimonial.quote}
+                            </p>
+                            <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                              {testimonial.name}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  {/* Next set for seamless right scrolling */}
-                  {testimonials.map((testimonial) => (
-                    <div
-                      key={`next-${testimonial.id}`}
-                      className="w-full flex-shrink-0"
-                    >
-                      <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
-                        <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                          {testimonial.videoUrl && (
-                            <iframe
-                              className="w-full h-full"
-                              src={testimonial.videoUrl}
-                              title={`Customer Testimonial ${testimonial.id}`}
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                            ></iframe>
-                          )}
-                        </div>
-                        <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
-                          <div className="flex items-center justify-center mb-4">
-                            <svg
-                              className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                            </svg>
+                    {/* Current set - main testimonials */}
+                    {testimonials.map((testimonial) => (
+                      <div
+                        key={testimonial.id}
+                        className="w-full flex-shrink-0"
+                      >
+                        <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                          <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                            {testimonial.videoUrl && (
+                              <iframe
+                                className="w-full h-full"
+                                src={testimonial.videoUrl}
+                                title={`Customer Testimonial ${testimonial.id}`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                              ></iframe>
+                            )}
                           </div>
-                          <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                            {testimonial.quote}
-                          </p>
-                          <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                            {testimonial.name}
+                          <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                            <div className="flex items-center justify-center mb-4">
+                              <svg
+                                className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                              </svg>
+                            </div>
+                            <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                              {testimonial.quote}
+                            </p>
+                            <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                              {testimonial.name}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+
+                    {/* Next set for seamless right scrolling */}
+                    {testimonials.map((testimonial) => (
+                      <div
+                        key={`next-${testimonial.id}`}
+                        className="w-full flex-shrink-0"
+                      >
+                        <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                          <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                            {testimonial.videoUrl && (
+                              <iframe
+                                className="w-full h-full"
+                                src={testimonial.videoUrl}
+                                title={`Customer Testimonial ${testimonial.id}`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                              ></iframe>
+                            )}
+                          </div>
+                          <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                            <div className="flex items-center justify-center mb-4">
+                              <svg
+                                className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                              </svg>
+                            </div>
+                            <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                              {testimonial.quote}
+                            </p>
+                            <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                              {testimonial.name}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Desktop: All testimonials visible */}
-            <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={testimonial.id}
-                  className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
-                >
-                  <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                    {testimonial.videoUrl && (
-                      <iframe
-                        className="w-full h-full"
-                        src={testimonial.videoUrl}
-                        title={`Customer Testimonial ${index + 1}`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                      ></iframe>
-                    )}
-                  </div>
-                  <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                    <div className="flex items-center justify-center mb-4">
-                      <svg
-                        className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                      </svg>
+              {/* Desktop: All testimonials visible */}
+              <div className="hidden md:grid md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={testimonial.id}
+                    className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
+                  >
+                    <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                      {testimonial.videoUrl && (
+                        <iframe
+                          className="w-full h-full"
+                          src={testimonial.videoUrl}
+                          title={`Customer Testimonial ${index + 1}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                        ></iframe>
+                      )}
                     </div>
-                    <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                      {testimonial.quote}
-                    </p>
-                    <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                      {testimonial.name}
+                    <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
+                      <div className="flex items-center justify-center mb-4">
+                        <svg
+                          className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                        </svg>
+                      </div>
+                      <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                        {testimonial.quote}
+                      </p>
+                      <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                        {testimonial.name}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* Mobile Pagination Dots */}
-            <div className="flex justify-center mt-6 space-x-2 md:hidden">
-              {testimonials.map((_, index) => {
-                const actualCurrentTestimonial =
-                  ((currentTestimonial % testimonials.length) +
-                    testimonials.length) %
-                  testimonials.length;
-                return (
-                  <button
-                    key={index}
-                    onClick={() => goToTestimonial(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                      index === actualCurrentTestimonial
-                        ? "bg-gray-800"
-                        : "bg-gray-300 hover:bg-gray-400"
-                    }`}
-                  />
-                );
-              })}
-            </div>
+              {/* Mobile Pagination Dots */}
+              <div className="flex justify-center mt-6 space-x-2 md:hidden">
+                {testimonials.map((_, index) => {
+                  const actualCurrentTestimonial =
+                    ((currentTestimonial % testimonials.length) +
+                      testimonials.length) %
+                    testimonials.length;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => goToTestimonial(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                        index === actualCurrentTestimonial
+                          ? "bg-gray-800"
+                          : "bg-gray-300 hover:bg-gray-400"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
 
-            {/* Desktop Pagination Dots - Remove this section since desktop shows all testimonials */}
+              {/* Desktop Pagination Dots - Remove this section since desktop shows all testimonials */}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Contact Form */}
       <ContactForm />

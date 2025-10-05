@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import FooterNavigation from "./FooterNavigation";
 
 interface CompanySettings {
   company_name: string;
@@ -20,8 +21,7 @@ interface CompanySettings {
 async function getCompanySettings(): Promise<CompanySettings> {
   try {
     // For server-side rendering, we need to use absolute URL to dashboard
-    const baseUrl =
-      process.env.NEXT_PUBLIC_DASHBOARD_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
     const url = `${baseUrl}/api/company-settings`;
 
     const response = await fetch(url, {
@@ -181,67 +181,7 @@ export default async function Footer() {
           </div>
 
           {/* Company Section */}
-          <div className="lg:col-span-4">
-            <h3 className="text-xl font-semibold mb-6 text-white">Company</h3>
-            <ul className="space-y-4 text-base text-gray-300">
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-white transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/projects"
-                  className="hover:text-white transition-colors"
-                >
-                  Gallery
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/testimonials"
-                  className="hover:text-white transition-colors"
-                >
-                  Testimonials
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="hover:text-white transition-colors"
-                >
-                  Contact us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/faq"
-                  className="hover:text-white transition-colors"
-                >
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blogs"
-                  className="hover:text-white transition-colors"
-                >
-                  Blogs & Articles
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/sitemap-page"
-                  className="hover:text-white transition-colors"
-                >
-                  Sitemap
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <FooterNavigation />
 
           {/* Legal Section */}
           <div className="lg:col-span-3">
