@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 import ContactForm from "../../components/ContactForm";
 import FloatingBookButton from "../../components/FloatingBookButton";
 import Link from "next/link";
+import { getBlogBySlug, getBlogs } from "@/lib/data-provider-client";
 
 interface BlogPost {
   id: string;
@@ -41,29 +42,33 @@ export default function BlogPostClient({ slug }: { slug: string }) {
 
   const loadBlogPost = useCallback(async () => {
     try {
-      const response = await fetch(`/api/content/blogs/${slug}`);
+      // Use data provider instead of direct API call
+      const post = await getBlogBySlug(slug);
 
-      if (response.ok) {
-        const post = await response.json();
+      if (post) {
         setBlogPost(post);
 
-        // Load related posts
-        if (post.categorySlug) {
-          const relatedResponse = await fetch(
-            `/api/content/blogs?category=${post.categorySlug}&limit=3`
-          );
-          if (relatedResponse.ok) {
-            const allPosts = await relatedResponse.json();
-            const filtered = allPosts
-              .filter((p: RelatedPost) => p.slug !== slug)
-              .slice(0, 3);
-            setRelatedPosts(filtered);
-          }
+        // Load related posts - get all blogs and filter by category
+        if (post.category_id) {
+          const allBlogs = await getBlogs();
+          const relatedPosts = allBlogs
+            .filter(
+              (p: any) => p.slug !== slug && p.category_id === post.category_id
+            )
+            .slice(0, 3)
+            .map((p: any) => ({
+              id: p.id,
+              title: p.title,
+              slug: p.slug,
+              excerpt: p.excerpt,
+              image: p.featured_image || "/images/blog-placeholder.jpg",
+              category: p.category || "General",
+            }));
+          setRelatedPosts(relatedPosts);
         }
-      } else if (response.status === 404) {
-        notFound();
       } else {
-        throw new Error("Failed to fetch blog post");
+        // Blog post not found
+        notFound();
       }
     } catch (error) {
       console.error("Error loading blog post:", error);

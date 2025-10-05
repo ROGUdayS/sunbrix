@@ -1,27 +1,13 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { getBlogBySlug } from "@/lib/data-provider-client";
 import BlogPostClient from "./BlogPostClient";
 
-// Fetch blog post data server-side for SEO
+// Fetch blog post data server-side for SEO using data provider
 async function getBlogPost(slug: string) {
   try {
-    // Build base URL from request headers to support any host/port
-    const h = await headers();
-    const host = h.get("host") || "localhost:3000";
-    const protocol =
-      h.get("x-forwarded-proto") ||
-      (process.env.NODE_ENV === "production" ? "https" : "http");
-    const baseUrl = `${protocol}://${host}`;
-
-    const response = await fetch(`${baseUrl}/api/content/blogs/${slug}`, {
-      next: { revalidate: 3600 }, // Revalidate every hour
-    });
-
-    if (!response.ok) {
-      return null;
-    }
-
-    return await response.json();
+    // Use the data provider which respects static/API mode
+    const blogPost = await getBlogBySlug(slug);
+    return blogPost;
   } catch (error) {
     console.error("Error fetching blog post:", error);
     return null;

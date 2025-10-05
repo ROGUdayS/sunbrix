@@ -320,6 +320,19 @@ export async function isPageEnabled(pageId: string): Promise<boolean> {
   return pageConfig ? pageConfig.enabled : true; // Default to enabled if not found
 }
 
+export async function getCompanySettings(): Promise<any> {
+  if (USE_API_DATA) {
+    const response = await fetchFromAPI<{
+      success: boolean;
+      settings: any;
+    }>("/api/company-settings");
+    return response?.settings || {};
+  } else {
+    const data = await readStaticData<any>("company-settings.json");
+    return data || {};
+  }
+}
+
 // Utility function to check current mode
 export function isUsingAPIData(): boolean {
   return USE_API_DATA;
