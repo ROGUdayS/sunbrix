@@ -30,9 +30,9 @@ async function getCompanySettingsForFooter(): Promise<CompanySettings> {
 
   // Return fallback defaults if fetch fails
   return {
-    company_name: "Sunbrix",
-    contact_email: "info@sunbrix.co",
-    contact_phone: "+91 9876543210",
+    company_name: "SUNBRIX Constructions",
+    contact_email: "sunbrix.co@gmail.com",
+    contact_phone: "+91 8867920940",
     show_facebook: false,
     facebook_url: null,
     show_instagram: false,
