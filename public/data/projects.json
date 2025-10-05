@@ -1,113 +1,120 @@
 {
   "projects": [
     {
-      "id": "cmfi8ngg200f4osscbhxjj69b",
-      "title": "Compact 2-BHK Apartment",
-      "location": "Bellary",
-      "year": "2023",
-      "plotSize": "25x40 sq. ft",
-      "facing": "South",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/compact-2-bhk-apartment-bellary/exterior-1.jpg",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/compact-2-bhk-apartment-bellary/exterior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/compact-2-bhk-apartment-bellary/interior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/compact-2-bhk-apartment-bellary/elevation-1.jpg"
-      ],
-      "image_alt_texts": [
-        "Compact 2-BHK Apartment - Exterior view showing modern architecture and South facing",
-        "Compact 2-BHK Apartment - Interior view showcasing spacious 2-BHK layout",
-        "Compact 2-BHK Apartment - Building elevation displaying contemporary design elements"
-      ],
-      "description": "A compact apartment designed for small families with smart space utilization and modern amenities.",
-      "specifications": {
-        "bedrooms": 2
-      },
-      "active": true,
-      "created_at": "2025-09-13T12:24:27.303Z",
-      "updated_at": "2025-09-13T12:24:27.303Z"
-    },
-    {
-      "id": "cmfi8ngl100f5ossckx3rdl5m",
-      "title": "Luxury 4-BHK Duplex",
+      "id": "cmfux3ll50001l509gheu02pz",
+      "title": "Shankar Lal & Brothers - Sunbrix",
       "location": "Bengaluru",
-      "year": "2024",
-      "plotSize": "40x60 sq. ft",
+      "year": "2011",
+      "plotSize": "4400 Sq.ft",
       "facing": "North",
       "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/exterior-1.jpg",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal-house---sunbrix/LAL%20-1758532908777-mzpdytlyyk.png",
       "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/exterior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/interior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg"
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal-house---sunbrix/LAL%20-1758532908777-mzpdytlyyk.png"
       ],
       "image_alt_texts": [
-        "Luxury 4-BHK Duplex - Exterior view showing modern architecture and North facing",
-        "Luxury 4-BHK Duplex - Interior view showcasing spacious 4-BHK layout",
-        "Luxury 4-BHK Duplex - Building elevation displaying contemporary design elements"
+        "Shankar Lal's & Brothers - Sunbrix"
       ],
-      "description": "A luxury duplex designed for large families with premium finishes and spacious interiors.",
+      "description": "House built for three brothers who wanted to live with each other along with their family, equal space distribution among all houses.",
       "specifications": {
-        "bedrooms": 4
+        "bedrooms": "6"
       },
       "active": true,
-      "created_at": "2025-09-13T12:24:27.303Z",
-      "updated_at": "2025-09-13T12:24:27.303Z"
+      "created_at": "2025-09-22T09:22:04.065Z",
+      "updated_at": "2025-09-22T09:22:04.065Z"
     },
     {
-      "id": "cmfi8ng6f00f2ossc99qrzo39",
-      "title": "Modern 3-BHK Villa",
+      "id": "cmgdnha430000l209ca8epoda",
+      "title": "Anuj & Manoj Lunia - Sunbrix",
       "location": "Bengaluru",
-      "year": "2024",
-      "plotSize": "30x50 sq. ft",
-      "facing": "East",
+      "year": "2005",
+      "plotSize": "4400",
+      "facing": "North",
       "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png",
       "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/interior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/elevation-1.jpg"
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png"
       ],
       "image_alt_texts": [
-        "Modern 3-BHK Villa exterior view",
-        "Spacious interior living room",
-        "Beautiful elevation design"
+        "Anuj & Manoj Lunia's house - Built by Sunbrix"
       ],
-      "description": "A modern 3-story residence designed with contemporary architecture and optimal space utilization.",
+      "description": "First house built by Sunbrix, however the house hasn't been painted ever since",
       "specifications": {
-        "bedrooms": 3
+        "bedrooms": "6"
       },
       "active": true,
-      "created_at": "2025-09-13T12:24:27.303Z",
-      "updated_at": "2025-09-13T12:24:27.303Z"
+      "created_at": "2025-10-05T12:00:25.203Z",
+      "updated_at": "2025-10-05T12:00:25.203Z"
     },
     {
-      "id": "cmfi8ngbd00f3osscq6pv31n2",
-      "title": "Cozy 2-BHK Home",
-      "location": "Bellary",
+      "id": "cmgdntzhw0000lb09si4j88hh",
+      "title": "Srinath House Sunbrix",
+      "location": "Bengaluru",
       "year": "2023",
-      "plotSize": "30x40 sq. ft",
-      "facing": "East",
+      "plotSize": "1100",
+      "facing": "North",
       "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/exterior-1.jpg",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp",
       "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/exterior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/elevation-1.jpg"
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp"
       ],
       "image_alt_texts": [
-        "checking alt tags",
-        "Cozy 2-BHK Home - Interior view showcasing spacious 2-BHK layout",
-        "Cozy 2-BHK Home - Building elevation displaying contemporary design elements"
+        "Srinath House Sunbrix"
       ],
-      "description": "A cozy 2-story home designed for young families with efficient space planning.",
+      "description": "Built for a close friend who wanted to move and settle into his house own house with his family. ",
       "specifications": {
-        "bedrooms": 2
+        "bedrooms": "2"
       },
       "active": true,
-      "created_at": "2025-09-13T12:24:27.303Z",
-      "updated_at": "2025-09-16T12:38:25.292Z"
+      "created_at": "2025-10-05T12:10:16.795Z",
+      "updated_at": "2025-10-05T12:10:16.795Z"
+    },
+    {
+      "id": "cmftvpy850000jo09e55cky6d",
+      "title": "Kiran Hulla Sunbrix",
+      "location": "Bengaluru",
+      "year": "2010",
+      "plotSize": "8000 Sqft",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png"
+      ],
+      "image_alt_texts": [
+        "Kiran Hulla House | Sunbrix Constructions"
+      ],
+      "description": "This is a bunglow built for Mr. Kiran Holla & Family kiran hullla was a fantastic client he did great decisions his house had marble and other floorings his house is in maruti layout",
+      "specifications": {
+        "bedrooms": "8"
+      },
+      "active": true,
+      "created_at": "2025-09-21T15:55:43.109Z",
+      "updated_at": "2025-09-21T16:34:36.339Z"
+    },
+    {
+      "id": "cmfuwuxgn0000l509ztns1dca",
+      "title": "Shashikala House - Sunbrix",
+      "location": "Bengaluru",
+      "year": "2012",
+      "plotSize": "1500 Sq.ft",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shashikala-house---sunbrix/Cropped-1758532505829-ddjmi4hf8mg.png",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shashikala-house---sunbrix/Cropped-1758532505829-ddjmi4hf8mg.png"
+      ],
+      "image_alt_texts": [
+        "Shashikala's House 375 Sqft plot - Sunbrix"
+      ],
+      "description": "A compact house built on 375 Sq.ft plot an architectural marvel to prove how much space a family really needs for a spacious, bright and happy home.",
+      "specifications": {
+        "bedrooms": "3"
+      },
+      "active": true,
+      "created_at": "2025-09-22T09:15:21.186Z",
+      "updated_at": "2025-09-22T09:15:21.186Z"
     }
   ],
-  "count": 4
+  "count": 5
 }

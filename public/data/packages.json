@@ -3,11 +3,11 @@
     "title": "Standard",
     "popular": false,
     "pricing": {
-      "cmfi8m1es0000ossc68o9sty6": {
+      "cmftum8u10000os6j63r6qe7j": {
         "price": "₹ 1,850",
         "startingAt": false
       },
-      "cmfi8m1ji0001osscdvj4vahe": {
+      "cmftum8zt0001os6jnszcn9un": {
         "price": "₹ 1,650",
         "startingAt": false
       }
@@ -98,17 +98,17 @@
         "title": "Railing and handrails"
       }
     },
-    "updated_at": "2025-09-13T12:23:22.188Z"
+    "updated_at": "2025-09-21T15:24:51.036Z"
   },
   "premium": {
     "title": "Premium",
     "popular": false,
     "pricing": {
-      "cmfi8m1es0000ossc68o9sty6": {
+      "cmftum8u10000os6j63r6qe7j": {
         "price": "₹ 2,250",
         "startingAt": false
       },
-      "cmfi8m1ji0001osscdvj4vahe": {
+      "cmftum8zt0001os6jnszcn9un": {
         "price": "₹ 2,050",
         "startingAt": false
       }
@@ -199,17 +199,17 @@
         "title": "Railing and handrails"
       }
     },
-    "updated_at": "2025-09-13T12:23:33.711Z"
+    "updated_at": "2025-09-21T15:25:01.691Z"
   },
   "luxury": {
     "title": "Luxury",
     "popular": false,
     "pricing": {
-      "cmfi8m1es0000ossc68o9sty6": {
+      "cmftum8u10000os6j63r6qe7j": {
         "price": "₹ 2,850",
         "startingAt": false
       },
-      "cmfi8m1ji0001osscdvj4vahe": {
+      "cmftum8zt0001os6jnszcn9un": {
         "price": "₹ 2,650",
         "startingAt": false
       }
@@ -300,6 +300,6 @@
         "title": "Railing and handrails"
       }
     },
-    "updated_at": "2025-09-13T12:23:44.706Z"
+    "updated_at": "2025-09-21T15:25:12.278Z"
   }
 }
