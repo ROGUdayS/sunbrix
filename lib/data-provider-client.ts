@@ -298,6 +298,18 @@ export async function getBlogs(): Promise<any[]> {
   }
 }
 
+export async function getBlogBySlug(slug: string): Promise<any | null> {
+  if (USE_API_DATA) {
+    const data = await fetchFromAPI<any>(`/api/content/blogs/${slug}`);
+    return data || null;
+  } else {
+    // In static mode, get all blogs and find the one with matching slug
+    const blogs = await getBlogs();
+    const blog = blogs.find((b: any) => b.slug === slug);
+    return blog || null;
+  }
+}
+
 export async function getBlogContent(): Promise<any> {
   if (USE_API_DATA) {
     const data = await fetchFromAPI<any>("/api/content/blogs/page-content");
@@ -357,6 +369,16 @@ export async function isPageEnabled(pageId: string): Promise<boolean> {
   const configs = await getPageConfigs();
   const pageConfig = configs.find((config) => config.pageId === pageId);
   return pageConfig ? pageConfig.enabled : true; // Default to enabled if not found
+}
+
+export async function getCompanySettings(): Promise<any> {
+  if (USE_API_DATA) {
+    const data = await fetchFromAPI<any>("/api/company-settings");
+    return data?.settings || {};
+  } else {
+    const data = await fetchStaticData<any>("company-settings.json");
+    return data || {};
+  }
 }
 
 // Utility function to check current mode

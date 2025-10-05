@@ -33,19 +33,17 @@ interface SyncMeta {
 
 async function syncPageConfigData(): Promise<void> {
   try {
-    console.log("🔄 Starting page config data sync...");
+    console.log("Starting page config data sync...");
 
     // Get dashboard URL from environment
     const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
     if (!dashboardUrl) {
       throw new Error(
-        "❌ NEXT_PUBLIC_DASHBOARD_URL not found in environment variables"
+        "NEXT_PUBLIC_DASHBOARD_URL not found in environment variables"
       );
     }
 
-    console.log(
-      `📡 Fetching page config from: ${dashboardUrl}/api/page-config`
-    );
+    console.log(`Fetching page config from: ${dashboardUrl}/api/page-config`);
 
     // Fetch page config data from dashboard
     const response = await fetch(`${dashboardUrl}/api/page-config`, {
@@ -55,11 +53,11 @@ async function syncPageConfigData(): Promise<void> {
     });
 
     if (!response.ok) {
-      throw new Error(`❌ API request failed with status: ${response.status}`);
+      throw new Error(`API request failed with status: ${response.status}`);
     }
 
     const pageConfigs: PageConfig[] = await response.json();
-    console.log(`✅ Fetched ${pageConfigs.length} page configurations`);
+    console.log(`Fetched ${pageConfigs.length} page configurations`);
 
     // Ensure public/data directory exists
     const dataDir = path.join(process.cwd(), "public", "data");
@@ -69,25 +67,25 @@ async function syncPageConfigData(): Promise<void> {
     const filePath = path.join(dataDir, "page-config.json");
     await fs.writeFile(filePath, JSON.stringify(pageConfigs, null, 2), "utf8");
 
-    console.log(`💾 Page config data saved to: ${filePath}`);
+    console.log(`Page config data saved to: ${filePath}`);
 
     // Log summary
     const enabledPages = pageConfigs.filter((config) => config.enabled);
     const disabledPages = pageConfigs.filter((config) => !config.enabled);
 
-    console.log("\n📊 Summary:");
+    console.log("\nSummary:");
     console.log(`   • Total pages: ${pageConfigs.length}`);
     console.log(`   • Enabled: ${enabledPages.length}`);
     console.log(`   • Disabled: ${disabledPages.length}`);
 
     if (disabledPages.length > 0) {
-      console.log("\n⚠️  Disabled pages:");
+      console.log("\n Disabled pages:");
       disabledPages.forEach((page) => {
         console.log(`   • ${page.pageName} (${page.pageId})`);
       });
     }
 
-    console.log("\n✅ Page config sync completed successfully!");
+    console.log("\nPage config sync completed successfully!");
 
     // Update sync metadata
     const syncMeta: SyncMeta = {
@@ -115,10 +113,10 @@ async function syncPageConfigData(): Promise<void> {
     };
 
     await fs.writeFile(metaPath, JSON.stringify(updatedMeta, null, 2), "utf8");
-    console.log("📋 Sync metadata updated");
+    console.log("Sync metadata updated");
   } catch (error) {
     console.error(
-      "❌ Error syncing page config data:",
+      "Error syncing page config data:",
       error instanceof Error ? error.message : String(error)
     );
     process.exit(1);

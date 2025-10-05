@@ -184,8 +184,6 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        console.log(`🔄 Loading data in ${getDataMode()} mode`);
-
         // Fetch projects
         const projectsResult = await getProjects(true);
         if (projectsResult && projectsResult.projects) {

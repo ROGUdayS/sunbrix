@@ -3,23 +3,7 @@
 import Header from "../components/Header";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface ProjectData {
-  id: string;
-  title: string;
-  location: string;
-  year: string;
-  plotSize: string;
-  facing: string;
-  property_type: string;
-  image: string;
-  images: string[];
-  description: string;
-  specifications: any;
-  active: boolean;
-  created_at: string;
-  updated_at: string;
-}
+import { getProjects, ProjectData } from "@/lib/data-provider-client";
 
 interface SitemapSection {
   title: string;
@@ -37,11 +21,9 @@ export default function SitemapPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("/data/projects.json");
-        if (response.ok) {
-          const data = await response.json();
-          setProjects(data.projects || []);
-        }
+        // Use data provider instead of direct file fetch
+        const data = await getProjects();
+        setProjects(data.projects || []);
       } catch (error) {
         console.error("Error fetching projects:", error);
       }

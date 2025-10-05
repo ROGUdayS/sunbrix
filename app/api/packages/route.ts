@@ -7,9 +7,6 @@ export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   try {
-    const timestamp = new Date().toISOString();
-    console.log(`[LANDER] 🔄 Fetching packages at ${timestamp}`);
-
     const { searchParams } = new URL(request.url);
     const active = searchParams.get("active");
 
@@ -21,7 +18,6 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all active cities with their packages
-    console.log(`[LANDER] 📊 Querying database for cities and packages...`);
     const cities = await prisma.city.findMany({
       where: { active: true },
       include: {
@@ -45,20 +41,6 @@ export async function GET(request: NextRequest) {
       orderBy: { display_order: "asc" },
     });
 
-    console.log(`[LANDER] 📈 Found ${cities.length} cities with packages`);
-    cities.forEach((city) => {
-      console.log(
-        `[LANDER]   - ${city.name}: ${city.packages.length} packages`
-      );
-      city.packages.forEach((pkg) => {
-        console.log(
-          `[LANDER]     - ${pkg.name}: ${
-            pkg.sections.length
-          } sections, JSON data: ${!!pkg.package_data}`
-        );
-      });
-    });
-
     // Transform data to match the expected frontend format
     const packages: Record<string, Record<string, unknown>> = {};
 
@@ -70,14 +52,6 @@ export async function GET(request: NextRequest) {
         // Check if we have JSON data, if so use it as the base
         if (pkg.package_data && typeof pkg.package_data === "object") {
           const jsonData = pkg.package_data as Record<string, unknown>;
-          console.log(`[LANDER] 📦 Processing ${packageKey} with JSON data:`, {
-            hasTitle: !!jsonData.title,
-            hasPricing: !!jsonData.pricing,
-            hasSections: !!jsonData.sections,
-            sectionsCount: jsonData.sections
-              ? Object.keys(jsonData.sections as Record<string, unknown>).length
-              : 0,
-          });
 
           // Initialize package if it doesn't exist
           if (!packages[packageKey]) {
@@ -97,10 +71,6 @@ export async function GET(request: NextRequest) {
           ) {
             (packages[packageKey].pricing as Record<string, unknown>)[city.id] =
               (jsonData.pricing as Record<string, unknown>)[city.id];
-            console.log(
-              `[LANDER] 💰 Used JSON pricing for ${packageKey}:`,
-              (jsonData.pricing as Record<string, unknown>)[city.id]
-            );
           } else {
             // Fallback to calculated pricing
             const fallbackPricing = {
@@ -109,10 +79,6 @@ export async function GET(request: NextRequest) {
             };
             (packages[packageKey].pricing as Record<string, unknown>)[city.id] =
               fallbackPricing;
-            console.log(
-              `[LANDER] 💰 Used fallback pricing for ${packageKey}:`,
-              fallbackPricing
-            );
           }
 
           // Use sections from relational data (ordered by display_order) instead of JSON data
@@ -144,15 +110,6 @@ export async function GET(request: NextRequest) {
 
             packages[packageKey].sections = orderedSections;
             packages[packageKey].updated_at = pkg.updated_at;
-
-            console.log(
-              `[LANDER] 📋 Using relational sections for ${packageKey} from ${city.name}:`,
-              Object.keys(orderedSections)
-            );
-          } else {
-            console.log(
-              `[LANDER] 📋 Keeping existing sections for ${packageKey} (current is more recent than ${city.name})`
-            );
           }
         } else {
           // Fallback to relational data transformation (backward compatibility)
@@ -196,19 +153,9 @@ export async function GET(request: NextRequest) {
       });
     });
 
-    // Log final package summary
-    const finalPackageKeys = Object.keys(packages);
-    console.log(`[LANDER] 🎯 Final packages summary:`);
-    finalPackageKeys.forEach((key) => {
-      const pkg = packages[key];
-      const sectionsCount = pkg.sections
-        ? Object.keys(pkg.sections as Record<string, unknown>).length
-        : 0;
-      console.log(`[LANDER]   - ${key}: ${sectionsCount} sections`);
-    });
-
     // Clean up packages object - remove internal fields before returning
     const cleanPackages: Record<string, Record<string, unknown>> = {};
+    const finalPackageKeys = Object.keys(packages);
     finalPackageKeys.forEach((key) => {
       const { ...cleanPackage } = packages[key];
       cleanPackages[key] = cleanPackage;

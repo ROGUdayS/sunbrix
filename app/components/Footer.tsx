@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import FooterNavigation from "./FooterNavigation";
+import { getCompanySettings } from "@/lib/data-provider";
 
 interface CompanySettings {
   company_name: string;
@@ -18,28 +19,16 @@ interface CompanySettings {
   privacy_policy: string | null;
 }
 
-async function getCompanySettings(): Promise<CompanySettings> {
+async function getCompanySettingsForFooter(): Promise<CompanySettings> {
   try {
-    // For server-side rendering, we need to use absolute URL to dashboard
-    const baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
-    const url = `${baseUrl}/api/company-settings`;
-
-    const response = await fetch(url, {
-      cache: "force-cache",
-      next: { revalidate: 300 }, // Revalidate every 5 minutes
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success && data.settings) {
-        return data.settings;
-      }
-    }
+    // Use server-side data provider which respects static/API mode
+    const settings = await getCompanySettings();
+    return settings;
   } catch (error) {
     console.error("Failed to fetch company settings:", error);
   }
 
-  // Fallback to default settings
+  // Return fallback defaults if fetch fails
   return {
     company_name: "SUNBRIX Constructions",
     contact_email: "sunbrix.co@gmail.com",
@@ -58,7 +47,7 @@ async function getCompanySettings(): Promise<CompanySettings> {
 }
 
 export default async function Footer() {
-  const settings = await getCompanySettings();
+  const settings = await getCompanySettingsForFooter();
 
   return (
     <footer className="bg-gray-900 text-white py-16">
@@ -85,16 +74,19 @@ export default async function Footer() {
                 Get in touch
               </div>
               <a
-                href={`mailto:${settings.contact_email}`}
+                href={`mailto:${settings.contact_email || ""}`}
                 className="text-base text-orange-400 hover:text-orange-300 transition-colors block"
               >
-                {settings.contact_email}
+                {settings.contact_email || "Contact Email"}
               </a>
               <a
-                href={`tel:${settings.contact_phone.replace(/\s+/g, "")}`}
+                href={`tel:${(settings.contact_phone || "").replace(
+                  /\s+/g,
+                  ""
+                )}`}
                 className="text-base text-orange-400 hover:text-orange-300 transition-colors block"
               >
-                {settings.contact_phone}
+                {settings.contact_phone || "Contact Number"}
               </a>
             </div>
             {/* Social Media Icons */}

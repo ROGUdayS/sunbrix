@@ -76,7 +76,7 @@ function checkAltTags(html, testName) {
 
 // Test static pages
 async function testStaticPages() {
-  console.log("🔍 Testing static pages for alt tags...\n");
+  console.log("Testing static pages for alt tags...\n");
 
   const pages = [
     { name: "Home Page", url: `${BASE_URL}/` },
@@ -90,7 +90,7 @@ async function testStaticPages() {
 
   for (const page of pages) {
     try {
-      console.log(`📄 Testing ${page.name}...`);
+      console.log(`Testing ${page.name}...`);
       const response = await makeRequest(page.url);
 
       if (response.statusCode === 200) {
@@ -102,22 +102,22 @@ async function testStaticPages() {
 
         if (errors.length === 0) {
           console.log(
-            `  ✅ ${page.name}: ${successes.length} images with valid alt tags`
+            `  ${page.name}: ${successes.length} images with valid alt tags`
           );
           results.static.passed++;
         } else {
           console.log(
-            `  ❌ ${page.name}: ${errors.length} images with missing/invalid alt tags`
+            `  ${page.name}: ${errors.length} images with missing/invalid alt tags`
           );
           errors.forEach((error) => console.log(`    - ${error.message}`));
           results.static.failed++;
         }
       } else {
-        console.log(`  ⚠️  ${page.name}: HTTP ${response.statusCode}`);
+        console.log(`  ${page.name}: HTTP ${response.statusCode}`);
         results.static.failed++;
       }
     } catch (error) {
-      console.log(`  ❌ ${page.name}: Error - ${error.message}`);
+      console.log(`  ${page.name}: Error - ${error.message}`);
       results.static.failed++;
     }
   }
@@ -125,7 +125,7 @@ async function testStaticPages() {
 
 // Test API endpoints
 async function testApiEndpoints() {
-  console.log("\n🔍 Testing API endpoints for alt tags...\n");
+  console.log("\nTesting API endpoints for alt tags...\n");
 
   const endpoints = [
     { name: "Projects API", url: `${API_BASE_URL}/projects` },
@@ -136,7 +136,7 @@ async function testApiEndpoints() {
 
   for (const endpoint of endpoints) {
     try {
-      console.log(`📡 Testing ${endpoint.name}...`);
+      console.log(`Testing ${endpoint.name}...`);
       const response = await makeRequest(endpoint.url);
 
       if (response.statusCode === 200) {
@@ -148,21 +148,21 @@ async function testApiEndpoints() {
         const successes = altTest.results.filter((r) => r.type === "success");
 
         if (errors.length === 0) {
-          console.log(`  ✅ ${endpoint.name}: All images have alt text`);
+          console.log(`  ${endpoint.name}: All images have alt text`);
           results.api.passed++;
         } else {
           console.log(
-            `  ❌ ${endpoint.name}: ${errors.length} images missing alt text`
+            `  ${endpoint.name}: ${errors.length} images missing alt text`
           );
           errors.forEach((error) => console.log(`    - ${error.message}`));
           results.api.failed++;
         }
       } else {
-        console.log(`  ⚠️  ${endpoint.name}: HTTP ${response.statusCode}`);
+        console.log(`  ${endpoint.name}: HTTP ${response.statusCode}`);
         results.api.failed++;
       }
     } catch (error) {
-      console.log(`  ❌ ${endpoint.name}: Error - ${error.message}`);
+      console.log(`  ${endpoint.name}: Error - ${error.message}`);
       results.api.failed++;
     }
   }
@@ -242,42 +242,42 @@ function checkApiDataForAltTags(data, testName) {
 
 // Generate test report
 function generateReport() {
-  console.log("\n📊 Test Report");
+  console.log("\nTest Report");
   console.log("=".repeat(50));
 
-  console.log("\n📄 Static Pages:");
-  console.log(`  ✅ Passed: ${results.static.passed}`);
-  console.log(`  ❌ Failed: ${results.static.failed}`);
-  console.log(`  📊 Total: ${results.static.passed + results.static.failed}`);
+  console.log("\nStatic Pages:");
+  console.log(`  Passed: ${results.static.passed}`);
+  console.log(`  Failed: ${results.static.failed}`);
+  console.log(` Total: ${results.static.passed + results.static.failed}`);
 
-  console.log("\n📡 API Endpoints:");
-  console.log(`  ✅ Passed: ${results.api.passed}`);
-  console.log(`  ❌ Failed: ${results.api.failed}`);
-  console.log(`  📊 Total: ${results.api.passed + results.api.failed}`);
+  console.log("\n API Endpoints:");
+  console.log(`  Passed: ${results.api.passed}`);
+  console.log(`  Failed: ${results.api.failed}`);
+  console.log(` Total: ${results.api.passed + results.api.failed}`);
 
   const totalPassed = results.static.passed + results.api.passed;
   const totalFailed = results.static.failed + results.api.failed;
   const totalTests = totalPassed + totalFailed;
 
-  console.log("\n🎯 Overall Results:");
-  console.log(`  ✅ Passed: ${totalPassed}`);
-  console.log(`  ❌ Failed: ${totalFailed}`);
+  console.log("\nOverall Results:");
+  console.log(`  Passed: ${totalPassed}`);
+  console.log(`  Failed: ${totalFailed}`);
   console.log(
-    `  📊 Success Rate: ${
+    ` Success Rate: ${
       totalTests > 0 ? Math.round((totalPassed / totalTests) * 100) : 0
     }%`
   );
 
   if (totalFailed === 0) {
-    console.log("\n🎉 All tests passed! Alt tags are properly implemented.");
+    console.log("\nAll tests passed! Alt tags are properly implemented.");
   } else {
-    console.log("\n⚠️  Some tests failed. Please check the issues above.");
+    console.log("\n Some tests failed. Please check the issues above.");
   }
 }
 
 // Main test function
 async function runTests() {
-  console.log("🚀 Starting Alt Tag Tests for sunr-next-app");
+  console.log("Starting Alt Tag Tests for sunr-next-app");
   console.log("=".repeat(50));
 
   try {
@@ -285,7 +285,7 @@ async function runTests() {
     await testApiEndpoints();
     generateReport();
   } catch (error) {
-    console.error("❌ Test execution failed:", error);
+    console.error("Test execution failed:", error);
     process.exit(1);
   }
 }
