@@ -3,6 +3,9 @@ import "./globals.css";
 import { CityProvider } from "./contexts/CityContext";
 import CityModal from "./components/CityModal";
 import Footer from "./components/Footer";
+import GoogleTagManager, {
+  GoogleTagManagerNoScript,
+} from "./components/GoogleTagManager";
 
 export const metadata: Metadata = {
   title: "Sunbrix - Building homes Since 1999",
@@ -35,8 +38,10 @@ export default function RootLayout({
         <meta name="msapplication-TileImage" content="/favicon.ico" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
+        <GoogleTagManager />
       </head>
       <body className="antialiased">
+        <GoogleTagManagerNoScript />
         <CityProvider>
           {children}
           <CityModal />
