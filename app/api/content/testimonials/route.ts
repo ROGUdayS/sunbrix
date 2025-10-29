@@ -7,19 +7,13 @@ const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const featured = searchParams.get('featured');
     const limit = parseInt(searchParams.get('limit') || '20');
     
-    const where: {
-      active: boolean;
-      featured?: boolean;
-    } = { active: true };
-    if (featured === 'true') where.featured = true;
+    const where = { active: true };
 
     const testimonials = await prisma.testimonial.findMany({
       where,
       orderBy: [
-        { featured: 'desc' },
         { order_index: 'asc' },
         { created_at: 'desc' }
       ],
@@ -27,15 +21,9 @@ export async function GET(request: NextRequest) {
       select: {
         id: true,
         customer_name: true,
-        customer_role: true,
-        company: true,
-        rating: true,
         testimonial_text: true,
-        project_type: true,
-        customer_image: true,
         video_url: true,
-        video_thumbnail: true,
-        featured: true
+        active: true
       }
     });
 
@@ -44,16 +32,17 @@ export async function GET(request: NextRequest) {
       id: index + 1, // Keep numeric IDs for compatibility
       originalId: testimonial.id,
       name: testimonial.customer_name,
-      role: testimonial.customer_role,
-      company: testimonial.company,
-      rating: testimonial.rating,
+      role: null, // Removed field
+      company: null, // Removed field
+      rating: 5, // Default rating for compatibility
       quote: testimonial.testimonial_text,
       testimonial: testimonial.testimonial_text, // Alternative field name
-      projectType: testimonial.project_type,
-      image: testimonial.customer_image,
-      videoUrl: testimonial.video_url,
-      videoThumbnail: testimonial.video_thumbnail,
-      featured: testimonial.featured
+      projectType: null, // Removed field
+      image: null, // Removed field
+      videoUrl: testimonial.video_url || '',
+      videoThumbnail: null, // Removed field
+      featured: false, // Removed field
+      active: testimonial.active
     }));
 
     // Set cache headers for better performance
