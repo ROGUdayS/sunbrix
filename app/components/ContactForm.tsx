@@ -13,6 +13,7 @@ interface FormData {
   email: string;
   mobileNumber: string;
   city: string;
+  timeline: string;
 }
 
 export default function ContactForm({
@@ -26,6 +27,7 @@ export default function ContactForm({
     email: "",
     mobileNumber: "",
     city: selectedCity?.name || "",
+    timeline: "",
   });
 
   const handleInputChange = (
@@ -185,7 +187,39 @@ export default function ContactForm({
               </div>
             </div>
 
-            {/* Row 5: Terms & Conditions text */}
+            {/* Row 5: Timeline of Construction */}
+            <div className="relative">
+              <select
+                name="timeline"
+                value={formData.timeline}
+                onChange={handleInputChange}
+                required
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-700 focus:border-transparent focus:ring-2 focus:ring-orange-400 outline-none appearance-none"
+              >
+                <option value="" disabled>
+                  Timeline of Construction
+                </option>
+                <option value="Immediately">Immediately</option>
+                <option value="In 2 Months">In 2 Months</option>
+                <option value="In 4 Months">In 4 Months</option>
+              </select>
+              {/* Arrow Icon (right edge) */}
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Row 6: Terms & Conditions text */}
             <div className="space-y-3">
               <p className="text-sm text-gray-700">
                 We agree with Sunbrix{" "}

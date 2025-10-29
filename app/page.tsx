@@ -381,6 +381,10 @@ export default function Home() {
     },
   ];
 
+  // Determine which testimonials to show based on data mode
+  // In API mode: only show dynamic testimonials, don't fallback to static
+  // In static mode: use static testimonials as fallback
+  const dataMode = getDataMode();
   const testimonials =
     dynamicTestimonials.length > 0
       ? dynamicTestimonials.map((testimonial) => ({
@@ -390,7 +394,9 @@ export default function Home() {
           quote: testimonial.review || testimonial.quote || "",
           name: testimonial.name,
         }))
-      : staticTestimonials;
+      : dataMode === "static"
+      ? staticTestimonials
+      : []; // In API mode with no data, return empty array
 
   const nextTestimonial = () => {
     if (isTestimonialTransitioning) return;
@@ -2264,7 +2270,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      {isPageEnabled("testimonials") && (
+      {isPageEnabled("testimonials") && testimonials.length > 0 && (
         <section className="py-8 sm:py-10 lg:py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-6 sm:mb-8 lg:mb-10">
