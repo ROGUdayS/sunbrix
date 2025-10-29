@@ -16,16 +16,6 @@ export async function GET(
         active: true,
         status: "published", // Only show published posts on frontend
       },
-      include: {
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            color: true,
-          },
-        },
-      },
     });
 
     if (!blogPost) {
@@ -46,9 +36,6 @@ export async function GET(
       date: blogPost.updated_at.toISOString().split("T")[0],
       image: blogPost.featured_image || "/images/blog-placeholder.jpg",
       tags: blogPost.tags,
-      category: blogPost.category?.name || "General",
-      categorySlug: blogPost.category?.slug || "general",
-      categoryColor: blogPost.category?.color || "#3B82F6",
       featured: blogPost.featured,
       metaTitle: blogPost.meta_title,
       metaDescription: blogPost.meta_description,
