@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
       mobileNumber: body.mobileNumber ? "[REDACTED]" : undefined,
     });
 
-    const { fullName, email, mobileNumber, city } = body;
+    const { fullName, email, mobileNumber, city, timeline } = body;
 
     // Validate required fields
     if (!fullName || !email || !mobileNumber) {
@@ -227,6 +227,7 @@ export async function POST(request: NextRequest) {
         email: email,
         phone: mobileNumber,
         city: city || "Not specified",
+        timeline: timeline || null,
         source: "website",
         status: "new",
       },

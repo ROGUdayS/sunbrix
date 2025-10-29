@@ -107,6 +107,7 @@ model Lead {
   city       String   @db.VarChar(100)
   source     String   @default("website") @db.VarChar(50)
   status     String   @default("new") @db.VarChar(20)
+  timeline   String?  @db.VarChar(50)
   email_sent Boolean  @default(false) @map("email_sent")
   created_at DateTime @default(now()) @map("created_at")
   updated_at DateTime @updatedAt @map("updated_at")
@@ -223,23 +224,6 @@ model Testimonial {
 // MainPageStats model removed - using static content in main app
 
 // Blog Management Models
-model BlogCategory {
-  id          String   @id @default(cuid())
-  name        String   @db.VarChar(100)
-  description String?  @db.Text
-  slug        String   @unique @db.VarChar(100)
-  color       String   @default("#3B82F6") @db.VarChar(7) // Hex color
-  order_index Int      @default(0) @map("order_index")
-  active      Boolean  @default(true)
-  created_at  DateTime @default(now()) @map("created_at")
-  updated_at  DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  blog_posts  BlogPost[]
-
-  @@map("blog_categories")
-}
-
 model BlogPost {
   id               String      @id @default(cuid())
   title            String      @db.VarChar(255)
@@ -249,7 +233,6 @@ model BlogPost {
   author           String      @default("Sunbrix Team") @db.VarChar(100)
   featured_image   String?     @map("featured_image") @db.VarChar(500)
   featured_image_alt_text String? @map("featured_image_alt_text") @db.VarChar(500)
-  category_id      String?     @map("category_id")
   tags             String[]    @default([])
   status           String      @default("draft") @db.VarChar(20) // draft, published, archived
   meta_title       String?     @map("meta_title") @db.VarChar(255)
@@ -259,9 +242,6 @@ model BlogPost {
   active           Boolean     @default(true)
   created_at       DateTime    @default(now()) @map("created_at")
   updated_at       DateTime    @updatedAt @map("updated_at")
-
-  // Relations
-  category         BlogCategory? @relation(fields: [category_id], references: [id], onDelete: Cascade)
 
   @@map("blog_posts")
 }
@@ -282,31 +262,14 @@ model BlogPageContent {
 }
 
 // FAQ Management Models
-model FaqCategory {
-  id          String   @id @default(cuid())
-  name        String   @db.VarChar(100)
-  description String?  @db.Text
-  order_index Int      @default(0) @map("order_index")
-  active      Boolean  @default(true)
-  created_at  DateTime @default(now()) @map("created_at")
-  updated_at  DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  faqs        Faq[]
-
-  @@map("faq_categories")
-}
-
 model Faq {
   id          String      @id @default(cuid())
   question    String      @db.VarChar(500)
   answer      String
-  category_id String?     @map("category_id")
   order_index Int         @default(0) @map("order_index")
   active      Boolean     @default(true)
   created_at  DateTime    @default(now()) @map("created_at")
   updated_at  DateTime    @updatedAt @map("updated_at")
-  category    FaqCategory? @relation(fields: [category_id], references: [id], onDelete: SetNull)
 
   @@map("faqs")
 }

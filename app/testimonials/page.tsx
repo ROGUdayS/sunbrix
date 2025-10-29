@@ -52,9 +52,8 @@ export default function Testimonials() {
           testimonial: item.review || item.quote || "",
           projectType: null,
           image: item.image || null,
-          videoUrl:
-            "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk", // Default video URL
-          videoThumbnail: null,
+          videoUrl: item.videoUrl || "", // Use videoUrl from data source
+          videoThumbnail: item.videoThumbnail || null,
           featured: item.active,
         }));
         setTestimonials(mappedTestimonials);

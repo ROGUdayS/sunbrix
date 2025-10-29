@@ -46,7 +46,10 @@ export interface TestimonialData {
   location: string;
   rating: number;
   review: string;
+  quote?: string;
   image?: string;
+  videoUrl?: string;
+  videoThumbnail?: string;
   active: boolean;
 }
 
