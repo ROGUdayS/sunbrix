@@ -153,5 +153,9 @@ node scripts/initialize-user-roles.mjs sunbrix.co@gmail.com
 ```
 
 ```bash
+node scripts/make-user-admin.mjs sunbrix.co@gmail.com
+```
+
+```bash
 node scripts/download-project-images.mjs
 ```
