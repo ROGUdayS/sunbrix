@@ -262,31 +262,14 @@ model BlogPageContent {
 }
 
 // FAQ Management Models
-model FaqCategory {
-  id          String   @id @default(cuid())
-  name        String   @db.VarChar(100)
-  description String?  @db.Text
-  order_index Int      @default(0) @map("order_index")
-  active      Boolean  @default(true)
-  created_at  DateTime @default(now()) @map("created_at")
-  updated_at  DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  faqs        Faq[]
-
-  @@map("faq_categories")
-}
-
 model Faq {
   id          String      @id @default(cuid())
   question    String      @db.VarChar(500)
   answer      String
-  category_id String?     @map("category_id")
   order_index Int         @default(0) @map("order_index")
   active      Boolean     @default(true)
   created_at  DateTime    @default(now()) @map("created_at")
   updated_at  DateTime    @updatedAt @map("updated_at")
-  category    FaqCategory? @relation(fields: [category_id], references: [id], onDelete: SetNull)
 
   @@map("faqs")
 }
