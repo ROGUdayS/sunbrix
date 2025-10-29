@@ -92,6 +92,8 @@ export default function Home() {
       review: string;
       quote?: string;
       image?: string;
+      videoUrl?: string;
+      videoThumbnail?: string;
       active: boolean;
     }[]
   >([]);
@@ -356,47 +358,17 @@ export default function Home() {
   };
 
   // Testimonial data
-  // Use dynamic testimonials if available, fallback to static data
-  const staticTestimonials = [
-    {
-      id: 1,
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-      quote:
-        "Most people struggle with delays, finances, or contractors. I didn&apos;t face even 1% of that. Sunbrix made my home journey smooth and hassle-free.",
-      name: "Mr. Suryanarayanan Karthikeyan",
-    },
-    {
-      id: 2,
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-      quote:
-        "Sunbrix&apos;s expert team guided me at every step. Their quality gave me total confidence throughout the journey.",
-      name: "Mr. Gururaj Naik",
-    },
-    {
-      id: 3,
-      videoUrl: "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk",
-      quote:
-        "Sunbrix Homes exceeded our expectations! The construction quality and timely delivery were remarkable. Truly a dream home.",
-      name: "Mr. Hariharasudan",
-    },
-  ];
-
-  // Determine which testimonials to show based on data mode
-  // In API mode: only show dynamic testimonials, don't fallback to static
-  // In static mode: use static testimonials as fallback
-  const dataMode = getDataMode();
+  // Only show dynamic testimonials from database/JSON - no hardcoded fallbacks
+  // If there are no testimonials, the section will be hidden via isPageEnabled check
   const testimonials =
     dynamicTestimonials.length > 0
       ? dynamicTestimonials.map((testimonial) => ({
           id: testimonial.id,
-          videoUrl:
-            "https://www.youtube.com/embed/r-thd4PJKBw?si=Mm_R8V6mJWvUAEYk", // Default video URL
+          videoUrl: testimonial.videoUrl || "", // Use videoUrl from data source
           quote: testimonial.review || testimonial.quote || "",
           name: testimonial.name,
         }))
-      : dataMode === "static"
-      ? staticTestimonials
-      : []; // In API mode with no data, return empty array
+      : []; // No testimonials = section will be hidden
 
   const nextTestimonial = () => {
     if (isTestimonialTransitioning) return;

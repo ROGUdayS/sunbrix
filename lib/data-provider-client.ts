@@ -40,10 +40,11 @@ export interface TestimonialData {
   location: string;
   rating: number;
   review: string;
-  quote?: string; // Add quote field for compatibility
+  quote?: string;
   image?: string;
+  videoUrl?: string;
+  videoThumbnail?: string;
   active: boolean;
-  [key: string]: any; // Allow additional properties for flexibility
 }
 
 export interface MainPageContent {
