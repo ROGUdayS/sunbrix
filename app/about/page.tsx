@@ -72,21 +72,19 @@ export default async function About() {
               )}
             </div>
             <div className="relative">
-              <div className="rounded-2xl overflow-hidden shadow-xl border border-gray-100">
-                <Image
-                  src={
-                    aboutContent.storySection?.image ||
-                    "/images/HomeHeroWebImage.webp"
-                  }
-                  alt={
-                    aboutContent.storySection?.imageAlt ||
-                    "Sunbrix construction site showcasing our expertise"
-                  }
-                  width={600}
-                  height={400}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
+              <Image
+                src={
+                  aboutContent.storySection?.image ||
+                  "/images/HomeHeroWebImage.webp"
+                }
+                alt={
+                  aboutContent.storySection?.imageAlt ||
+                  "Sunbrix construction site showcasing our expertise"
+                }
+                width={600}
+                height={400}
+                className="w-full h-auto object-cover"
+              />
             </div>
           </div>
         </div>
