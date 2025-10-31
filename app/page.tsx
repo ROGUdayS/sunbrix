@@ -83,6 +83,7 @@ export default function Home() {
   const [demoVideoUrl, setDemoVideoUrl] = useState<string>(
     "/videos/video_demo.mp4"
   );
+  const [heroHeading, setHeroHeading] = useState<string>("");
   const [dynamicTestimonials, setDynamicTestimonials] = useState<
     {
       id: string;
@@ -305,7 +306,16 @@ export default function Home() {
         const content = await getMainPageContent();
         if (content) {
           setDemoVideoUrl(content.demoVideoUrl || "/videos/video_demo.mp4");
-          setDynamicGalleryImages(content.galleryImages || []);
+          setHeroHeading(content.heroHeading || "");
+          // Map alt_text to altText for consistency
+          const galleryImagesWithAlt = (content.galleryImages || []).map(
+            (img: any) => ({
+              ...img,
+              altText:
+                img.alt_text || img.altText || img.quote || "Gallery image",
+            })
+          );
+          setDynamicGalleryImages(galleryImagesWithAlt);
           // Ensure heroStats is always an array
           setHeroStats(
             Array.isArray(content.heroStats) ? content.heroStats : heroStats
@@ -855,6 +865,13 @@ export default function Home() {
 
         {/* Hero Content - Positioned at bottom */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white pb-16 sm:pb-20">
+          {/* Main Headline - H1 for SEO */}
+          {heroHeading && (
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-10 lg:mb-12 drop-shadow-lg">
+              {heroHeading}
+            </h1>
+          )}
+
           {/* Key Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 max-w-4xl mx-auto">
             {heroStats.map((stat, index) => (

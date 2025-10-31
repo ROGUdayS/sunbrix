@@ -8,6 +8,7 @@ export async function GET() {
   try {
     const [
       demoVideoContent,
+      heroHeadingContent,
       galleryImages,
       heroStats,
       commitmentSection,
@@ -24,12 +25,21 @@ export async function GET() {
           },
         },
       }),
+      prisma.pageContent.findUnique({
+        where: {
+          page_type_section_type: {
+            page_type: "main",
+            section_type: "hero_heading",
+          },
+        },
+      }),
       prisma.galleryImage.findMany({
         where: { active: true },
         orderBy: [{ order_index: "asc" }, { created_at: "desc" }],
         select: {
           id: true,
           image_url: true,
+          alt_text: true,
           quote: true,
           order_index: true,
         },
@@ -88,10 +98,12 @@ export async function GET() {
     const response = {
       demoVideoUrl:
         demoVideoContent?.demo_video_url || "/videos/video_demo.mp4",
+      heroHeading: heroHeadingContent?.title || "",
       galleryImages: galleryImages.map((image) => ({
         id: image.id,
         image: image.image_url,
         image_url: image.image_url, // Keep both for compatibility
+        alt_text: image.alt_text,
         quote: image.quote,
         order_index: image.order_index,
       })),

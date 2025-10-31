@@ -1,5 +1,6 @@
 {
   "demoVideoUrl": "/videos/video_demo.mp4",
+  "heroHeading": "",
   "galleryImages": [
     {
       "id": "cmftunsr000ffos6jpahxqcro",
@@ -25,20 +26,20 @@
   ],
   "heroStats": [
     {
-      "value": "25",
-      "label": "Years"
+      "label": "Years",
+      "value": "25"
     },
     {
-      "value": "100+",
-      "label": "Homes"
+      "label": "Homes",
+      "value": "100+"
     },
     {
-      "value": "100%",
-      "label": "Transparent"
+      "label": "Transparent",
+      "value": "100%"
     },
     {
-      "value": "100%",
-      "label": "On-Time"
+      "label": "On-Time",
+      "value": "100%"
     }
   ],
   "commitmentSection": {
@@ -67,7 +68,27 @@
       }
     ]
   },
-  "gallerySection": {},
-  "packagesSection": {},
-  "testimonialsSection": {}
+  "gallerySection": {
+    "title": "Gallery",
+    "subtitle": ""
+  },
+  "packagesSection": {
+    "title": "Packages",
+    "subtitle": ""
+  },
+  "testimonialsSection": {
+    "title": "Testimonials",
+    "subtitle": "See what our customers have to say."
+  },
+  "metaContent": {
+    "meta_title": "Sunbrix - Premium Home Construction Services",
+    "meta_description": "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty. Get your free quote today!",
+    "meta_keywords": "home construction, building contractors, house builders, construction services, premium homes",
+    "og_title": "Sunbrix - Premium Home Construction Services",
+    "og_description": "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty.",
+    "og_image": "/images/og-image.jpg",
+    "twitter_title": "Sunbrix - Premium Home Construction Services",
+    "twitter_description": "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty.",
+    "twitter_image": "/images/twitter-image.jpg"
+  }
 }

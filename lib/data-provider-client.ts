@@ -49,6 +49,7 @@ export interface TestimonialData {
 
 export interface MainPageContent {
   demoVideoUrl?: string;
+  heroHeading?: string;
   galleryImages?: any[];
   heroStats?: any;
   commitmentSection?: any;
