@@ -52,16 +52,13 @@ export default function FAQ() {
       setFaqs(sortedFaqs);
       setAllFaqs(sortedFaqs);
 
-      // Handle pageData - it might be an array, so take the first item or use default
-      const pageContentData =
-        Array.isArray(pageData) && pageData.length > 0
-          ? pageData[0]
-          : {
-              page_title: "Frequently Asked Questions",
-              page_subtitle:
-                "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
-            };
-      setPageContent(pageContentData);
+      // Set page content from data
+      setPageContent({
+        page_title: pageData?.page_title || "Frequently Asked Questions",
+        page_subtitle:
+          pageData?.page_subtitle ||
+          "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
+      });
     } catch (error) {
       console.error("Error loading FAQ data:", error);
     } finally {

@@ -343,13 +343,13 @@ export async function getFaqs(): Promise<any[]> {
   }
 }
 
-export async function getFaqContent(): Promise<any[]> {
+export async function getFaqContent(): Promise<any> {
   if (USE_API_DATA) {
-    const data = await fetchFromAPI<any[]>("/api/content/faqs/page-content");
-    return data || [];
+    const data = await fetchFromAPI<any>("/api/content/faqs/page-content");
+    return data || {};
   } else {
-    const data = await fetchStaticData<any>("main-page-content.json");
-    return data?.faqs || [];
+    const data = await fetchStaticData<any>("faqs-content.json");
+    return data || {};
   }
 }
 
