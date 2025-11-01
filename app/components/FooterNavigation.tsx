@@ -22,14 +22,16 @@ export default function FooterNavigation() {
               </Link>
             </li>
           )}
-          <li>
-            <Link
-              href="/projects"
-              className="hover:text-white transition-colors"
-            >
-              Gallery
-            </Link>
-          </li>
+          {isPageEnabled("projects") && (
+            <li>
+              <Link
+                href="/projects"
+                className="hover:text-white transition-colors"
+              >
+                Gallery
+              </Link>
+            </li>
+          )}
           {isPageEnabled("testimonials") && (
             <li>
               <Link

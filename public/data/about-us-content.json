@@ -47,5 +47,16 @@
         "description": "Your vision is our priority. We work closely with you to ensure your dream home becomes reality."
       }
     ]
+  },
+  "metaContent": {
+    "meta_title": "About Sunbrix - Premium Home Construction Services",
+    "meta_description": "Learn about Sunbrix's commitment to quality home construction. Building dreams with trust, quality, and innovation since 1999.",
+    "meta_keywords": "about sunbrix, home construction company, building contractors, construction services",
+    "og_title": "About Sunbrix - Premium Home Construction Services",
+    "og_description": "Learn about Sunbrix's commitment to quality home construction. Building dreams with trust, quality, and innovation.",
+    "og_image": "/images/og-image.jpg",
+    "twitter_title": "About Sunbrix - Premium Home Construction Services",
+    "twitter_description": "Learn about Sunbrix's commitment to quality home construction. Building dreams with trust, quality, and innovation.",
+    "twitter_image": "/images/twitter-image.jpg"
   }
 }

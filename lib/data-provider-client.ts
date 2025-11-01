@@ -49,6 +49,7 @@ export interface TestimonialData {
 
 export interface MainPageContent {
   demoVideoUrl?: string;
+  heroHeading?: string;
   galleryImages?: any[];
   heroStats?: any;
   commitmentSection?: any;
@@ -58,6 +59,17 @@ export interface MainPageContent {
 }
 
 export interface AboutUsContent {
+  metaContent?: {
+    meta_title?: string;
+    meta_description?: string;
+    meta_keywords?: string;
+    og_title?: string;
+    og_description?: string;
+    og_image?: string;
+    twitter_title?: string;
+    twitter_description?: string;
+    twitter_image?: string;
+  };
   heroSection?: {
     title: string;
     subtitle: string;
@@ -331,13 +343,13 @@ export async function getFaqs(): Promise<any[]> {
   }
 }
 
-export async function getFaqContent(): Promise<any[]> {
+export async function getFaqContent(): Promise<any> {
   if (USE_API_DATA) {
-    const data = await fetchFromAPI<any[]>("/api/content/faqs/page-content");
-    return data || [];
+    const data = await fetchFromAPI<any>("/api/content/faqs/page-content");
+    return data || {};
   } else {
-    const data = await fetchStaticData<any>("main-page-content.json");
-    return data?.faqs || [];
+    const data = await fetchStaticData<any>("faqs-content.json");
+    return data || {};
   }
 }
 

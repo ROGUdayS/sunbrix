@@ -1,9 +1,37 @@
 /* eslint-disable react/no-unescaped-entities */
+import type { Metadata } from "next";
 import Header from "../components/Header";
 import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
 import Image from "next/image";
 import { getAboutUsContent } from "@/lib/data-provider";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const aboutContent = await getAboutUsContent();
+  const metaContent = aboutContent.metaContent || {};
+  
+  return {
+    title: metaContent.meta_title || "About Sunbrix - Premium Home Construction Services",
+    description: metaContent.meta_description || "Learn about Sunbrix's commitment to quality home construction. Building dreams with trust, quality, and innovation since 1999.",
+    keywords: metaContent.meta_keywords || "about sunbrix, home construction company, building contractors, construction services",
+    alternates: {
+      canonical: "https://sunbrix.co/about",
+    },
+    openGraph: {
+      title: metaContent.og_title || "About Sunbrix - Premium Home Construction Services",
+      description: metaContent.og_description || "Learn about Sunbrix's commitment to quality home construction. Building dreams with trust, quality, and innovation.",
+      images: [{ url: metaContent.og_image || "/images/og-image.jpg" }],
+      url: "https://sunbrix.co/about",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaContent.twitter_title || "About Sunbrix - Premium Home Construction Services",
+      description: metaContent.twitter_description || "Learn about Sunbrix's commitment to quality home construction. Building dreams with trust, quality, and innovation.",
+      images: [metaContent.twitter_image || "/images/twitter-image.jpg"],
+    },
+  };
+}
 
 export default async function About() {
   const aboutContent = await getAboutUsContent();

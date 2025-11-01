@@ -83,6 +83,7 @@ export default function Home() {
   const [demoVideoUrl, setDemoVideoUrl] = useState<string>(
     "/videos/video_demo.mp4"
   );
+  const [heroHeading, setHeroHeading] = useState<string>("");
   const [dynamicTestimonials, setDynamicTestimonials] = useState<
     {
       id: string;
@@ -305,7 +306,16 @@ export default function Home() {
         const content = await getMainPageContent();
         if (content) {
           setDemoVideoUrl(content.demoVideoUrl || "/videos/video_demo.mp4");
-          setDynamicGalleryImages(content.galleryImages || []);
+          setHeroHeading(content.heroHeading || "");
+          // Map alt_text to altText for consistency
+          const galleryImagesWithAlt = (content.galleryImages || []).map(
+            (img: any) => ({
+              ...img,
+              altText:
+                img.alt_text || img.altText || img.quote || "Gallery image",
+            })
+          );
+          setDynamicGalleryImages(galleryImagesWithAlt);
           // Ensure heroStats is always an array
           setHeroStats(
             Array.isArray(content.heroStats) ? content.heroStats : heroStats
@@ -855,6 +865,13 @@ export default function Home() {
 
         {/* Hero Content - Positioned at bottom */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white pb-16 sm:pb-20">
+          {/* Main Headline - H1 for SEO */}
+          {heroHeading && (
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 sm:mb-10 lg:mb-12 drop-shadow-lg">
+              {heroHeading}
+            </h1>
+          )}
+
           {/* Key Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 max-w-4xl mx-auto">
             {heroStats.map((stat, index) => (
@@ -927,109 +944,116 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Project Gallery */}
-      <section className="py-6 sm:py-8 lg:py-10 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-4 sm:mb-6 lg:mb-8">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-2 sm:mb-3">
-              {gallerySection.title}
-            </h2>
-          </div>
+      {/* Project Gallery - Only show if projects page is enabled */}
+      {isPageEnabled("projects") && (
+        <section className="py-6 sm:py-8 lg:py-10 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-4 sm:mb-6 lg:mb-8">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 mb-2 sm:mb-3">
+                {gallerySection.title}
+              </h2>
+            </div>
 
-          {/* Only render carousel if gallery images are loaded */}
-          {dynamicGalleryImages.length > 0 && (
-            <>
-              {/* Carousel Container with Side Previews */}
-              <div className="relative max-w-7xl mx-auto">
-                {/* Gallery with Side Previews */}
-                <div className="flex items-center justify-center gap-4 lg:gap-6">
-                  {/* Previous Image Preview - Show right edge only */}
-                  <div className="hidden lg:block flex-shrink-0 relative">
-                    <div
-                      className="relative w-16 lg:w-20 xl:w-24 h-[400px] xl:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-l-xl"
-                      onClick={prevSlide}
-                    >
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={
-                            dynamicGalleryImages[
-                              (currentSlide - 1 + dynamicGalleryImages.length) %
-                                dynamicGalleryImages.length
-                            ]?.image_url ||
-                            dynamicGalleryImages[
-                              (currentSlide - 1 + dynamicGalleryImages.length) %
-                                dynamicGalleryImages.length
-                            ]?.image ||
-                            ""
-                          }
-                          alt={
-                            dynamicGalleryImages[
-                              (currentSlide - 1 + dynamicGalleryImages.length) %
-                                dynamicGalleryImages.length
-                            ]?.quote || "Previous image"
-                          }
-                          fill
-                          className="object-cover object-right"
-                        />
-                      </div>
-                      <div className="absolute inset-0 bg-black/20"></div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-white opacity-70"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 19l-7-7 7-7"
+            {/* Only render carousel if gallery images are loaded */}
+            {dynamicGalleryImages.length > 0 && (
+              <>
+                {/* Carousel Container with Side Previews */}
+                <div className="relative max-w-7xl mx-auto">
+                  {/* Gallery with Side Previews */}
+                  <div className="flex items-center justify-center gap-4 lg:gap-6">
+                    {/* Previous Image Preview - Show right edge only */}
+                    <div className="hidden lg:block flex-shrink-0 relative">
+                      <div
+                        className="relative w-16 lg:w-20 xl:w-24 h-[400px] xl:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-l-xl"
+                        onClick={prevSlide}
+                      >
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={
+                              dynamicGalleryImages[
+                                (currentSlide -
+                                  1 +
+                                  dynamicGalleryImages.length) %
+                                  dynamicGalleryImages.length
+                              ]?.image_url ||
+                              dynamicGalleryImages[
+                                (currentSlide -
+                                  1 +
+                                  dynamicGalleryImages.length) %
+                                  dynamicGalleryImages.length
+                              ]?.image ||
+                              ""
+                            }
+                            alt={
+                              dynamicGalleryImages[
+                                (currentSlide -
+                                  1 +
+                                  dynamicGalleryImages.length) %
+                                  dynamicGalleryImages.length
+                              ]?.quote || "Previous image"
+                            }
+                            fill
+                            className="object-cover object-right"
                           />
-                        </svg>
+                        </div>
+                        <div className="absolute inset-0 bg-black/20"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <svg
+                            className="w-4 h-4 text-white opacity-70"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 19l-7-7 7-7"
+                            />
+                          </svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Main Image Container */}
-                  <div className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none">
-                    <div
-                      ref={galleryRef}
-                      className={`flex transition-transform duration-300 ease-out ${
-                        isDragging ? "transition-none" : ""
-                      }`}
-                      style={{
-                        transform: `translateX(calc(-${
-                          (currentSlide + dynamicGalleryImages.length) * 100
-                        }% + ${dragOffset}px))`,
-                        touchAction: "pan-y",
-                      }}
-                      onTouchStart={handleTouchStart}
-                      onTouchMove={handleTouchMove}
-                      onTouchEnd={() => handleTouchEnd("gallery")}
-                    >
-                      {/* Previous set for seamless left scrolling */}
-                      {dynamicGalleryImages.map((image, index) => (
-                        <div
-                          key={`prev-${image.id || index}`}
-                          className="w-full flex-shrink-0"
-                        >
-                          <div className="relative">
-                            {(image.image_url || image.image) && (
-                              <Image
-                                src={image.image_url || image.image}
-                                alt={
-                                  image.altText ||
-                                  image.quote ||
-                                  "Gallery image"
-                                }
-                                width={900}
-                                height={600}
-                                className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                              />
-                            )}
-                            {/* Quote overlay */}
-                            {/* {image.quote && (
+                    {/* Main Image Container */}
+                    <div className="relative overflow-hidden select-none carousel-container flex-1 max-w-3xl lg:max-w-4xl rounded-xl lg:rounded-none">
+                      <div
+                        ref={galleryRef}
+                        className={`flex transition-transform duration-300 ease-out ${
+                          isDragging ? "transition-none" : ""
+                        }`}
+                        style={{
+                          transform: `translateX(calc(-${
+                            (currentSlide + dynamicGalleryImages.length) * 100
+                          }% + ${dragOffset}px))`,
+                          touchAction: "pan-y",
+                        }}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={() => handleTouchEnd("gallery")}
+                      >
+                        {/* Previous set for seamless left scrolling */}
+                        {dynamicGalleryImages.map((image, index) => (
+                          <div
+                            key={`prev-${image.id || index}`}
+                            className="w-full flex-shrink-0"
+                          >
+                            <div className="relative">
+                              {(image.image_url || image.image) && (
+                                <Image
+                                  src={image.image_url || image.image}
+                                  alt={
+                                    image.altText ||
+                                    image.quote ||
+                                    "Gallery image"
+                                  }
+                                  width={900}
+                                  height={600}
+                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                />
+                              )}
+                              {/* Quote overlay */}
+                              {/* {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
@@ -1038,31 +1062,31 @@ export default function Home() {
                                 </div>
                               </div>
                             )} */}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
 
-                      {/* Current set - main gallery images */}
-                      {dynamicGalleryImages.map((image, index) => (
-                        <div
-                          key={image.id || index}
-                          className="w-full flex-shrink-0"
-                        >
-                          <div className="relative">
-                            {(image.image_url || image.image) && (
-                              <Image
-                                src={image.image_url || image.image}
-                                alt={
-                                  image.altText ||
-                                  image.quote ||
-                                  "Gallery image"
-                                }
-                                width={900}
-                                height={600}
-                                className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                              />
-                            )}
-                            {/* Quote overlay
+                        {/* Current set - main gallery images */}
+                        {dynamicGalleryImages.map((image, index) => (
+                          <div
+                            key={image.id || index}
+                            className="w-full flex-shrink-0"
+                          >
+                            <div className="relative">
+                              {(image.image_url || image.image) && (
+                                <Image
+                                  src={image.image_url || image.image}
+                                  alt={
+                                    image.altText ||
+                                    image.quote ||
+                                    "Gallery image"
+                                  }
+                                  width={900}
+                                  height={600}
+                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                />
+                              )}
+                              {/* Quote overlay
                             {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
@@ -1072,32 +1096,32 @@ export default function Home() {
                                 </div>
                               </div>
                             )} */}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
 
-                      {/* Next set for seamless right scrolling */}
-                      {dynamicGalleryImages.map((image, index) => (
-                        <div
-                          key={`next-${image.id || index}`}
-                          className="w-full flex-shrink-0"
-                        >
-                          <div className="relative">
-                            {(image.image_url || image.image) && (
-                              <Image
-                                src={image.image_url || image.image}
-                                alt={
-                                  image.altText ||
-                                  image.quote ||
-                                  "Gallery image"
-                                }
-                                width={900}
-                                height={600}
-                                className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                              />
-                            )}
-                            {/* Quote overlay */}
-                            {/* {image.quote && (
+                        {/* Next set for seamless right scrolling */}
+                        {dynamicGalleryImages.map((image, index) => (
+                          <div
+                            key={`next-${image.id || index}`}
+                            className="w-full flex-shrink-0"
+                          >
+                            <div className="relative">
+                              {(image.image_url || image.image) && (
+                                <Image
+                                  src={image.image_url || image.image}
+                                  alt={
+                                    image.altText ||
+                                    image.quote ||
+                                    "Gallery image"
+                                  }
+                                  width={900}
+                                  height={600}
+                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                />
+                              )}
+                              {/* Quote overlay */}
+                              {/* {image.quote && (
                               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 sm:p-6 lg:p-8">
                                 <div className="text-center max-w-2xl">
                                   <blockquote className="text-white text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold leading-relaxed">
@@ -1106,127 +1130,128 @@ export default function Home() {
                                 </div>
                               </div>
                             )} */}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Next Image Preview - Show left edge only */}
-                  <div className="hidden lg:block flex-shrink-0 relative">
-                    <div
-                      className="relative w-16 lg:w-20 xl:w-24 h-[400px] xl:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-r-xl"
-                      onClick={nextSlide}
-                    >
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={
-                            dynamicGalleryImages[
-                              (currentSlide + 1) % dynamicGalleryImages.length
-                            ]?.image_url ||
-                            dynamicGalleryImages[
-                              (currentSlide + 1) % dynamicGalleryImages.length
-                            ]?.image ||
-                            ""
-                          }
-                          alt={
-                            dynamicGalleryImages[
-                              (currentSlide + 1) % dynamicGalleryImages.length
-                            ]?.quote || "Next image"
-                          }
-                          fill
-                          className="object-cover object-left"
-                        />
+                        ))}
                       </div>
-                      <div className="absolute inset-0 bg-black/20"></div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-white opacity-70"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
+                    </div>
+
+                    {/* Next Image Preview - Show left edge only */}
+                    <div className="hidden lg:block flex-shrink-0 relative">
+                      <div
+                        className="relative w-16 lg:w-20 xl:w-24 h-[400px] xl:h-[480px] overflow-hidden cursor-pointer opacity-60 hover:opacity-80 transition-opacity duration-300 rounded-r-xl"
+                        onClick={nextSlide}
+                      >
+                        <div className="relative w-full h-full">
+                          <Image
+                            src={
+                              dynamicGalleryImages[
+                                (currentSlide + 1) % dynamicGalleryImages.length
+                              ]?.image_url ||
+                              dynamicGalleryImages[
+                                (currentSlide + 1) % dynamicGalleryImages.length
+                              ]?.image ||
+                              ""
+                            }
+                            alt={
+                              dynamicGalleryImages[
+                                (currentSlide + 1) % dynamicGalleryImages.length
+                              ]?.quote || "Next image"
+                            }
+                            fill
+                            className="object-cover object-left"
                           />
-                        </svg>
+                        </div>
+                        <div className="absolute inset-0 bg-black/20"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <svg
+                            className="w-4 h-4 text-white opacity-70"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Project Description */}
-                <div className="text-center mt-3 sm:mt-4 lg:mt-5 px-4">
-                  <div className="flex justify-center mb-2 sm:mb-3">
-                    <svg
-                      className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                    </svg>
+                  {/* Project Description */}
+                  <div className="text-center mt-3 sm:mt-4 lg:mt-5 px-4">
+                    <div className="flex justify-center mb-2 sm:mb-3">
+                      <svg
+                        className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
+                      {dynamicGalleryImages[
+                        ((currentSlide % dynamicGalleryImages.length) +
+                          dynamicGalleryImages.length) %
+                          dynamicGalleryImages.length
+                      ]?.quote || "Loading..."}
+                    </p>
                   </div>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
-                    {dynamicGalleryImages[
-                      ((currentSlide % dynamicGalleryImages.length) +
-                        dynamicGalleryImages.length) %
-                        dynamicGalleryImages.length
-                    ]?.quote || "Loading..."}
-                  </p>
-                </div>
 
-                {/* Pagination Dots */}
-                <div className="flex justify-center mt-3 sm:mt-4 lg:mt-5 space-x-2">
-                  {dynamicGalleryImages.map((_, index) => {
-                    const actualCurrentSlide =
-                      ((currentSlide % dynamicGalleryImages.length) +
-                        dynamicGalleryImages.length) %
-                      dynamicGalleryImages.length;
-                    return (
-                      <button
-                        key={index}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          goToSlide(index);
-                        }}
-                        className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
-                          index === actualCurrentSlide
-                            ? "bg-gray-800"
-                            : "bg-gray-300 hover:bg-gray-400"
-                        }`}
-                      />
-                    );
-                  })}
-                </div>
+                  {/* Pagination Dots */}
+                  <div className="flex justify-center mt-3 sm:mt-4 lg:mt-5 space-x-2">
+                    {dynamicGalleryImages.map((_, index) => {
+                      const actualCurrentSlide =
+                        ((currentSlide % dynamicGalleryImages.length) +
+                          dynamicGalleryImages.length) %
+                        dynamicGalleryImages.length;
+                      return (
+                        <button
+                          key={index}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            goToSlide(index);
+                          }}
+                          className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
+                            index === actualCurrentSlide
+                              ? "bg-gray-800"
+                              : "bg-gray-300 hover:bg-gray-400"
+                          }`}
+                        />
+                      );
+                    })}
+                  </div>
 
-                {/* Explore More Button */}
-                <div className="text-center mt-4 sm:mt-6 lg:mt-8">
-                  <Link
-                    href="/projects"
-                    className="bg-amber-600 hover:bg-amber-700 text-white px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
-                  >
-                    Explore Gallery
-                  </Link>
+                  {/* Explore More Button */}
+                  <div className="text-center mt-4 sm:mt-6 lg:mt-8">
+                    <Link
+                      href="/projects"
+                      className="bg-amber-600 hover:bg-amber-700 text-white px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 inline-block shadow-sm hover:shadow-md"
+                    >
+                      Explore Gallery
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Loading state while gallery images are being loaded */}
+            {dynamicGalleryImages.length === 0 && (
+              <div className="text-center py-8">
+                <div className="animate-pulse max-w-5xl mx-auto">
+                  <div className="bg-gray-200 rounded-xl h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] mb-4"></div>
+                  <div className="bg-gray-200 h-3 rounded w-3/4 mx-auto mb-3"></div>
+                  <div className="bg-gray-200 h-3 rounded w-1/2 mx-auto"></div>
                 </div>
               </div>
-            </>
-          )}
-
-          {/* Loading state while gallery images are being loaded */}
-          {dynamicGalleryImages.length === 0 && (
-            <div className="text-center py-8">
-              <div className="animate-pulse max-w-5xl mx-auto">
-                <div className="bg-gray-200 rounded-xl h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] mb-4"></div>
-                <div className="bg-gray-200 h-3 rounded w-3/4 mx-auto mb-3"></div>
-                <div className="bg-gray-200 h-3 rounded w-1/2 mx-auto"></div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Build Your Dream Home CTA */}
       <section className="py-8 sm:py-10 lg:py-12 bg-gray-50">

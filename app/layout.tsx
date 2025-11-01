@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     "Build your dream home hassle-free with Sunbrix. High-quality materials, transparent pricing, and on-time delivery.",
   keywords:
     "home construction, dream home, Sunbrix homes, house building, construction company",
+  alternates: {
+    canonical: "https://sunbrix.co",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },

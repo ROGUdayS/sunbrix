@@ -52,16 +52,13 @@ export default function FAQ() {
       setFaqs(sortedFaqs);
       setAllFaqs(sortedFaqs);
 
-      // Handle pageData - it might be an array, so take the first item or use default
-      const pageContentData =
-        Array.isArray(pageData) && pageData.length > 0
-          ? pageData[0]
-          : {
-              page_title: "Frequently Asked Questions",
-              page_subtitle:
-                "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
-            };
-      setPageContent(pageContentData);
+      // Set page content from data
+      setPageContent({
+        page_title: pageData?.page_title || "Frequently Asked Questions",
+        page_subtitle:
+          pageData?.page_subtitle ||
+          "Find answers to common questions about Sunbrix, our construction process, materials, and services.",
+      });
     } catch (error) {
       console.error("Error loading FAQ data:", error);
     } finally {
@@ -219,9 +216,9 @@ export default function FAQ() {
                     className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
                   >
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                      <h2 className="text-lg font-semibold text-gray-900 pr-4">
                         {faq.question}
-                      </h3>
+                      </h2>
                     </div>
                     <div className="flex-shrink-0 ml-4">
                       <svg

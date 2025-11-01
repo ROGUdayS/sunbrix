@@ -1,5 +1,5 @@
 {
-  "lastSync": "2025-10-29T17:26:58.755Z",
+  "lastSync": "2025-10-31T13:07:06.981Z",
   "version": "1.0.0",
   "source": "dashboard-sync",
   "totalRecords": {
@@ -9,10 +9,10 @@
     "testimonials": 0,
     "galleryImages": 3,
     "mainPageContent": 0,
-    "pageContent": 10,
+    "pageContent": 11,
     "blogs": 0,
     "faqs": 17,
-    "pageConfigs": 0
+    "pageConfigs": 1
   },
   "files": [
     "projects.json",
@@ -40,7 +40,7 @@
     },
     {
       "filename": "packages.json",
-      "size": 1076,
+      "size": 3746,
       "records": 3
     },
     {
@@ -65,22 +65,22 @@
     },
     {
       "filename": "page-config.json",
-      "size": 2,
-      "records": 0
+      "size": 254,
+      "records": 1
     },
     {
       "filename": "main-page-content.json",
-      "size": 3245,
-      "records": 7
+      "size": 4365,
+      "records": 9
     },
     {
       "filename": "about-us-content.json",
-      "size": 2423,
+      "size": 2598,
       "records": 3
     },
     {
       "filename": "company-settings.json",
-      "size": 452,
+      "size": 500,
       "records": 16
     }
   ]

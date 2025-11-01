@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { isPageEnabled } from "@/lib/data-provider";
 import { notFound } from "next/navigation";
 
-// Helper function to fetch FAQ page metadata
-async function getFaqMetadata() {
+// Helper function to fetch projects metadata
+async function getProjectsMetadata() {
   try {
     const USE_API_DATA = process.env.NEXT_PUBLIC_USE_API_DATA === "true";
 
@@ -12,7 +12,7 @@ async function getFaqMetadata() {
       const response = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
-        }/api/content/faqs/page-content`,
+        }/api/content/projects`,
         {
           next: { revalidate: 3600 }, // Revalidate every hour
         }
@@ -27,7 +27,7 @@ async function getFaqMetadata() {
       const path = await import("path");
       const filePath = path.join(
         process.cwd(),
-        "public/data/faqs-content.json"
+        "public/data/projects-content.json"
       );
       try {
         const fileContent = await fs.readFile(filePath, "utf-8");
@@ -38,52 +38,52 @@ async function getFaqMetadata() {
       }
     }
   } catch (error) {
-    console.error("Error fetching FAQ metadata:", error);
+    console.error("Error fetching projects metadata:", error);
     return null;
   }
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const metaContent = await getFaqMetadata();
+  const metaContent = await getProjectsMetadata();
 
   return {
-    title: metaContent?.meta_title || "FAQs - Sunbrix Home Construction",
+    title: metaContent?.meta_title || "Our Projects - Sunbrix Home Construction",
     description:
       metaContent?.meta_description ||
-      "Get answers to frequently asked questions about Sunbrix home construction services, processes, materials, and warranties.",
+      "Explore our portfolio of beautifully constructed homes. View completed projects, designs, and see the quality craftsmanship that defines Sunbrix.",
     keywords:
       metaContent?.meta_keywords ||
-      "sunbrix faq, home construction questions, building faq, construction services faq",
+      "sunbrix projects, home construction projects, completed homes, construction portfolio, home gallery",
     alternates: {
-      canonical: "https://sunbrix.co/faq",
+      canonical: "https://sunbrix.co/projects",
     },
     openGraph: {
-      title: metaContent?.og_title || "FAQs - Sunbrix Home Construction",
+      title: metaContent?.og_title || "Our Projects - Sunbrix Home Construction",
       description:
         metaContent?.og_description ||
-        "Get answers to frequently asked questions about Sunbrix home construction services, processes, materials, and warranties.",
+        "Explore our portfolio of beautifully constructed homes. View completed projects, designs, and see the quality craftsmanship that defines Sunbrix.",
       images: [{ url: metaContent?.og_image || "/images/og-image.jpg" }],
-      url: "https://sunbrix.co/faq",
+      url: "https://sunbrix.co/projects",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: metaContent?.twitter_title || "FAQs - Sunbrix Home Construction",
+      title: metaContent?.twitter_title || "Our Projects - Sunbrix Home Construction",
       description:
         metaContent?.twitter_description ||
-        "Get answers to frequently asked questions about Sunbrix home construction services, processes, materials, and warranties.",
+        "Explore our portfolio of beautifully constructed homes. View completed projects, designs, and see the quality craftsmanship that defines Sunbrix.",
       images: [metaContent?.twitter_image || "/images/twitter-image.jpg"],
     },
   };
 }
 
-export default async function FAQLayout({
+export default async function ProjectsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Check if faqs page is enabled
-  const pageEnabled = await isPageEnabled("faqs");
+  // Check if projects page is enabled
+  const pageEnabled = await isPageEnabled("projects");
 
   if (!pageEnabled) {
     notFound();
@@ -91,3 +91,4 @@ export default async function FAQLayout({
 
   return <>{children}</>;
 }
+

@@ -140,9 +140,11 @@ export default function Header({
                 About Us
               </Link>
             )}
-            <Link href="/projects" className={getLinkClassName("/projects")}>
-              Gallery
-            </Link>
+            {isPageEnabled("projects") && (
+              <Link href="/projects" className={getLinkClassName("/projects")}>
+                Gallery
+              </Link>
+            )}
             <button
               onClick={() => {
                 if (pathname === "/") {
@@ -214,13 +216,15 @@ export default function Header({
                   About Us
                 </Link>
               )}
-              <Link
-                href="/projects"
-                className={getMobileLinkClassName("/projects")}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Gallery
-              </Link>
+              {isPageEnabled("projects") && (
+                <Link
+                  href="/projects"
+                  className={getMobileLinkClassName("/projects")}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Gallery
+                </Link>
+              )}
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
