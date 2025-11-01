@@ -80,6 +80,17 @@ export interface AboutUsContent {
       icon: string;
     }>;
   };
+  metaContent?: {
+    meta_title?: string;
+    meta_description?: string;
+    meta_keywords?: string;
+    og_title?: string;
+    og_description?: string;
+    og_image?: string;
+    twitter_title?: string;
+    twitter_description?: string;
+    twitter_image?: string;
+  };
 }
 
 export interface PackageData {
