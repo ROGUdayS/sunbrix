@@ -216,9 +216,9 @@ export default function FAQ() {
                     className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
                   >
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                      <h2 className="text-lg font-semibold text-gray-900 pr-4">
                         {faq.question}
-                      </h3>
+                      </h2>
                     </div>
                     <div className="flex-shrink-0 ml-4">
                       <svg
