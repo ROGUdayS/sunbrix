@@ -27,7 +27,10 @@ export default function ProjectGallery() {
   const [modalCurrentIndex, setModalCurrentIndex] = useState(0);
   const [modalTitle, setModalTitle] = useState("");
 
-  // Fetch projects using data provider
+  // Hero heading state
+  const [heroHeading, setHeroHeading] = useState("");
+
+  // Fetch projects and page content using data provider
   useEffect(() => {
     async function fetchProjects() {
       try {
@@ -51,6 +54,24 @@ export default function ProjectGallery() {
           );
 
           setProjects(transformedProjects);
+        }
+
+        // Load hero heading from API or static file
+        const USE_API_DATA = process.env.NEXT_PUBLIC_USE_API_DATA === "true";
+        if (USE_API_DATA) {
+          // Fetch heroHeading from page content API
+          const response = await fetch("/api/content/projects");
+          if (response.ok) {
+            const pageData = await response.json();
+            setHeroHeading(pageData.heroHeading || "");
+          }
+        } else {
+          // Load from static JSON
+          const response = await fetch("/data/projects-content.json");
+          if (response.ok) {
+            const pageData = await response.json();
+            setHeroHeading(pageData.heroHeading || "");
+          }
         }
       } catch (err) {
         setError(
@@ -262,11 +283,13 @@ export default function ProjectGallery() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
         {/* Page Title */}
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-            Gallery
-          </h1>
-        </div>
+        {heroHeading && (
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+              {heroHeading}
+            </h1>
+          </div>
+        )}
 
         {/* Loading State */}
         {loading && (
