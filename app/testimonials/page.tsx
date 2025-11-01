@@ -29,13 +29,14 @@ export default function Testimonials() {
   const testimonialRef = useRef<HTMLDivElement>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [heroHeading, setHeroHeading] = useState("");
 
   // Touch/swipe handlers for mobile
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Load testimonials using data provider
+  // Load testimonials and page content using data provider
   useEffect(() => {
     const loadTestimonials = async () => {
       try {
@@ -57,6 +58,24 @@ export default function Testimonials() {
           featured: item.active,
         }));
         setTestimonials(mappedTestimonials);
+
+        // Load hero heading from API or static file
+        const USE_API_DATA = process.env.NEXT_PUBLIC_USE_API_DATA === "true";
+        if (USE_API_DATA) {
+          // Fetch heroHeading from page content API (separate from testimonials list)
+          const response = await fetch("/api/content/testimonials-page");
+          if (response.ok) {
+            const pageData = await response.json();
+            setHeroHeading(pageData.heroHeading || "");
+          }
+        } else {
+          // Load from static JSON
+          const response = await fetch("/data/testimonials-content.json");
+          if (response.ok) {
+            const pageData = await response.json();
+            setHeroHeading(pageData.heroHeading || "");
+          }
+        }
       } catch (error) {
         console.error("Error loading testimonials:", error);
       } finally {
@@ -198,9 +217,11 @@ export default function Testimonials() {
       <section className="py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 lg:pt-32 bg-gradient-to-br from-amber-50 to-orange-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Testimonials
-            </h1>
+            {heroHeading && (
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
+                {heroHeading}
+              </h1>
+            )}
           </div>
         </div>
 
