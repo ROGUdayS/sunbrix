@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import FooterNavigation from "./FooterNavigation";
-import { getCompanySettings } from "@/lib/data-provider";
+import { getCompanySettings, isPageEnabled } from "@/lib/data-provider";
 
 interface CompanySettings {
   company_name: string;
@@ -15,8 +15,6 @@ interface CompanySettings {
   google_url: string | null;
   show_youtube: boolean;
   youtube_url: string | null;
-  terms_conditions: string | null;
-  privacy_policy: string | null;
 }
 
 async function getCompanySettingsForFooter(): Promise<CompanySettings> {
@@ -41,13 +39,13 @@ async function getCompanySettingsForFooter(): Promise<CompanySettings> {
     google_url: null,
     show_youtube: false,
     youtube_url: null,
-    terms_conditions: null,
-    privacy_policy: null,
   };
 }
 
 export default async function Footer() {
   const settings = await getCompanySettingsForFooter();
+  const isPrivacyEnabled = await isPageEnabled("privacy-policy");
+  const isTermsEnabled = await isPageEnabled("terms-conditions");
 
   return (
     <footer className="bg-gray-900 text-white py-16">
@@ -175,28 +173,34 @@ export default async function Footer() {
           {/* Company Section */}
           <FooterNavigation />
 
-          {/* Legal Section */}
-          <div className="lg:col-span-3">
-            <h3 className="text-xl font-semibold mb-6 text-white">Legal</h3>
-            <ul className="space-y-4 text-base text-gray-300">
-              <li>
-                <Link
-                  href="/terms"
-                  className="hover:text-white transition-colors"
-                >
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="hover:text-white transition-colors"
-                >
-                  Privacy policy
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Legal Section - Only show if at least one legal page is enabled */}
+          {(isPrivacyEnabled || isTermsEnabled) && (
+            <div className="lg:col-span-3">
+              <h3 className="text-xl font-semibold mb-6 text-white">Legal</h3>
+              <ul className="space-y-4 text-base text-gray-300">
+                {isTermsEnabled && (
+                  <li>
+                    <Link
+                      href="/terms"
+                      className="hover:text-white transition-colors"
+                    >
+                      Terms & Conditions
+                    </Link>
+                  </li>
+                )}
+                {isPrivacyEnabled && (
+                  <li>
+                    <Link
+                      href="/privacy"
+                      className="hover:text-white transition-colors"
+                    >
+                      Privacy policy
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </footer>
