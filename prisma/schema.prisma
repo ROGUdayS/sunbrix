@@ -100,17 +100,18 @@ model PackageSectionItem {
 }
 
 model Lead {
-  id         String   @id @default(cuid())
-  name       String   @db.VarChar(255)
-  email      String   @db.VarChar(255)
-  phone      String   @db.VarChar(20)
-  city       String   @db.VarChar(100)
-  source     String   @default("website") @db.VarChar(50)
-  status     String   @default("new") @db.VarChar(20)
-  timeline   String?  @db.VarChar(50)
-  email_sent Boolean  @default(false) @map("email_sent")
-  created_at DateTime @default(now()) @map("created_at")
-  updated_at DateTime @updatedAt @map("updated_at")
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(255)
+  email       String   @db.VarChar(255)
+  phone       String   @db.VarChar(20)
+  city        String   @db.VarChar(100)
+  source      String   @default("website") @db.VarChar(50)
+  source_page String?  @map("source_page") @db.VarChar(100)
+  status      String   @default("new") @db.VarChar(20)
+  timeline    String?  @db.VarChar(50)
+  email_sent  Boolean  @default(false) @map("email_sent")
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @updatedAt @map("updated_at")
 
   @@map("leads")
 }
