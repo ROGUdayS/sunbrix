@@ -488,7 +488,7 @@ export default function BlogPostClient({ slug }: { slug: string }) {
       </section>
 
       {/* Contact Form */}
-      <ContactForm title="Get Expert Guidance" />
+      <ContactForm title="Get Expert Guidance" sourcePage={`Blog: ${blogPost?.title || "Blog Post"}`} />
 
       {/* Floating Contact Us Button */}
       <FloatingBookButton />

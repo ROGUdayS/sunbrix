@@ -6,6 +6,7 @@ import { useCity } from "../contexts/CityContext";
 
 interface ContactFormProps {
   title?: string;
+  sourcePage?: string;
 }
 
 interface FormData {
@@ -18,6 +19,7 @@ interface FormData {
 
 export default function ContactForm({
   title = "Contact Us",
+  sourcePage = "Contact Page",
 }: ContactFormProps) {
   const { selectedCity, cities, setSelectedCity, loading } = useCity();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,6 +51,7 @@ export default function ContactForm({
       const submitData = {
         ...formData,
         city: cityName,
+        sourcePage: sourcePage,
       };
 
       const response = await fetch("/api/contact", {

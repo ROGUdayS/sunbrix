@@ -33,17 +33,17 @@ export async function generateMetadata({
   return {
     title: blogPost.metaTitle || `${blogPost.title} | Sunbrix`,
     description: blogPost.metaDescription || blogPost.excerpt,
-    keywords: blogPost.tags.join(", "),
+    keywords: blogPost.metaKeywords || blogPost.tags.join(", "),
     authors: [{ name: blogPost.author }],
     openGraph: {
-      title: blogPost.title,
-      description: blogPost.excerpt,
+      title: blogPost.ogTitle || blogPost.title,
+      description: blogPost.ogDescription || blogPost.excerpt,
       type: "article",
       publishedTime: blogPost.date,
       authors: [blogPost.author],
       images: [
         {
-          url: blogPost.image || "/images/blog-placeholder.jpg",
+          url: blogPost.ogImage || blogPost.image || "/images/blog-placeholder.jpg",
           width: 1200,
           height: 630,
           alt: blogPost.title,
@@ -52,12 +52,12 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: blogPost.title,
-      description: blogPost.excerpt,
-      images: [blogPost.image || "/images/blog-placeholder.jpg"],
+      title: blogPost.twitterTitle || blogPost.title,
+      description: blogPost.twitterDescription || blogPost.excerpt,
+      images: [blogPost.twitterImage || blogPost.image || "/images/blog-placeholder.jpg"],
     },
     alternates: {
-      canonical: `/blogs/${slug}`,
+      canonical: `https://sunbrix.co/blogs/${slug}`,
     },
   };
 }
