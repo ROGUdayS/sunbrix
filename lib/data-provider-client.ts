@@ -121,10 +121,24 @@ export interface PageConfigData {
 // Configuration
 const USE_API_DATA = process.env.NEXT_PUBLIC_USE_API_DATA === "true";
 
+// Helper to get base URL for server-side fetching
+function getBaseUrl(): string {
+  // Check if we're on the server
+  if (typeof window === "undefined") {
+    // Server-side: use environment variable or default to localhost
+    return process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+  }
+  // Client-side: use relative URLs
+  return "";
+}
+
 // Helper function to make API calls
 async function fetchFromAPI<T>(endpoint: string): Promise<T | null> {
   try {
-    const response = await fetch(endpoint);
+    const baseUrl = getBaseUrl();
+    const url = baseUrl ? `${baseUrl}${endpoint}` : endpoint;
+    
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`API call failed: ${response.status}`);
@@ -140,7 +154,10 @@ async function fetchFromAPI<T>(endpoint: string): Promise<T | null> {
 // Helper function to fetch static JSON files via HTTP
 async function fetchStaticData<T>(filename: string): Promise<T | null> {
   try {
-    const response = await fetch(`/data/${filename}`);
+    const baseUrl = getBaseUrl();
+    const url = baseUrl ? `${baseUrl}/data/${filename}` : `/data/${filename}`;
+    
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch static data: ${response.status}`);

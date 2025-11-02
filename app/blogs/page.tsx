@@ -30,6 +30,7 @@ export default function Blogs() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [allBlogPosts, setAllBlogPosts] = useState<BlogPost[]>([]);
+  const [heroHeading, setHeroHeading] = useState("");
   const [pageContent, setPageContent] = useState<PageContent>({
     page_title: "Blogs & Articles",
     page_subtitle:
@@ -79,6 +80,11 @@ export default function Blogs() {
             "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.",
         }
       );
+      
+      // Set hero heading from page data
+      if (pageData && pageData.heroHeading !== undefined) {
+        setHeroHeading(pageData.heroHeading || "");
+      }
     } catch (error) {
       console.error("Error loading blog data:", error);
       // Set fallback content on error
@@ -130,8 +136,8 @@ export default function Blogs() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Show content immediately with fallback data
-  const displayContent = pageContent.page_title || "Blogs & Articles";
+  // Show content immediately with fallback data - use heroHeading if set, otherwise page_title
+  const displayContent = heroHeading || pageContent.page_title || "Blogs & Articles";
   const displaySubtitle =
     pageContent.page_subtitle ||
     "Discover expert insights, construction tips, and design inspiration to help you build your dream home with confidence.";
@@ -283,9 +289,9 @@ export default function Blogs() {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors duration-200 line-clamp-2">
+                    <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors duration-200 line-clamp-2">
                       {post.title}
-                    </h3>
+                    </h2>
                     <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
                       {post.excerpt}
                     </p>

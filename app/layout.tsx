@@ -8,6 +8,7 @@ import GoogleTagManager, {
 } from "./components/GoogleTagManager";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sunbrix.co"),
   title: "Sunbrix - Building homes Since 1999",
   description:
     "Build your dream home hassle-free with Sunbrix. High-quality materials, transparent pricing, and on-time delivery.",
