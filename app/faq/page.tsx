@@ -84,6 +84,10 @@ export default function FAQ() {
   };
 
   const filteredFAQs = filterAndSearchFaqs();
+  const heroTitle = pageContent.page_title?.trim() || "Frequently Asked Questions";
+  const heroSubtitle =
+    pageContent.page_subtitle?.trim() ||
+    "Find answers to common questions about Sunbrix, our construction process, materials, and services.";
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -118,10 +122,10 @@ export default function FAQ() {
       <section className="py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 lg:pt-32 bg-gradient-to-br from-amber-50 to-orange-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
-            {pageContent.page_title}
+            {heroTitle}
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 leading-relaxed">
-            {pageContent.page_subtitle}
+            {heroSubtitle}
           </p>
         </div>
       </section>
@@ -214,9 +218,11 @@ export default function FAQ() {
                   <button
                     onClick={() => toggleFAQ(faq.id)}
                     className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:bg-gray-50"
+                    aria-expanded={expandedFAQ === faq.id}
+                    aria-controls={`faq-panel-${faq.id}`}
                   >
                     <div className="flex-1">
-                      <h2 className="text-lg font-semibold text-gray-900 pr-4">
+                      <h2 className="text-lg sm:text-xl font-semibold text-gray-900 pr-4">
                         {faq.question}
                       </h2>
                     </div>
@@ -239,7 +245,10 @@ export default function FAQ() {
                     </div>
                   </button>
                   {expandedFAQ === faq.id && (
-                    <div className="px-6 pb-4 border-t border-gray-100">
+                    <div
+                      id={`faq-panel-${faq.id}`}
+                      className="px-6 pb-4 border-t border-gray-100"
+                    >
                       <div className="pt-4 text-gray-700 leading-relaxed">
                         <MarkdownRenderer content={faq.answer} />
                       </div>
