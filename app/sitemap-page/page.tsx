@@ -1,9 +1,5 @@
-"use client";
-
 import Header from "../components/Header";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { getProjects, ProjectData } from "@/lib/data-provider-client";
 
 interface SitemapSection {
   title: string;
@@ -16,22 +12,6 @@ interface SitemapSection {
 }
 
 export default function SitemapPage() {
-  const [projects, setProjects] = useState<ProjectData[]>([]);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        // Use data provider instead of direct file fetch
-        const data = await getProjects();
-        setProjects(data.projects || []);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
   const sitemapSections: SitemapSection[] = [
     {
       title: "Main Pages",
@@ -105,21 +85,6 @@ export default function SitemapPage() {
       ],
     },
   ];
-
-  // Add dynamic project pages
-  if (projects.length > 0) {
-    const projectPages = projects.map((project) => ({
-      title: project.title,
-      url: `/projects/${project.id}`,
-      description: `View details of ${project.title}`,
-    }));
-
-    sitemapSections.push({
-      title: "Individual Projects",
-      description: "Detailed pages for each completed project",
-      pages: projectPages,
-    });
-  }
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
