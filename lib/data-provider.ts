@@ -99,6 +99,20 @@ export interface AboutUsContent {
   };
 }
 
+export interface ContactContent {
+  metaContent?: {
+    meta_title?: string;
+    meta_description?: string;
+    meta_keywords?: string;
+    og_title?: string;
+    og_description?: string;
+    og_image?: string;
+    twitter_title?: string;
+    twitter_description?: string;
+    twitter_image?: string;
+  };
+}
+
 export interface PackageData {
   [cityName: string]: {
     [packageName: string]: any;
@@ -311,6 +325,16 @@ export async function getAboutUsContent(): Promise<AboutUsContent> {
     return data || {};
   } else {
     const data = await readStaticData<AboutUsContent>("about-us-content.json");
+    return data || {};
+  }
+}
+
+export async function getContactContent(): Promise<ContactContent> {
+  if (USE_API_DATA) {
+    const data = await fetchFromAPI<ContactContent>("/api/content/contact");
+    return data || {};
+  } else {
+    const data = await readStaticData<ContactContent>("contact-content.json");
     return data || {};
   }
 }
