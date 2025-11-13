@@ -35,6 +35,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function About() {
   const aboutContent = await getAboutUsContent();
+  const heroTitle =
+    aboutContent.heroSection?.title?.trim() || "About Sunbrix";
+  const heroSubtitle =
+    aboutContent.heroSection?.subtitle?.trim() ||
+    "Building dreams with trust, quality, and innovation. We're here to make your home-building journey seamless and stress-free.";
+
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
       {/* Header */}
@@ -44,11 +50,10 @@ export default async function About() {
       <section className="bg-gradient-to-br from-orange-50 to-amber-50 py-12 sm:py-16 lg:py-20 pt-24 sm:pt-28 lg:pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
-            {aboutContent.heroSection?.title || "About Sunbrix"}
+            {heroTitle}
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            {aboutContent.heroSection?.subtitle ||
-              "Building dreams with trust, quality, and innovation. We're here to make your home-building journey seamless and stress-free."}
+            {heroSubtitle}
           </p>
         </div>
       </section>
