@@ -1,0 +1,239 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+
+// Generate or retrieve session ID
+function getSessionId(): string {
+  if (typeof window === "undefined") return "";
+  
+  let sessionId = sessionStorage.getItem("analytics_session_id");
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    sessionStorage.setItem("analytics_session_id", sessionId);
+  }
+  return sessionId;
+}
+
+// Get user ID from localStorage if available
+function getUserId(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("analytics_user_id");
+}
+
+// Track analytics event
+async function trackEvent(
+  eventType: string,
+  eventData?: Record<string, any>,
+  duration?: number
+) {
+  try {
+    const trackingUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    if (!trackingUrl) {
+      console.warn("Analytics tracking URL not configured");
+      return;
+    }
+
+    // Check if we're on the correct domain
+    if (typeof window !== "undefined") {
+      const currentUrl = window.location.origin;
+      if (!currentUrl.startsWith(trackingUrl.replace(/\/$/, ""))) {
+        return; // Don't track if not on the configured domain
+      }
+    }
+
+    const sessionId = getSessionId();
+    const userId = getUserId();
+
+    const payload = {
+      event_type: eventType,
+      page_path: window.location.pathname + window.location.search,
+      page_title: document.title,
+      referrer: document.referrer || null,
+      user_agent: navigator.userAgent,
+      screen_width: window.screen.width,
+      screen_height: window.screen.height,
+      language: navigator.language,
+      session_id: sessionId,
+      user_id: userId,
+      event_data: eventData || null,
+      duration: duration || null,
+    };
+
+    const response = await fetch("/api/analytics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      // Don't log 503 (Service Unavailable) as errors - these are temporary during schema cache refresh
+      if (response.status === 503) {
+        // Silently handle - analytics will work once schema cache refreshes
+        return;
+      }
+      
+      // Only log actual errors (not temporary service unavailability)
+      const errorText = await response.text();
+      try {
+        const errorData = JSON.parse(errorText);
+        // If it's a schema cache initialization message, don't log as error
+        if (errorData.error?.includes("being initialized") || errorData.message?.includes("schema cache")) {
+          return;
+        }
+      } catch {
+        // If parsing fails, log the error
+        console.error("Failed to track analytics event:", errorText);
+      }
+    }
+  } catch (error) {
+    // Only log unexpected errors, not network issues or temporary unavailability
+    if (error instanceof TypeError && error.message.includes("fetch")) {
+      // Network error - silently fail
+      return;
+    }
+    console.error("Analytics tracking error:", error);
+  }
+}
+
+export default function AnalyticsTracker() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const sessionStartTime = useRef<number>(Date.now());
+  const lastPathname = useRef<string>("");
+
+  useEffect(() => {
+    // Track page view on route change
+    const currentPath = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
+    
+    if (lastPathname.current !== currentPath) {
+      // Calculate duration for previous page
+      if (lastPathname.current) {
+        const duration = Math.floor((Date.now() - sessionStartTime.current) / 1000);
+        trackEvent("page_exit", { path: lastPathname.current }, duration);
+      }
+
+      // Track new page view
+      sessionStartTime.current = Date.now();
+      lastPathname.current = currentPath;
+      
+      setTimeout(() => {
+        trackEvent("page_view", {
+          path: currentPath,
+          timestamp: new Date().toISOString(),
+        });
+      }, 100);
+    }
+  }, [pathname, searchParams]);
+
+  useEffect(() => {
+    // Track session start
+    trackEvent("session_start", {
+      timestamp: new Date().toISOString(),
+    });
+
+    // Track clicks on links and buttons
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest("a");
+      const button = target.closest("button");
+      
+      if (link) {
+        const href = link.getAttribute("href");
+        if (href && !href.startsWith("#") && !href.startsWith("javascript:")) {
+          trackEvent("link_click", {
+            href,
+            text: link.textContent?.trim() || "",
+            target: link.getAttribute("target") || "_self",
+          });
+        }
+      } else if (button) {
+        trackEvent("button_click", {
+          text: button.textContent?.trim() || "",
+          type: button.getAttribute("type") || "button",
+        });
+      }
+    };
+
+    // Track form submissions
+    const handleSubmit = (e: SubmitEvent) => {
+      const form = e.target as HTMLFormElement;
+      trackEvent("form_submit", {
+        form_id: form.id || form.name || "unknown",
+        action: form.action || "",
+        method: form.method || "get",
+      });
+    };
+
+    // Track scroll depth
+    let maxScroll = 0;
+    const handleScroll = () => {
+      const scrollPercent = Math.round(
+        ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100
+      );
+      if (scrollPercent > maxScroll) {
+        maxScroll = scrollPercent;
+        // Track at 25%, 50%, 75%, 100%
+        if ([25, 50, 75, 100].includes(scrollPercent)) {
+          trackEvent("scroll_depth", {
+            depth: scrollPercent,
+            path: window.location.pathname,
+          });
+        }
+      }
+    };
+
+    // Track time on page
+    const timeOnPageInterval = setInterval(() => {
+      const duration = Math.floor((Date.now() - sessionStartTime.current) / 1000);
+      if (duration > 0 && duration % 30 === 0) {
+        // Track every 30 seconds
+        trackEvent("time_on_page", {
+          duration,
+          path: window.location.pathname,
+        });
+      }
+    }, 30000);
+
+    // Track page exit
+    const handleBeforeUnload = () => {
+      const duration = Math.floor((Date.now() - sessionStartTime.current) / 1000);
+      // Use sendBeacon for reliable tracking on page unload
+      const trackingUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      if (trackingUrl && navigator.sendBeacon) {
+        const sessionId = getSessionId();
+        const userId = getUserId();
+        const payload = JSON.stringify({
+          event_type: "page_exit",
+          page_path: window.location.pathname + window.location.search,
+          page_title: document.title,
+          session_id: sessionId,
+          user_id: userId,
+          duration,
+        });
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon("/api/analytics", blob);
+      } else {
+        trackEvent("page_exit", { path: window.location.pathname }, duration);
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+    document.addEventListener("submit", handleSubmit);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+      document.removeEventListener("submit", handleSubmit);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      clearInterval(timeOnPageInterval);
+    };
+  }, []);
+
+  return null; // This component doesn't render anything
+}
+

@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import GoogleTagManager, {
   GoogleTagManagerNoScript,
 } from "./components/GoogleTagManager";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunbrix.co"),
@@ -46,6 +47,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <GoogleTagManagerNoScript />
+        <AnalyticsTracker />
         <CityProvider>
           {children}
           <CityModal />
