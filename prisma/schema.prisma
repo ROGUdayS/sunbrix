@@ -292,3 +292,31 @@ model FaqPageContent {
 
   @@map("faq_page_content")
 }
+
+model Analytics {
+  id              String   @id @default(cuid())
+  event_type      String   @map("event_type") @db.VarChar(50)
+  page_path       String?  @map("page_path") @db.VarChar(500)
+  page_title      String?  @map("page_title") @db.VarChar(255)
+  referrer        String?  @db.VarChar(500)
+  user_agent      String?  @map("user_agent") @db.VarChar(500)
+  device_type     String?  @map("device_type") @db.VarChar(50)
+  browser         String?  @db.VarChar(100)
+  os              String?  @db.VarChar(100)
+  screen_width    Int?     @map("screen_width")
+  screen_height   Int?     @map("screen_height")
+  language        String?  @db.VarChar(10)
+  country         String?  @db.VarChar(100)
+  city            String?  @db.VarChar(100)
+  session_id      String?  @map("session_id") @db.VarChar(255)
+  user_id         String?  @map("user_id") @db.VarChar(255)
+  event_data      Json?    @map("event_data")
+  duration        Int?     // Session duration in seconds
+  created_at      DateTime @default(now()) @map("created_at")
+
+  @@index([event_type])
+  @@index([page_path])
+  @@index([created_at])
+  @@index([session_id])
+  @@map("analytics")
+}

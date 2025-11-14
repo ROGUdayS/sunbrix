@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { CityProvider } from "./contexts/CityContext";
 import CityModal from "./components/CityModal";
@@ -6,6 +7,7 @@ import Footer from "./components/Footer";
 import GoogleTagManager, {
   GoogleTagManagerNoScript,
 } from "./components/GoogleTagManager";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunbrix.co"),
@@ -46,6 +48,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <GoogleTagManagerNoScript />
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         <CityProvider>
           {children}
           <CityModal />
