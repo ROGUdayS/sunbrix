@@ -8,6 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import { getCities, CityData } from "@/lib/data-provider-client";
+import { trackCityChange } from "../components/AnalyticsTracker";
 
 interface CityContextType {
   selectedCity: CityData | null;
@@ -79,9 +80,16 @@ export function CityProvider({ children }: { children: React.ReactNode }) {
   }, [selectedCityId]);
 
   const setSelectedCity = (cityId: string) => {
-    if (cities.find((city) => city.id === cityId)) {
+    const city = cities.find((city) => city.id === cityId);
+    if (city) {
+      const oldCity = selectedCity?.name || null;
       setSelectedCityId(cityId);
       setShowCityModal(false);
+      
+      // Track city change
+      if (oldCity !== city.name) {
+        trackCityChange(oldCity, city.name);
+      }
     }
   };
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { CityProvider } from "./contexts/CityContext";
 import CityModal from "./components/CityModal";
@@ -47,7 +48,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <GoogleTagManagerNoScript />
-        <AnalyticsTracker />
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         <CityProvider>
           {children}
           <CityModal />

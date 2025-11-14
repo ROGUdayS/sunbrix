@@ -7,6 +7,7 @@ import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
 import ImageModal from "../components/ImageModal";
 import { getProjects, ProjectData } from "@/lib/data-provider-client";
+import { trackProjectClick } from "../components/AnalyticsTracker";
 
 interface Project extends ProjectData {
   yearBuilt: string;
@@ -98,12 +99,19 @@ export default function ProjectGallery() {
   const openModal = (
     images: string[],
     title: string,
-    startIndex: number = 0
+    startIndex: number = 0,
+    projectId?: string,
+    location?: string
   ) => {
     setModalImages(images);
     setModalTitle(title);
     setModalCurrentIndex(startIndex);
     setModalOpen(true);
+    
+    // Track project click
+    if (projectId && location) {
+      trackProjectClick(projectId, title, location);
+    }
   };
 
   const closeModal = () => {
@@ -326,7 +334,7 @@ export default function ProjectGallery() {
                   <div
                     className="relative cursor-pointer"
                     onClick={() =>
-                      openModal(projectImages, project.title, currentIndex)
+                      openModal(projectImages, project.title, currentIndex, project.id, project.location)
                     }
                   >
                     {projectImages[currentIndex] && (

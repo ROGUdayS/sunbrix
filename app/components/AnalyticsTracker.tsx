@@ -237,3 +237,66 @@ export default function AnalyticsTracker() {
   return null; // This component doesn't render anything
 }
 
+// Export helper functions for business-specific tracking
+export function trackProjectClick(projectId: string, projectTitle: string, location: string) {
+  trackEvent("project_card_click", {
+    project_id: projectId,
+    project_title: projectTitle,
+    location: location,
+  });
+}
+
+export function trackPackageView(packageName: string, city: string, price?: string | number) {
+  trackEvent("package_view", {
+    package_name: packageName,
+    city: city,
+    price: price || null,
+  });
+}
+
+export function trackPackageSectionExpand(packageName: string, sectionTitle: string) {
+  trackEvent("package_section_expand", {
+    package_name: packageName,
+    section_title: sectionTitle,
+  });
+}
+
+export function trackPackageSectionCollapse(packageName: string, sectionTitle: string) {
+  trackEvent("package_section_collapse", {
+    package_name: packageName,
+    section_title: sectionTitle,
+  });
+}
+
+export function trackCityChange(oldCity: string | null, newCity: string) {
+  trackEvent("city_change", {
+    old_city: oldCity || "none",
+    new_city: newCity,
+  });
+}
+
+export function trackFormFieldFocus(formId: string, fieldName: string, fieldType: string) {
+  trackEvent("form_field_focus", {
+    form_id: formId,
+    field_name: fieldName,
+    field_type: fieldType,
+  });
+}
+
+export function trackFormFieldChange(formId: string, fieldName: string, fieldType: string, valueLength: number) {
+  trackEvent("form_field_change", {
+    form_id: formId,
+    field_name: fieldName,
+    field_type: fieldType,
+    value_length: valueLength,
+  });
+}
+
+export function trackFormFieldBlur(formId: string, fieldName: string, fieldType: string) {
+  trackEvent("form_field_blur", {
+    form_id: formId,
+    field_name: fieldName,
+    field_type: fieldType,
+  });
+}
+

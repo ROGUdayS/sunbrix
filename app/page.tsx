@@ -18,6 +18,11 @@ import {
 } from "@/lib/data-provider-client";
 import { usePageConfigs } from "./hooks/usePageConfigs";
 import DataModeIndicator from "./components/DataModeIndicator";
+import {
+  trackPackageView,
+  trackPackageSectionExpand,
+  trackPackageSectionCollapse,
+} from "./components/AnalyticsTracker";
 
 // ProjectData is now imported from data-provider
 
@@ -396,8 +401,16 @@ export default function Home() {
     setCurrentTestimonial(index);
   };
 
-  const toggleSection = (section: string) => {
+  const toggleSection = (section: string, packageName: string, sectionTitle: string) => {
+    const wasExpanded = expandedSection === section;
     setExpandedSection((prev) => (prev === section ? null : section));
+    
+    // Track section expand/collapse
+    if (!wasExpanded) {
+      trackPackageSectionExpand(packageName, sectionTitle);
+    } else {
+      trackPackageSectionCollapse(packageName, sectionTitle);
+    }
   };
 
   // Bank logos data and mobile carousel state (3 logos per slide)
@@ -831,6 +844,32 @@ export default function Home() {
 
     return filteredPackages;
   }, [packagesData, selectedCity]);
+
+  // Track package views when packages are displayed (only once per city change)
+  const trackedPackagesRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (selectedCity && packagesData?.packages) {
+      const filtered = getFilteredPackages();
+      const cityPackageKey = `city-${selectedCity.id}`;
+      
+      // Reset tracking when city changes
+      if (!trackedPackagesRef.current.has(cityPackageKey)) {
+        trackedPackagesRef.current.clear();
+        trackedPackagesRef.current.add(cityPackageKey);
+        
+        Object.entries(filtered).forEach(([packageKey, packageInfo]) => {
+          const packageName = (packageInfo as any).title || packageKey;
+          const packagePrice = (packageInfo as any).pricing?.[selectedCity.id]?.price || null;
+          const trackingKey = `${cityPackageKey}-${packageKey}`;
+          
+          if (!trackedPackagesRef.current.has(trackingKey)) {
+            trackedPackagesRef.current.add(trackingKey);
+            trackPackageView(packageName, selectedCity.name, packagePrice);
+          }
+        });
+      }
+    }
+  }, [selectedCity?.id, packagesData?.packages, getFilteredPackages]);
 
   return (
     <div className="min-h-screen bg-[#fdfdf8]">
@@ -1310,6 +1349,13 @@ export default function Home() {
               <div className="hidden lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
                 {Object.entries(getFilteredPackages()).map(
                   ([packageKey, packageInfo]) => {
+                    const packageName = (packageInfo as any).title || packageKey;
+                    const packagePrice = selectedCity &&
+                      (packageInfo as any).pricing &&
+                      (packageInfo as any).pricing[selectedCity.id]
+                      ? (packageInfo as any).pricing[selectedCity.id].price
+                      : null;
+                    
                     return (
                       <div
                         key={packageKey}
@@ -1353,7 +1399,7 @@ export default function Home() {
                                 className="border border-gray-100 rounded-md overflow-hidden"
                               >
                                 <button
-                                  onClick={() => toggleSection(sectionKey)}
+                                  onClick={() => toggleSection(sectionKey, packageName, (section as any).title)}
                                   className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
                                 >
                                   <span className="font-semibold text-gray-900 text-xs lg:text-sm">
@@ -1528,6 +1574,7 @@ export default function Home() {
                                   const currentCityPricing = ((
                                     packageInfo as any
                                   ).pricing || {})[selectedCity.id];
+                                  const packageName = (packageInfo as any).title || packageKey;
 
                                   return (
                                     <div
@@ -1566,7 +1613,7 @@ export default function Home() {
                                               >
                                                 <button
                                                   onClick={() =>
-                                                    toggleSection(sectionKey)
+                                                    toggleSection(sectionKey, packageName, (section as any).title)
                                                   }
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
@@ -1639,6 +1686,7 @@ export default function Home() {
                                   const currentCityPricing = ((
                                     packageInfo as any
                                   ).pricing || {})[selectedCity.id];
+                                  const packageName = (packageInfo as any).title || packageKey;
 
                                   return (
                                     <div
@@ -1684,7 +1732,7 @@ export default function Home() {
                                               >
                                                 <button
                                                   onClick={() =>
-                                                    toggleSection(sectionKey)
+                                                    toggleSection(sectionKey, packageName, (section as any).title)
                                                   }
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
@@ -1758,6 +1806,7 @@ export default function Home() {
                                   const currentCityPricing = ((
                                     packageInfo as any
                                   ).pricing || {})[selectedCity.id];
+                                  const packageName = (packageInfo as any).title || packageKey;
 
                                   return (
                                     <div
@@ -1796,7 +1845,7 @@ export default function Home() {
                                               >
                                                 <button
                                                   onClick={() =>
-                                                    toggleSection(sectionKey)
+                                                    toggleSection(sectionKey, packageName, (section as any).title)
                                                   }
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >

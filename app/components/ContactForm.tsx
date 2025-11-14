@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCity } from "../contexts/CityContext";
+import {
+  trackFormFieldFocus,
+  trackFormFieldChange,
+  trackFormFieldBlur,
+} from "./AnalyticsTracker";
 
 interface ContactFormProps {
   title?: string;
@@ -35,8 +40,25 @@ export default function ContactForm({
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Track form field change
+    trackFormFieldChange("contact-form", name, type, value.length);
+  };
+
+  const handleInputFocus = (
+    e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, type } = e.target;
+    trackFormFieldFocus("contact-form", name, type);
+  };
+
+  const handleInputBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, type } = e.target;
+    trackFormFieldBlur("contact-form", name, type);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -127,6 +149,8 @@ export default function ContactForm({
                 placeholder="Full Name"
                 value={formData.fullName}
                 onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-700 placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-orange-400 outline-none transition"
               />
@@ -140,6 +164,8 @@ export default function ContactForm({
                 placeholder="Email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-700 placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-orange-400 outline-none transition"
               />
@@ -153,6 +179,8 @@ export default function ContactForm({
                 placeholder="Mobile Number"
                 value={formData.mobileNumber}
                 onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-700 placeholder-gray-400 focus:border-transparent focus:ring-2 focus:ring-orange-400 outline-none transition"
               />
@@ -161,8 +189,14 @@ export default function ContactForm({
             {/* Row 4: Choose City (Preselected) */}
             <div className="relative">
               <select
+                name="city"
                 value={selectedCity.id}
-                onChange={(e) => setSelectedCity(e.target.value)}
+                onChange={(e) => {
+                  setSelectedCity(e.target.value);
+                  handleInputChange(e);
+                }}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 className="w-full px-4 py-3 rounded-lg border-2 border-orange-400 bg-white text-orange-600 focus:outline-none appearance-none"
               >
                 <option disabled value="Choose City">
@@ -196,6 +230,8 @@ export default function ContactForm({
                 name="timeline"
                 value={formData.timeline}
                 onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-700 focus:border-transparent focus:ring-2 focus:ring-orange-400 outline-none appearance-none"
               >
