@@ -32,14 +32,18 @@ export function parseTrafficSource(
     try {
       const url = new URL(currentUrl);
       const params = url.searchParams;
-      
+
       if (params.has("utm_source")) {
         result.utm_source = params.get("utm_source") || undefined;
-        result.source = result.utm_source.toLowerCase();
+        if (result.utm_source) {
+          result.source = result.utm_source.toLowerCase();
+        }
       }
       if (params.has("utm_medium")) {
         result.utm_medium = params.get("utm_medium") || undefined;
-        result.medium = result.utm_medium.toLowerCase();
+        if (result.utm_medium) {
+          result.medium = result.utm_medium.toLowerCase();
+        }
       }
       if (params.has("utm_campaign")) {
         result.utm_campaign = params.get("utm_campaign") || undefined;
@@ -74,7 +78,9 @@ export function parseTrafficSource(
     if (currentUrl) {
       try {
         const currentUrlObj = new URL(currentUrl);
-        const currentHostname = currentUrlObj.hostname.toLowerCase().replace("www.", "");
+        const currentHostname = currentUrlObj.hostname
+          .toLowerCase()
+          .replace("www.", "");
         if (hostname === currentHostname) {
           return result; // Same domain = direct
         }
@@ -88,11 +94,17 @@ export function parseTrafficSource(
       result.source = "instagram";
       result.medium = "social";
       result.category = "Social Media";
-    } else if (hostname.includes("facebook.com") || hostname.includes("fb.com")) {
+    } else if (
+      hostname.includes("facebook.com") ||
+      hostname.includes("fb.com")
+    ) {
       result.source = "facebook";
       result.medium = "social";
       result.category = "Social Media";
-    } else if (hostname.includes("youtube.com") || hostname.includes("youtu.be")) {
+    } else if (
+      hostname.includes("youtube.com") ||
+      hostname.includes("youtu.be")
+    ) {
       result.source = "youtube";
       result.medium = "social";
       result.category = "Social Media";
@@ -118,7 +130,7 @@ export function parseTrafficSource(
       result.source = "google";
       result.medium = "organic";
       result.category = "Search Engine";
-      
+
       // Check if it's a paid search (has gclid parameter)
       if (referrerUrl.searchParams.has("gclid")) {
         result.medium = "cpc";
@@ -203,4 +215,3 @@ function categorizeUTMSource(utmSource: string, utmMedium?: string): string {
   // Default to Referral
   return "Referral";
 }
-
