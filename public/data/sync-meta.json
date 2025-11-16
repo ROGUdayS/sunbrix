@@ -1,27 +1,35 @@
 {
-  "lastSync": "2025-10-31T13:07:06.981Z",
+  "lastSync": "2025-11-16T18:11:15.156Z",
   "version": "1.0.0",
   "source": "dashboard-sync",
   "totalRecords": {
     "projects": 5,
     "cities": 2,
     "packages": 3,
-    "testimonials": 0,
+    "testimonials": 7,
     "galleryImages": 3,
     "mainPageContent": 0,
-    "pageContent": 11,
-    "blogs": 0,
+    "pageContent": 12,
+    "blogs": 4,
+    "contactMeta": 0,
     "faqs": 17,
-    "pageConfigs": 1
+    "pageConfigs": 0
   },
   "files": [
     "projects.json",
     "cities.json",
     "packages.json",
     "testimonials.json",
+    "testimonials-content.json",
     "gallery.json",
     "faqs.json",
+    "faqs-content.json",
+    "projects-content.json",
     "blogs.json",
+    "blogs-content.json",
+    "contact-content.json",
+    "privacy-policy.json",
+    "terms-conditions.json",
     "page-config.json",
     "main-page-content.json",
     "about-us-content.json",
@@ -30,7 +38,7 @@
   "writeResults": [
     {
       "filename": "projects.json",
-      "size": 5069,
+      "size": 5084,
       "records": 2
     },
     {
@@ -40,17 +48,22 @@
     },
     {
       "filename": "packages.json",
-      "size": 3746,
+      "size": 7897,
       "records": 3
     },
     {
       "filename": "testimonials.json",
-      "size": 2,
-      "records": 0
+      "size": 4973,
+      "records": 7
+    },
+    {
+      "filename": "testimonials-content.json",
+      "size": 902,
+      "records": 2
     },
     {
       "filename": "gallery.json",
-      "size": 2065,
+      "size": 1644,
       "records": 3
     },
     {
@@ -59,28 +72,58 @@
       "records": 17
     },
     {
+      "filename": "faqs-content.json",
+      "size": 999,
+      "records": 3
+    },
+    {
+      "filename": "projects-content.json",
+      "size": 967,
+      "records": 2
+    },
+    {
       "filename": "blogs.json",
+      "size": 12429,
+      "records": 4
+    },
+    {
+      "filename": "blogs-content.json",
+      "size": 874,
+      "records": 2
+    },
+    {
+      "filename": "contact-content.json",
+      "size": 798,
+      "records": 1
+    },
+    {
+      "filename": "privacy-policy.json",
+      "size": 845,
+      "records": 3
+    },
+    {
+      "filename": "terms-conditions.json",
+      "size": 888,
+      "records": 3
+    },
+    {
+      "filename": "page-config.json",
       "size": 2,
       "records": 0
     },
     {
-      "filename": "page-config.json",
-      "size": 254,
-      "records": 1
-    },
-    {
       "filename": "main-page-content.json",
-      "size": 4365,
+      "size": 4008,
       "records": 9
     },
     {
       "filename": "about-us-content.json",
-      "size": 2598,
-      "records": 3
+      "size": 3304,
+      "records": 4
     },
     {
       "filename": "company-settings.json",
-      "size": 500,
+      "size": 2688,
       "records": 16
     }
   ]

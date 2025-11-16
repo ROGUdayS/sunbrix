@@ -1,7 +1,53 @@
 {
   "projects": [
     {
-      "id": "cmfux3ll50001l509gheu02pz",
+      "id": "cmi1z0tn000f3os94o6kdcop9",
+      "title": "Anuj & Manoj Lunia - Sunbrix",
+      "location": "Bengaluru",
+      "year": "2005",
+      "plotSize": "4400 sq. ft",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png"
+      ],
+      "image_alt_texts": [
+        "Anuj & Manoj Lunia's house - Built by Sunbrix"
+      ],
+      "description": "First house built by Sunbrix, however the house hasn't been painted ever since",
+      "specifications": {
+        "bedrooms": "6"
+      },
+      "active": true,
+      "created_at": "2025-11-16T17:09:43.141Z",
+      "updated_at": "2025-11-16T17:42:09.142Z"
+    },
+    {
+      "id": "cmi1z0tro00f4os94d8ccaf8x",
+      "title": "Kiran Hulla Sunbrix",
+      "location": "Bengaluru",
+      "year": "2010",
+      "plotSize": "8000 sq. ft",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png"
+      ],
+      "image_alt_texts": [
+        "Kiran Hulla House | Sunbrix Constructions"
+      ],
+      "description": "This is a bunglow built for Mr. Kiran Holla & Family kiran hullla was a fantastic client he did great decisions his house had marble and other floorings his house is in maruti layout",
+      "specifications": {
+        "bedrooms": "8"
+      },
+      "active": true,
+      "created_at": "2025-11-16T17:09:43.141Z",
+      "updated_at": "2025-11-16T17:46:20.073Z"
+    },
+    {
+      "id": "cmi1z0tic00f2os94gdkb1cke",
       "title": "Shankar Lal & Brothers - Sunbrix",
       "location": "Bengaluru",
       "year": "2011",
@@ -20,38 +66,15 @@
         "bedrooms": "6"
       },
       "active": true,
-      "created_at": "2025-10-29T16:37:44.084Z",
-      "updated_at": "2025-10-29T16:37:44.084Z"
+      "created_at": "2025-11-16T17:09:43.141Z",
+      "updated_at": "2025-11-16T17:38:23.910Z"
     },
     {
-      "id": "cmgdnha430000l209ca8epoda",
-      "title": "Anuj & Manoj Lunia - Sunbrix",
-      "location": "Bengaluru",
-      "year": "2005",
-      "plotSize": "4400",
-      "facing": "North",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png"
-      ],
-      "image_alt_texts": [
-        "Anuj & Manoj Lunia's house - Built by Sunbrix"
-      ],
-      "description": "First house built by Sunbrix, however the house hasn't been painted ever since",
-      "specifications": {
-        "bedrooms": "6"
-      },
-      "active": true,
-      "created_at": "2025-10-29T16:37:44.255Z",
-      "updated_at": "2025-10-29T16:37:44.255Z"
-    },
-    {
-      "id": "cmgdntzhw0000lb09si4j88hh",
+      "id": "cmi1z0twj00f5os94x5z93f4f",
       "title": "Srinath House Sunbrix",
       "location": "Bengaluru",
       "year": "2023",
-      "plotSize": "1100",
+      "plotSize": "1100 sq. ft",
       "facing": "North",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp",
@@ -61,39 +84,16 @@
       "image_alt_texts": [
         "Srinath House Sunbrix"
       ],
-      "description": "Built for a close friend who wanted to move and settle into his house own house with his family. ",
+      "description": "Built for a close friend who wanted to move and settle into his house own house with his family.",
       "specifications": {
         "bedrooms": "2"
       },
       "active": true,
-      "created_at": "2025-10-29T16:37:44.704Z",
-      "updated_at": "2025-10-29T16:37:44.704Z"
+      "created_at": "2025-11-16T17:09:43.141Z",
+      "updated_at": "2025-11-16T17:44:24.834Z"
     },
     {
-      "id": "cmftvpy850000jo09e55cky6d",
-      "title": "Kiran Hulla Sunbrix",
-      "location": "Bengaluru",
-      "year": "2010",
-      "plotSize": "8000 Sqft",
-      "facing": "North",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png"
-      ],
-      "image_alt_texts": [
-        "Kiran Hulla House | Sunbrix Constructions"
-      ],
-      "description": "This is a bunglow built for Mr. Kiran Holla & Family kiran hullla was a fantastic client he did great decisions his house had marble and other floorings his house is in maruti layout",
-      "specifications": {
-        "bedrooms": "8"
-      },
-      "active": true,
-      "created_at": "2025-10-29T16:37:45.660Z",
-      "updated_at": "2025-10-29T16:37:45.660Z"
-    },
-    {
-      "id": "cmfuwuxgn0000l509ztns1dca",
+      "id": "cmi20lddt0000l209dd6a1hwb",
       "title": "Shashikala House - Sunbrix",
       "location": "Bengaluru",
       "year": "2012",
@@ -112,8 +112,8 @@
         "bedrooms": "3"
       },
       "active": true,
-      "created_at": "2025-10-29T16:37:45.830Z",
-      "updated_at": "2025-10-29T16:37:45.830Z"
+      "created_at": "2025-11-16T17:53:40.430Z",
+      "updated_at": "2025-11-16T17:53:40.430Z"
     }
   ],
   "count": 5
