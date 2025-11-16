@@ -47,6 +47,7 @@ const convertToEmbedUrl = (url: string): string => {
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [currentDesktopTestimonialPage, setCurrentDesktopTestimonialPage] = useState(0);
   // City context is used by the Header component and CityModal
   const { selectedCity, setShowCityModal } = useCity();
 
@@ -174,7 +175,6 @@ export default function Home() {
   const [isTestimonialTransitioning, setIsTestimonialTransitioning] =
     useState(false);
   const testimonialRef = useRef<HTMLDivElement>(null);
-  const testimonialDesktopRef = useRef<HTMLDivElement>(null);
 
   // Add video ref for auto-play functionality
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -389,42 +389,17 @@ export default function Home() {
   const nextTestimonial = () => {
     if (isTestimonialTransitioning) return;
     setIsTestimonialTransitioning(true);
-    // On desktop, move by 3; on mobile, move by 1
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    if (isMobile) {
-      // Mobile: increment and let useEffect handle infinite loop
-      setCurrentTestimonial((prev) => prev + 1);
-    } else {
-      // Desktop: increment by 3 (move to next group) - let useEffect handle infinite loop
-      setCurrentTestimonial((prev) => prev + 3);
-    }
+    setCurrentTestimonial((prev) => prev + 1);
   };
 
   const prevTestimonial = () => {
     if (isTestimonialTransitioning) return;
     setIsTestimonialTransitioning(true);
-    // On desktop, move by 3; on mobile, move by 1
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    if (isMobile) {
-      // Mobile: decrement and let useEffect handle infinite loop
-      setCurrentTestimonial((prev) => prev - 1);
-    } else {
-      // Desktop: decrement by 3 (move to previous group) - let useEffect handle infinite loop
-      setCurrentTestimonial((prev) => prev - 3);
-    }
+    setCurrentTestimonial((prev) => prev - 1);
   };
 
   const goToTestimonial = (index: number) => {
-    if (isTestimonialTransitioning) return;
-    setIsTestimonialTransitioning(true);
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    if (isMobile) {
-      setCurrentTestimonial(index);
-    } else {
-      // Desktop: go to the group containing this testimonial
-      const groupIndex = Math.floor(index / 3);
-      setCurrentTestimonial(groupIndex * 3);
-    }
+    setCurrentTestimonial(index);
   };
 
   const toggleSection = (
@@ -794,59 +769,28 @@ export default function Home() {
     if (!isTestimonialTransitioning) return;
 
     const timer = setTimeout(() => {
-      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
-      if (isMobile) {
-        // Mobile: Handle single testimonial carousel
-        if (currentTestimonial >= testimonials.length) {
-          if (testimonialRef.current) {
-            testimonialRef.current.style.transition = "none";
-            setCurrentTestimonial(0);
-            setTimeout(() => {
-              if (testimonialRef.current) {
-                testimonialRef.current.style.transition = "";
-              }
-            }, 50);
-          }
-        } else if (currentTestimonial < 0) {
-          if (testimonialRef.current) {
-            testimonialRef.current.style.transition = "none";
-            setCurrentTestimonial(testimonials.length - 1);
-            setTimeout(() => {
-              if (testimonialRef.current) {
-                testimonialRef.current.style.transition = "";
-              }
-            }, 50);
-          }
+      // Handle infinite loop reset without animation
+      if (currentTestimonial >= testimonials.length) {
+        if (testimonialRef.current) {
+          testimonialRef.current.style.transition = "none";
+          setCurrentTestimonial(0);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (testimonialRef.current) {
+              testimonialRef.current.style.transition = "";
+            }
+          }, 50);
         }
-      } else {
-        // Desktop: Handle groups of 3 testimonials - match packages pattern
-        const numGroups = Math.ceil(testimonials.length / 3);
-        const currentGroup = Math.floor(currentTestimonial / 3);
-
-        // Handle infinite loop reset without animation (like packages)
-        if (currentGroup >= numGroups) {
-          if (testimonialDesktopRef.current) {
-            testimonialDesktopRef.current.style.transition = "none";
-            setCurrentTestimonial(0);
-            // Force reflow and restore transition
-            setTimeout(() => {
-              if (testimonialDesktopRef.current) {
-                testimonialDesktopRef.current.style.transition = "";
-              }
-            }, 50);
-          }
-        } else if (currentGroup < 0) {
-          if (testimonialDesktopRef.current) {
-            testimonialDesktopRef.current.style.transition = "none";
-            setCurrentTestimonial((numGroups - 1) * 3);
-            // Force reflow and restore transition
-            setTimeout(() => {
-              if (testimonialDesktopRef.current) {
-                testimonialDesktopRef.current.style.transition = "";
-              }
-            }, 50);
-          }
+      } else if (currentTestimonial < 0) {
+        if (testimonialRef.current) {
+          testimonialRef.current.style.transition = "none";
+          setCurrentTestimonial(testimonials.length - 1);
+          // Force reflow and restore transition
+          setTimeout(() => {
+            if (testimonialRef.current) {
+              testimonialRef.current.style.transition = "";
+            }
+          }, 50);
         }
       }
       setIsTestimonialTransitioning(false);
@@ -2415,13 +2359,18 @@ export default function Home() {
 
             {/* Video Testimonials Carousel */}
             <div className="relative max-w-6xl mx-auto">
-              {/* Navigation Arrows - Desktop only, show if more than 3 testimonials */}
+              {/* Navigation Arrows - Desktop only, hidden if 3 or fewer testimonials */}
               {testimonials.length > 3 && (
                 <>
                   <button
-                    onClick={prevTestimonial}
+                    onClick={() => {
+                      const testimonialsPerPage = 3;
+                      const totalPages = Math.ceil(testimonials.length / testimonialsPerPage);
+                      setCurrentDesktopTestimonialPage((prev) => 
+                        (prev - 1 + totalPages) % totalPages
+                      );
+                    }}
                     className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                    aria-label="Previous testimonials"
                   >
                     <svg
                       className="w-6 h-6"
@@ -2438,9 +2387,14 @@ export default function Home() {
                     </svg>
                   </button>
                   <button
-                    onClick={nextTestimonial}
+                    onClick={() => {
+                      const testimonialsPerPage = 3;
+                      const totalPages = Math.ceil(testimonials.length / testimonialsPerPage);
+                      setCurrentDesktopTestimonialPage((prev) => 
+                        (prev + 1) % totalPages
+                      );
+                    }}
                     className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
-                    aria-label="Next testimonials"
                   >
                     <svg
                       className="w-6 h-6"
@@ -2648,247 +2602,62 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Desktop: 3 testimonials carousel */}
+              {/* Desktop: Show 3 testimonials at a time */}
               {testimonials.length > 1 && (
-                <div className="hidden md:block relative overflow-hidden rounded-2xl">
+                <div className="hidden md:block">
                   <div
-                    ref={testimonialDesktopRef}
-                    className={`flex transition-transform duration-300 ease-out ${
-                      isTestimonialTransitioning ? "" : ""
+                    className={`grid gap-6 sm:gap-8 items-stretch transition-opacity duration-300 ${
+                      testimonials.length === 2
+                        ? "md:grid-cols-2 max-w-4xl mx-auto"
+                        : "md:grid-cols-3"
                     }`}
-                    style={{
-                      transform: `translateX(calc(-${
-                        (Math.floor(currentTestimonial / 3) +
-                          Math.ceil(testimonials.length / 3)) *
-                        100
-                      }%))`,
-                      touchAction: "pan-y",
-                    }}
                   >
-                    {/* Previous groups for seamless left scrolling */}
-                    {Array.from({
-                      length: Math.ceil(testimonials.length / 3),
-                    }).map((_, groupIndex) => {
-                      const numGroups = Math.ceil(testimonials.length / 3);
-                      // Previous groups show in reverse order: last group first
-                      const actualGroupIndex =
-                        (numGroups - 1 - groupIndex + numGroups) % numGroups;
-                      return (
-                        <div
-                          key={`prev-${groupIndex}`}
-                          className="w-full flex-shrink-0 grid grid-cols-3 gap-6"
-                        >
-                          {testimonials
-                            .slice(
-                              actualGroupIndex * 3,
-                              actualGroupIndex * 3 + 3
-                            )
-                            .map((testimonial, index) => (
-                              <div
-                                key={`prev-${testimonial.id}-${index}`}
-                                className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
-                              >
-                                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                                  {testimonial.videoUrl && (
-                                    <iframe
-                                      className="w-full h-full"
-                                      src={convertToEmbedUrl(
-                                        testimonial.videoUrl
-                                      )}
-                                      title={`Customer Testimonial ${
-                                        actualGroupIndex * 3 + index + 1
-                                      }`}
-                                      frameBorder="0"
-                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                      allowFullScreen
-                                    ></iframe>
-                                  )}
-                                </div>
-                                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                                  <div className="flex items-center justify-center mb-4">
-                                    <svg
-                                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                                      fill="currentColor"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                                    </svg>
-                                  </div>
-                                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                                    {testimonial.quote}
-                                  </p>
-                                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                                    {testimonial.name}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          {/* Fill remaining slots if less than 3 in last group */}
-                          {testimonials.slice(
-                            actualGroupIndex * 3,
-                            actualGroupIndex * 3 + 3
-                          ).length < 3 &&
-                            Array.from({
-                              length:
-                                3 -
-                                testimonials.slice(
-                                  actualGroupIndex * 3,
-                                  actualGroupIndex * 3 + 3
-                                ).length,
-                            }).map((_, fillIndex) => (
-                              <div
-                                key={`prev-fill-${fillIndex}`}
-                                className="w-full"
-                              />
-                            ))}
-                        </div>
+                    {(() => {
+                      // Calculate which 3 testimonials to show
+                      const testimonialsPerPage = 3;
+                      const startIndex = currentDesktopTestimonialPage * testimonialsPerPage;
+                      const visibleTestimonials = testimonials.slice(
+                        startIndex,
+                        startIndex + testimonialsPerPage
                       );
-                    })}
 
-                    {/* Current groups - main testimonials */}
-                    {Array.from({
-                      length: Math.ceil(testimonials.length / 3),
-                    }).map((_, groupIndex) => (
-                      <div
-                        key={groupIndex}
-                        className="w-full flex-shrink-0 grid grid-cols-3 gap-6"
-                      >
-                        {testimonials
-                          .slice(groupIndex * 3, groupIndex * 3 + 3)
-                          .map((testimonial, index) => (
-                            <div
-                              key={testimonial.id}
-                              className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
-                            >
-                              <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                                {testimonial.videoUrl && (
-                                  <iframe
-                                    className="w-full h-full"
-                                    src={convertToEmbedUrl(
-                                      testimonial.videoUrl
-                                    )}
-                                    title={`Customer Testimonial ${
-                                      groupIndex * 3 + index + 1
-                                    }`}
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowFullScreen
-                                  ></iframe>
-                                )}
-                              </div>
-                              <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                                <div className="flex items-center justify-center mb-4">
-                                  <svg
-                                    className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                                  </svg>
-                                </div>
-                                <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                                  {testimonial.quote}
-                                </p>
-                                <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                                  {testimonial.name}
-                                </div>
-                              </div>
+                      return visibleTestimonials.map((testimonial, index) => (
+                        <div
+                          key={testimonial.id}
+                          className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
+                        >
+                          <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
+                            {testimonial.videoUrl && (
+                              <iframe
+                                className="w-full h-full"
+                                src={convertToEmbedUrl(testimonial.videoUrl)}
+                                title={`Customer Testimonial ${startIndex + index + 1}`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                              ></iframe>
+                            )}
+                          </div>
+                          <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
+                            <div className="flex items-center justify-center mb-4">
+                              <svg
+                                className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                              </svg>
                             </div>
-                          ))}
-                        {/* Fill remaining slots if less than 3 in last group */}
-                        {testimonials.slice(groupIndex * 3, groupIndex * 3 + 3)
-                          .length < 3 &&
-                          Array.from({
-                            length:
-                              3 -
-                              testimonials.slice(
-                                groupIndex * 3,
-                                groupIndex * 3 + 3
-                              ).length,
-                          }).map((_, fillIndex) => (
-                            <div key={`fill-${fillIndex}`} className="w-full" />
-                          ))}
-                      </div>
-                    ))}
-
-                    {/* Next groups for seamless right scrolling */}
-                    {Array.from({
-                      length: Math.ceil(testimonials.length / 3),
-                    }).map((_, groupIndex) => {
-                      const actualGroupIndex =
-                        (groupIndex + Math.ceil(testimonials.length / 3)) %
-                        Math.ceil(testimonials.length / 3);
-                      return (
-                        <div
-                          key={`next-${groupIndex}`}
-                          className="w-full flex-shrink-0 grid grid-cols-3 gap-6"
-                        >
-                          {testimonials
-                            .slice(
-                              actualGroupIndex * 3,
-                              actualGroupIndex * 3 + 3
-                            )
-                            .map((testimonial, index) => (
-                              <div
-                                key={`next-${testimonial.id}-${index}`}
-                                className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 flex flex-col"
-                              >
-                                <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
-                                  {testimonial.videoUrl && (
-                                    <iframe
-                                      className="w-full h-full"
-                                      src={convertToEmbedUrl(
-                                        testimonial.videoUrl
-                                      )}
-                                      title={`Customer Testimonial ${
-                                        actualGroupIndex * 3 + index + 1
-                                      }`}
-                                      frameBorder="0"
-                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                      allowFullScreen
-                                    ></iframe>
-                                  )}
-                                </div>
-                                <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
-                                  <div className="flex items-center justify-center mb-4">
-                                    <svg
-                                      className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
-                                      fill="currentColor"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                                    </svg>
-                                  </div>
-                                  <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
-                                    {testimonial.quote}
-                                  </p>
-                                  <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
-                                    {testimonial.name}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          {/* Fill remaining slots if less than 3 in last group */}
-                          {testimonials.slice(
-                            actualGroupIndex * 3,
-                            actualGroupIndex * 3 + 3
-                          ).length < 3 &&
-                            Array.from({
-                              length:
-                                3 -
-                                testimonials.slice(
-                                  actualGroupIndex * 3,
-                                  actualGroupIndex * 3 + 3
-                                ).length,
-                            }).map((_, fillIndex) => (
-                              <div
-                                key={`next-fill-${fillIndex}`}
-                                className="w-full"
-                              />
-                            ))}
+                            <p className="text-gray-700 text-center leading-relaxed text-sm sm:text-base flex-grow">
+                              {testimonial.quote}
+                            </p>
+                            <div className="text-center font-semibold text-amber-900 text-sm sm:text-base mt-4">
+                              {testimonial.name}
+                            </div>
+                          </div>
                         </div>
-                      );
-                    })}
+                      ));
+                    })()}
                   </div>
                 </div>
               )}
@@ -2916,26 +2685,20 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Desktop Pagination Dots - Show group indicators */}
+              {/* Desktop Pagination Dots - Show if more than 3 testimonials */}
               {testimonials.length > 3 && (
                 <div className="hidden md:flex justify-center mt-6 space-x-2">
-                  {Array.from({
-                    length: Math.ceil(testimonials.length / 3),
-                  }).map((_, groupIndex) => {
-                    const currentGroup = Math.floor(currentTestimonial / 3);
-                    return (
-                      <button
-                        key={groupIndex}
-                        onClick={() => goToTestimonial(groupIndex * 3)}
-                        className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                          groupIndex === currentGroup
-                            ? "bg-gray-800"
-                            : "bg-gray-300 hover:bg-gray-400"
-                        }`}
-                        aria-label={`Go to testimonial group ${groupIndex + 1}`}
-                      />
-                    );
-                  })}
+                  {Array.from({ length: Math.ceil(testimonials.length / 3) }).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentDesktopTestimonialPage(index)}
+                      className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                        index === currentDesktopTestimonialPage
+                          ? "bg-gray-800"
+                          : "bg-gray-300 hover:bg-gray-400"
+                      }`}
+                    />
+                  ))}
                 </div>
               )}
             </div>
