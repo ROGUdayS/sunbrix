@@ -401,10 +401,14 @@ export default function Home() {
     setCurrentTestimonial(index);
   };
 
-  const toggleSection = (section: string, packageName: string, sectionTitle: string) => {
+  const toggleSection = (
+    section: string,
+    packageName: string,
+    sectionTitle: string
+  ) => {
     const wasExpanded = expandedSection === section;
     setExpandedSection((prev) => (prev === section ? null : section));
-    
+
     // Track section expand/collapse
     if (!wasExpanded) {
       trackPackageSectionExpand(packageName, sectionTitle);
@@ -851,17 +855,18 @@ export default function Home() {
     if (selectedCity && packagesData?.packages) {
       const filtered = getFilteredPackages();
       const cityPackageKey = `city-${selectedCity.id}`;
-      
+
       // Reset tracking when city changes
       if (!trackedPackagesRef.current.has(cityPackageKey)) {
         trackedPackagesRef.current.clear();
         trackedPackagesRef.current.add(cityPackageKey);
-        
+
         Object.entries(filtered).forEach(([packageKey, packageInfo]) => {
           const packageName = (packageInfo as any).title || packageKey;
-          const packagePrice = (packageInfo as any).pricing?.[selectedCity.id]?.price || null;
+          const packagePrice =
+            (packageInfo as any).pricing?.[selectedCity.id]?.price || null;
           const trackingKey = `${cityPackageKey}-${packageKey}`;
-          
+
           if (!trackedPackagesRef.current.has(trackingKey)) {
             trackedPackagesRef.current.add(trackingKey);
             trackPackageView(packageName, selectedCity.name, packagePrice);
@@ -1349,13 +1354,15 @@ export default function Home() {
               <div className="hidden lg:grid lg:grid-cols-3 gap-4 lg:gap-6">
                 {Object.entries(getFilteredPackages()).map(
                   ([packageKey, packageInfo]) => {
-                    const packageName = (packageInfo as any).title || packageKey;
-                    const packagePrice = selectedCity &&
+                    const packageName =
+                      (packageInfo as any).title || packageKey;
+                    const packagePrice =
+                      selectedCity &&
                       (packageInfo as any).pricing &&
                       (packageInfo as any).pricing[selectedCity.id]
-                      ? (packageInfo as any).pricing[selectedCity.id].price
-                      : null;
-                    
+                        ? (packageInfo as any).pricing[selectedCity.id].price
+                        : null;
+
                     return (
                       <div
                         key={packageKey}
@@ -1399,7 +1406,13 @@ export default function Home() {
                                 className="border border-gray-100 rounded-md overflow-hidden"
                               >
                                 <button
-                                  onClick={() => toggleSection(sectionKey, packageName, (section as any).title)}
+                                  onClick={() =>
+                                    toggleSection(
+                                      sectionKey,
+                                      packageName,
+                                      (section as any).title
+                                    )
+                                  }
                                   className="w-full flex items-center justify-between p-2.5 lg:p-3 text-left hover:bg-gray-50 transition-colors"
                                 >
                                   <span className="font-semibold text-gray-900 text-xs lg:text-sm">
@@ -1574,7 +1587,8 @@ export default function Home() {
                                   const currentCityPricing = ((
                                     packageInfo as any
                                   ).pricing || {})[selectedCity.id];
-                                  const packageName = (packageInfo as any).title || packageKey;
+                                  const packageName =
+                                    (packageInfo as any).title || packageKey;
 
                                   return (
                                     <div
@@ -1613,7 +1627,11 @@ export default function Home() {
                                               >
                                                 <button
                                                   onClick={() =>
-                                                    toggleSection(sectionKey, packageName, (section as any).title)
+                                                    toggleSection(
+                                                      sectionKey,
+                                                      packageName,
+                                                      (section as any).title
+                                                    )
                                                   }
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
@@ -1686,7 +1704,8 @@ export default function Home() {
                                   const currentCityPricing = ((
                                     packageInfo as any
                                   ).pricing || {})[selectedCity.id];
-                                  const packageName = (packageInfo as any).title || packageKey;
+                                  const packageName =
+                                    (packageInfo as any).title || packageKey;
 
                                   return (
                                     <div
@@ -1732,7 +1751,11 @@ export default function Home() {
                                               >
                                                 <button
                                                   onClick={() =>
-                                                    toggleSection(sectionKey, packageName, (section as any).title)
+                                                    toggleSection(
+                                                      sectionKey,
+                                                      packageName,
+                                                      (section as any).title
+                                                    )
                                                   }
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
@@ -1806,7 +1829,8 @@ export default function Home() {
                                   const currentCityPricing = ((
                                     packageInfo as any
                                   ).pricing || {})[selectedCity.id];
-                                  const packageName = (packageInfo as any).title || packageKey;
+                                  const packageName =
+                                    (packageInfo as any).title || packageKey;
 
                                   return (
                                     <div
@@ -1845,7 +1869,11 @@ export default function Home() {
                                               >
                                                 <button
                                                   onClick={() =>
-                                                    toggleSection(sectionKey, packageName, (section as any).title)
+                                                    toggleSection(
+                                                      sectionKey,
+                                                      packageName,
+                                                      (section as any).title
+                                                    )
                                                   }
                                                   className="w-full flex items-center justify-between p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                                                 >
@@ -2404,7 +2432,7 @@ export default function Home() {
                               {testimonial.videoUrl && (
                                 <iframe
                                   className="w-full h-full"
-                                  src={testimonial.videoUrl}
+                                  src={convertToEmbedUrl(testimonial.videoUrl)}
                                   title={`Customer Testimonial ${testimonial.id}`}
                                   frameBorder="0"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -2444,7 +2472,7 @@ export default function Home() {
                               {testimonial.videoUrl && (
                                 <iframe
                                   className="w-full h-full"
-                                  src={testimonial.videoUrl}
+                                  src={convertToEmbedUrl(testimonial.videoUrl)}
                                   title={`Customer Testimonial ${testimonial.id}`}
                                   frameBorder="0"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -2484,7 +2512,7 @@ export default function Home() {
                               {testimonial.videoUrl && (
                                 <iframe
                                   className="w-full h-full"
-                                  src={testimonial.videoUrl}
+                                  src={convertToEmbedUrl(testimonial.videoUrl)}
                                   title={`Customer Testimonial ${testimonial.id}`}
                                   frameBorder="0"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -2530,7 +2558,7 @@ export default function Home() {
                           {testimonial.videoUrl && (
                             <iframe
                               className="w-full h-full"
-                              src={testimonial.videoUrl}
+                              src={convertToEmbedUrl(testimonial.videoUrl)}
                               title={`Customer Testimonial`}
                               frameBorder="0"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -2579,7 +2607,7 @@ export default function Home() {
                         {testimonial.videoUrl && (
                           <iframe
                             className="w-full h-full"
-                            src={testimonial.videoUrl}
+                            src={convertToEmbedUrl(testimonial.videoUrl)}
                             title={`Customer Testimonial ${index + 1}`}
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

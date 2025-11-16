@@ -6,6 +6,21 @@ import ContactForm from "../components/ContactForm";
 import FloatingBookButton from "../components/FloatingBookButton";
 import { getTestimonials } from "@/lib/data-provider-client";
 
+// Helper function to convert YouTube URLs to embed format
+const convertToEmbedUrl = (url: string): string => {
+  if (!url) return url;
+  if (url.includes("youtu.be/")) {
+    const videoId = url.split("youtu.be/")[1]?.split("?")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  } else if (url.includes("youtube.com/watch?v=")) {
+    const videoId = url.split("v=")[1]?.split("&")[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  } else if (url.includes("youtube.com/embed/")) {
+    return url; // Already in embed format
+  }
+  return url; // Return original if not YouTube
+};
+
 interface Testimonial {
   id: number;
   originalId?: string;
@@ -278,11 +293,13 @@ export default function Testimonials() {
                     <iframe
                       className="w-full h-full"
                       src={
-                        testimonials[
-                          ((currentTestimonial % testimonials.length) +
-                            testimonials.length) %
-                            testimonials.length
-                        ].videoUrl
+                        convertToEmbedUrl(
+                          testimonials[
+                            ((currentTestimonial % testimonials.length) +
+                              testimonials.length) %
+                              testimonials.length
+                          ].videoUrl
+                        )
                       }
                       title={`Customer Testimonial - ${
                         testimonials[
@@ -393,7 +410,7 @@ export default function Testimonials() {
                         {testimonial.videoUrl && (
                           <iframe
                             className="w-full h-full"
-                            src={testimonial.videoUrl}
+                            src={convertToEmbedUrl(testimonial.videoUrl)}
                             title={`Customer Testimonial ${testimonial.id}`}
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -440,7 +457,7 @@ export default function Testimonials() {
                         {testimonial.videoUrl && (
                           <iframe
                             className="w-full h-full"
-                            src={testimonial.videoUrl}
+                            src={convertToEmbedUrl(testimonial.videoUrl)}
                             title={`Customer Testimonial ${testimonial.id}`}
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -490,7 +507,7 @@ export default function Testimonials() {
                         {testimonial.videoUrl && (
                           <iframe
                             className="w-full h-full"
-                            src={testimonial.videoUrl}
+                            src={convertToEmbedUrl(testimonial.videoUrl)}
                             title={`Customer Testimonial ${testimonial.id}`}
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
