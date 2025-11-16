@@ -3,24 +3,24 @@
   "heroHeading": "",
   "galleryImages": [
     {
-      "id": "cmftunsr000ffos6jpahxqcro",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
+      "id": "cmi1z0zpy00ffos941qkv1pqj",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa-bengaluru/exterior-1.jpg",
       "alt_text": "Modern 3-BHK Villa exterior view showcasing contemporary architecture with East facing orientation",
-      "quote": "A house built for multipurpose somewhat designed to separate in blocks so that they can use it as a home now and in the future give it to the upcoming family. A house that is still connected to each other on the first floor.",
+      "quote": "Your dream home awaits - where modern design meets uncompromising quality.",
       "order_index": 1
     },
     {
-      "id": "cmftunswp00fgos6jehg51tbu",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal-house---sunbrix/LAL%20-1758532908777-mzpdytlyyk.png",
+      "id": "cmi1z0zun00fgos94o6nizsyp",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/cozy-2-bhk-home-bellary/interior-1.jpg",
       "alt_text": "Cozy 2-BHK Home interior view displaying efficient space planning and modern amenities",
-      "quote": "Built for three brothers and parents and inclusive house yet providing enough privacy and space to each family.",
+      "quote": "Excellence is not a skill, it's an attitude - and it shows in every detail.",
       "order_index": 2
     },
     {
-      "id": "cmftunt0p00fhos6jf5vtx21u",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shashikala-house---sunbrix/Cropped-1758532505829-ddjmi4hf8mg.png",
+      "id": "cmi1z0zzk00fhos94sb8bp5ai",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/luxury-4-bhk-duplex-bengaluru/elevation-1.jpg",
       "alt_text": "Luxury 4-BHK Duplex building elevation featuring premium finishes and spacious design",
-      "quote": "Compact 3BHK home built on a 370 Sqft plot. A lot of design and expertise is required to build such homes and ensuring it fits a family comfortably was our goal.",
+      "quote": "Building more than homes - we're crafting your future.",
       "order_index": 3
     }
   ],
