@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { parseTrafficSource } from "@/lib/traffic-source";
 
 // Generate or retrieve session ID
 function getSessionId(): string {
@@ -45,6 +46,13 @@ async function trackEvent(
     const sessionId = getSessionId();
     const userId = getUserId();
 
+    // Parse traffic source for page_view events
+    let trafficSourceData = null;
+    if (eventType === "page_view") {
+      const currentUrl = window.location.href;
+      trafficSourceData = parseTrafficSource(document.referrer || null, currentUrl);
+    }
+
     const payload = {
       event_type: eventType,
       page_path: window.location.pathname + window.location.search,
@@ -56,7 +64,9 @@ async function trackEvent(
       language: navigator.language,
       session_id: sessionId,
       user_id: userId,
-      event_data: eventData || null,
+      event_data: trafficSourceData 
+        ? { ...eventData, traffic_source: trafficSourceData }
+        : eventData || null,
       duration: duration || null,
     };
 
