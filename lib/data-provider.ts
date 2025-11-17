@@ -158,6 +158,37 @@ async function readStaticData<T>(filename: string): Promise<T | null> {
   }
 }
 
+// Helper function to get the base URL for API calls
+function getBaseUrl(): string {
+  // Client-side: use relative URL
+  if (typeof window !== "undefined") {
+    return "";
+  }
+
+  // Server-side: construct absolute URL for the lander app's own API routes
+  // Try environment variables first (for production deployments)
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+  
+  // For Vercel deployments
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  
+  // For local development
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+  
+  // Final fallback: use relative URL (Next.js 13+ App Router handles this)
+  // This works because Next.js resolves relative URLs to the same origin in server components
+  return "";
+}
+
 // Helper function to make API calls in API mode
 async function fetchFromAPI<T>(endpoint: string): Promise<T | null> {
   if (!USE_API_DATA) {
@@ -165,14 +196,15 @@ async function fetchFromAPI<T>(endpoint: string): Promise<T | null> {
   }
 
   try {
-    const baseUrl =
-      typeof window !== "undefined"
-        ? ""
-        : process.env.NEXT_PUBLIC_DASHBOARD_URL;
-    const response = await fetch(`${baseUrl}${endpoint}`);
+    const baseUrl = getBaseUrl();
+    const url = baseUrl ? `${baseUrl}${endpoint}` : endpoint;
+    const response = await fetch(url, {
+      // Ensure fresh data in production
+      cache: "no-store",
+    });
 
     if (!response.ok) {
-      throw new Error(`API call failed: ${response.status}`);
+      throw new Error(`API call failed: ${response.status} ${response.statusText}`);
     }
 
     return await response.json();
