@@ -429,7 +429,25 @@ export async function getCompanySettings(): Promise<any> {
       success: boolean;
       settings: any;
     }>("/api/company-settings");
-    return response?.settings || {};
+    
+    // Extract settings from response
+    const settings = response?.settings || {};
+    
+    // Log for debugging if enabled
+    if (process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_DEBUG_FOOTER === "true") {
+      console.log("[DATA-PROVIDER] getCompanySettings API response:", {
+        hasResponse: !!response,
+        hasSettings: !!response?.settings,
+        success: response?.success,
+        settingsKeys: Object.keys(settings),
+        show_facebook: settings.show_facebook,
+        show_instagram: settings.show_instagram,
+        show_google: settings.show_google,
+        show_youtube: settings.show_youtube,
+      });
+    }
+    
+    return settings;
   } else {
     const data = await readStaticData<any>("company-settings.json");
     return data || {};

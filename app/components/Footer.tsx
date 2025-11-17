@@ -28,20 +28,90 @@ async function getCompanySettingsForFooter(): Promise<CompanySettings> {
       typeof settings === "object" &&
       Object.keys(settings).length > 0
     ) {
-      // Ensure all required fields exist with proper defaults
-      return {
+      // Helper to ensure boolean values are properly converted
+      // Handles cases where API might return strings, numbers, or null
+      const toBoolean = (value: unknown): boolean => {
+        if (value === true || value === "true" || value === 1 || value === "1")
+          return true;
+        if (
+          value === false ||
+          value === "false" ||
+          value === 0 ||
+          value === "0"
+        )
+          return false;
+        return false;
+      };
+
+      // Log raw settings for debugging (only in development or when explicitly enabled)
+      if (
+        process.env.NODE_ENV === "development" ||
+        process.env.NEXT_PUBLIC_DEBUG_FOOTER === "true"
+      ) {
+        console.log("[FOOTER] Raw settings received:", {
+          show_facebook: settings.show_facebook,
+          show_facebook_type: typeof settings.show_facebook,
+          facebook_url: settings.facebook_url,
+          show_instagram: settings.show_instagram,
+          show_instagram_type: typeof settings.show_instagram,
+          instagram_url: settings.instagram_url,
+          show_google: settings.show_google,
+          show_google_type: typeof settings.show_google,
+          google_url: settings.google_url,
+          show_youtube: settings.show_youtube,
+          show_youtube_type: typeof settings.show_youtube,
+          youtube_url: settings.youtube_url,
+        });
+      }
+
+      // Helper to normalize URL - ensure empty strings become null
+      const normalizeUrl = (url: unknown): string | null => {
+        if (!url || typeof url !== "string" || url.trim() === "") return null;
+        return url.trim();
+      };
+
+      // Ensure all required fields exist with proper defaults and convert booleans
+      const processedSettings = {
         company_name: settings.company_name || "SUNBRIX Constructions",
         contact_email: settings.contact_email || "sunbrix.co@gmail.com",
         contact_phone: settings.contact_phone || "+91 8867920940",
-        show_facebook: settings.show_facebook ?? false,
-        facebook_url: settings.facebook_url || null,
-        show_instagram: settings.show_instagram ?? false,
-        instagram_url: settings.instagram_url || null,
-        show_google: settings.show_google ?? false,
-        google_url: settings.google_url || null,
-        show_youtube: settings.show_youtube ?? false,
-        youtube_url: settings.youtube_url || null,
+        show_facebook: toBoolean(settings.show_facebook),
+        facebook_url: normalizeUrl(settings.facebook_url),
+        show_instagram: toBoolean(settings.show_instagram),
+        instagram_url: normalizeUrl(settings.instagram_url),
+        show_google: toBoolean(settings.show_google),
+        google_url: normalizeUrl(settings.google_url),
+        show_youtube: toBoolean(settings.show_youtube),
+        youtube_url: normalizeUrl(settings.youtube_url),
       };
+
+      // Log processed settings for debugging
+      if (
+        process.env.NODE_ENV === "development" ||
+        process.env.NEXT_PUBLIC_DEBUG_FOOTER === "true"
+      ) {
+        console.log("[FOOTER] Processed settings:", {
+          show_facebook: processedSettings.show_facebook,
+          has_facebook_url: !!processedSettings.facebook_url,
+          will_show_facebook:
+            processedSettings.show_facebook && !!processedSettings.facebook_url,
+          show_instagram: processedSettings.show_instagram,
+          has_instagram_url: !!processedSettings.instagram_url,
+          will_show_instagram:
+            processedSettings.show_instagram &&
+            !!processedSettings.instagram_url,
+          show_google: processedSettings.show_google,
+          has_google_url: !!processedSettings.google_url,
+          will_show_google:
+            processedSettings.show_google && !!processedSettings.google_url,
+          show_youtube: processedSettings.show_youtube,
+          has_youtube_url: !!processedSettings.youtube_url,
+          will_show_youtube:
+            processedSettings.show_youtube && !!processedSettings.youtube_url,
+        });
+      }
+
+      return processedSettings;
     } else {
       console.warn(
         "[FOOTER] getCompanySettings returned empty or invalid data, using fallback"
