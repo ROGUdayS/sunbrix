@@ -158,48 +158,66 @@ async function readStaticData<T>(filename: string): Promise<T | null> {
   }
 }
 
-// Helper function to make API calls in API mode with timeout and retry
-async function fetchFromAPI<T>(
-  endpoint: string,
-  retries: number = 2,
-  timeout: number = 10000
-): Promise<T | null> {
+// Helper function to get the base URL for API calls
+function getApiBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    // Client-side: use relative URLs to call lander's own API routes
+    return "";
+  }
+  
+  // Server-side: use lander's own base URL (not dashboard URL)
+  // This allows calling the lander's API routes which may proxy to dashboard or read from DB
+  
+  // Priority order:
+  // 1. Explicitly set API base URL
+  // 2. Netlify URL (if available)
+  // 3. Vercel URL (if available)
+  // 4. Localhost fallback
+  
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+  
+  // Netlify provides DEPLOY_PRIME_URL and URL
+  if (process.env.DEPLOY_PRIME_URL) {
+    return process.env.DEPLOY_PRIME_URL;
+  }
+  if (process.env.URL) {
+    return process.env.URL;
+  }
+  
+  // Vercel provides VERCEL_URL
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+  }
+  
+  // Localhost fallback for development
+  return "http://localhost:3000";
+}
+
+// Helper function to make API calls in API mode with retry logic
+async function fetchFromAPI<T>(endpoint: string, retries: number = 2): Promise<T | null> {
   if (!USE_API_DATA) {
     throw new Error("fetchFromAPI should not be called in static mode");
   }
 
-  // Determine base URL based on whether we're on client or server
-  // and whether the endpoint is internal (starts with /api/) or external
-  let baseUrl: string;
-  if (typeof window !== "undefined") {
-    // Client-side: use relative URLs
-    baseUrl = "";
-  } else {
-    // Server-side: check if it's an internal API route
-    if (endpoint.startsWith("/api/")) {
-      // Internal route: use relative URL (Next.js handles this correctly on server)
-      // For production, we may need the full URL, so try to construct it
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
-                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
-      // Use relative URL if we can't determine the app URL (Next.js will handle it)
-      // Otherwise use the full URL for external deployments
-      baseUrl = appUrl || "";
-    } else {
-      // External route: use dashboard URL
-      baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "";
-    }
-  }
-
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}${endpoint}`;
+  
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      // Create AbortController for timeout
+      // Create an AbortController for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeout);
-
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout (increased for production)
+      
       try {
-        const response = await fetch(`${baseUrl}${endpoint}`, {
+        const response = await fetch(url, {
           signal: controller.signal,
-          cache: "no-store", // Always fetch fresh data
+          // Add cache control to prevent stale data
+          cache: "no-store",
           headers: {
             "Content-Type": "application/json",
           },
@@ -216,34 +234,39 @@ async function fetchFromAPI<T>(
       } catch (fetchError: any) {
         clearTimeout(timeoutId);
         
-        // If it's an abort error (timeout), throw it
         if (fetchError.name === "AbortError") {
-          throw new Error(`Request timeout after ${timeout}ms`);
+          throw new Error(`API call timed out after 15 seconds: ${url}`);
         }
         throw fetchError;
       }
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       const isLastAttempt = attempt === retries;
-      const errorMessage = error instanceof Error ? error.message : String(error);
       
       if (isLastAttempt) {
-        console.error(
-          `[DATA-PROVIDER] Failed to fetch from API ${endpoint} after ${retries + 1} attempts:`,
-          errorMessage
-        );
+        // Log error on final attempt
+        console.error(`[DATA-PROVIDER] Error fetching from API ${endpoint} (after ${retries + 1} attempts):`, {
+          error: errorMessage,
+          endpoint,
+          baseUrl,
+          url,
+          attempts: retries + 1,
+          timestamp: new Date().toISOString(),
+        });
         return null;
       } else {
-        // Exponential backoff: wait 500ms, 1000ms, etc.
-        const delay = 500 * Math.pow(2, attempt);
-        console.warn(
-          `[DATA-PROVIDER] Attempt ${attempt + 1} failed for ${endpoint}, retrying in ${delay}ms...`,
-          errorMessage
-        );
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        // Log warning and retry
+        console.warn(`[DATA-PROVIDER] API call failed (attempt ${attempt + 1}/${retries + 1}), retrying...`, {
+          error: errorMessage,
+          endpoint,
+          url,
+        });
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
       }
     }
   }
-
+  
   return null;
 }
 
