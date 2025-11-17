@@ -142,6 +142,44 @@ export interface PageConfigData {
 const USE_API_DATA = process.env.NEXT_PUBLIC_USE_API_DATA === "true";
 const DATA_DIR = path.join(process.cwd(), "public", "data");
 
+function resolveInternalAppUrl(): string | null {
+  const candidateUrls: Array<string | null> = [
+    process.env.NEXT_PUBLIC_APP_URL ?? null,
+    process.env.NEXT_PUBLIC_SITE_URL ?? null,
+    process.env.APP_URL ?? null,
+    process.env.SITE_URL ?? null,
+    process.env.URL ?? null, // Netlify production URL
+    process.env.DEPLOY_PRIME_URL ?? null, // Netlify deploy previews
+    process.env.DEPLOY_URL ?? null,
+  ];
+
+  const vercelDomain =
+    process.env.NEXT_PUBLIC_VERCEL_URL || process.env.VERCEL_URL || null;
+  if (vercelDomain) {
+    candidateUrls.push(
+      vercelDomain.startsWith("http") ? vercelDomain : `https://${vercelDomain}`
+    );
+  }
+
+  // Provide a sensible default during local development to avoid config friction
+  if (process.env.NODE_ENV !== "production") {
+    candidateUrls.push("http://localhost:3000");
+  }
+
+  for (const rawUrl of candidateUrls) {
+    if (!rawUrl) continue;
+    const trimmed = rawUrl.trim();
+    if (!trimmed) continue;
+
+    // Ensure the URL includes a protocol
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      return trimmed.replace(/\/+$/, "");
+    }
+  }
+
+  return null;
+}
+
 // Helper function to read JSON files in static mode
 async function readStaticData<T>(filename: string): Promise<T | null> {
   if (USE_API_DATA) {
@@ -177,12 +215,16 @@ async function fetchFromAPI<T>(
   } else {
     // Server-side: check if it's an internal API route
     if (endpoint.startsWith("/api/")) {
-      // Internal route: use relative URL (Next.js handles this correctly on server)
-      // For production, we may need the full URL, so try to construct it
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
-                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
-      // Use relative URL if we can't determine the app URL (Next.js will handle it)
-      // Otherwise use the full URL for external deployments
+      // Internal route: derive the deployed URL so Node's fetch has an absolute URL
+      const appUrl = resolveInternalAppUrl();
+
+      if (!appUrl) {
+        console.error(
+          `[DATA-PROVIDER] Missing app URL for internal API endpoint ${endpoint}.` +
+            " Set NEXT_PUBLIC_APP_URL (or SITE_URL/URL) so server-side fetch can resolve correctly."
+        );
+      }
+
       baseUrl = appUrl || "";
     } else {
       // External route: use dashboard URL
@@ -208,14 +250,16 @@ async function fetchFromAPI<T>(
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          throw new Error(`API call failed: ${response.status} ${response.statusText}`);
+          throw new Error(
+            `API call failed: ${response.status} ${response.statusText}`
+          );
         }
 
         const data = await response.json();
         return data;
       } catch (fetchError: any) {
         clearTimeout(timeoutId);
-        
+
         // If it's an abort error (timeout), throw it
         if (fetchError.name === "AbortError") {
           throw new Error(`Request timeout after ${timeout}ms`);
@@ -224,11 +268,14 @@ async function fetchFromAPI<T>(
       }
     } catch (error: any) {
       const isLastAttempt = attempt === retries;
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
       if (isLastAttempt) {
         console.error(
-          `[DATA-PROVIDER] Failed to fetch from API ${endpoint} after ${retries + 1} attempts:`,
+          `[DATA-PROVIDER] Failed to fetch from API ${endpoint} after ${
+            retries + 1
+          } attempts:`,
           errorMessage
         );
         return null;
@@ -236,7 +283,9 @@ async function fetchFromAPI<T>(
         // Exponential backoff: wait 500ms, 1000ms, etc.
         const delay = 500 * Math.pow(2, attempt);
         console.warn(
-          `[DATA-PROVIDER] Attempt ${attempt + 1} failed for ${endpoint}, retrying in ${delay}ms...`,
+          `[DATA-PROVIDER] Attempt ${
+            attempt + 1
+          } failed for ${endpoint}, retrying in ${delay}ms...`,
           errorMessage
         );
         await new Promise((resolve) => setTimeout(resolve, delay));
