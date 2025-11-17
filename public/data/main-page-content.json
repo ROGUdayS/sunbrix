@@ -4,23 +4,23 @@
   "galleryImages": [
     {
       "id": "cmi1z0zpy00ffos941qkv1pqj",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal---brothers---sunbrix/Shankar%20Lal's%20House-1760929349164-g600rriqad8.png",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
       "alt_text": "Modern 3-BHK Villa exterior view showcasing contemporary architecture with East facing orientation",
-      "quote": "",
+      "quote": "A house built for multipurpose somewhat designed to separate in blocks so that they can use it as a home now and in the future give it to the upcoming family. A house that is still connected to each other on the first floor.",
       "order_index": 1
     },
     {
       "id": "cmi1z0zun00fgos94o6nizsyp",
-      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/modern-3-bhk-villa/Kiran%20Holla%20House-1757416452503-7ad9jmi7a02.png",
+      "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal-house---sunbrix/LAL%20-1758532908777-mzpdytlyyk.png",
       "alt_text": "Cozy 2-BHK Home interior view displaying efficient space planning and modern amenities",
-      "quote": "",
+      "quote": "Built for three brothers and parents and inclusive house yet providing enough privacy and space to each family.",
       "order_index": 2
     },
     {
       "id": "cmi1z0zzk00fhos94sb8bp5ai",
       "image_url": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shashikala-house---sunbrix/Cropped-1758532505829-ddjmi4hf8mg.png",
       "alt_text": "Luxury 4-BHK Duplex building elevation featuring premium finishes and spacious design",
-      "quote": "A home built on a 390 Sq.ft remarkable architecture and design",
+      "quote": "Compact 3BHK home built on a 370 Sqft plot. A lot of design and expertise is required to build such homes and ensuring it fits a family comfortably was our goal.",
       "order_index": 3
     }
   ],
