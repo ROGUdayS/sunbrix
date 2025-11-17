@@ -21,9 +21,34 @@ async function getCompanySettingsForFooter(): Promise<CompanySettings> {
   try {
     // Use server-side data provider which respects static/API mode
     const settings = await getCompanySettings();
-    return settings;
+
+    // Validate that we got actual settings data
+    if (
+      settings &&
+      typeof settings === "object" &&
+      Object.keys(settings).length > 0
+    ) {
+      // Ensure all required fields exist with proper defaults
+      return {
+        company_name: settings.company_name || "SUNBRIX Constructions",
+        contact_email: settings.contact_email || "sunbrix.co@gmail.com",
+        contact_phone: settings.contact_phone || "+91 8867920940",
+        show_facebook: settings.show_facebook ?? false,
+        facebook_url: settings.facebook_url || null,
+        show_instagram: settings.show_instagram ?? false,
+        instagram_url: settings.instagram_url || null,
+        show_google: settings.show_google ?? false,
+        google_url: settings.google_url || null,
+        show_youtube: settings.show_youtube ?? false,
+        youtube_url: settings.youtube_url || null,
+      };
+    } else {
+      console.warn(
+        "[FOOTER] getCompanySettings returned empty or invalid data, using fallback"
+      );
+    }
   } catch (error) {
-    console.error("Failed to fetch company settings:", error);
+    console.error("[FOOTER] Failed to fetch company settings:", error);
   }
 
   // Return fallback defaults if fetch fails

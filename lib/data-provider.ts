@@ -158,60 +158,93 @@ async function readStaticData<T>(filename: string): Promise<T | null> {
   }
 }
 
-// Helper function to get the base URL for API calls
-function getBaseUrl(): string {
-  // Client-side: use relative URL
-  if (typeof window !== "undefined") {
-    return "";
-  }
-
-  // Server-side: construct absolute URL for the lander app's own API routes
-  // Try environment variables first (for production deployments)
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL;
-  }
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL;
-  }
-  
-  // For Vercel deployments
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  
-  // For local development
-  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
-    return process.env.NEXT_PUBLIC_API_BASE_URL;
-  }
-  
-  // Final fallback: use relative URL (Next.js 13+ App Router handles this)
-  // This works because Next.js resolves relative URLs to the same origin in server components
-  return "";
-}
-
-// Helper function to make API calls in API mode
-async function fetchFromAPI<T>(endpoint: string): Promise<T | null> {
+// Helper function to make API calls in API mode with timeout and retry
+async function fetchFromAPI<T>(
+  endpoint: string,
+  retries: number = 2,
+  timeout: number = 10000
+): Promise<T | null> {
   if (!USE_API_DATA) {
     throw new Error("fetchFromAPI should not be called in static mode");
   }
 
-  try {
-    const baseUrl = getBaseUrl();
-    const url = baseUrl ? `${baseUrl}${endpoint}` : endpoint;
-    const response = await fetch(url, {
-      // Ensure fresh data in production
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new Error(`API call failed: ${response.status} ${response.statusText}`);
+  // Determine base URL based on whether we're on client or server
+  // and whether the endpoint is internal (starts with /api/) or external
+  let baseUrl: string;
+  if (typeof window !== "undefined") {
+    // Client-side: use relative URLs
+    baseUrl = "";
+  } else {
+    // Server-side: check if it's an internal API route
+    if (endpoint.startsWith("/api/")) {
+      // Internal route: use relative URL (Next.js handles this correctly on server)
+      // For production, we may need the full URL, so try to construct it
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
+                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
+      // Use relative URL if we can't determine the app URL (Next.js will handle it)
+      // Otherwise use the full URL for external deployments
+      baseUrl = appUrl || "";
+    } else {
+      // External route: use dashboard URL
+      baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "";
     }
-
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching from API ${endpoint}:`, error);
-    return null;
   }
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+      try {
+        const response = await fetch(`${baseUrl}${endpoint}`, {
+          signal: controller.signal,
+          cache: "no-store", // Always fetch fresh data
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`API call failed: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        
+        // If it's an abort error (timeout), throw it
+        if (fetchError.name === "AbortError") {
+          throw new Error(`Request timeout after ${timeout}ms`);
+        }
+        throw fetchError;
+      }
+    } catch (error: any) {
+      const isLastAttempt = attempt === retries;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      
+      if (isLastAttempt) {
+        console.error(
+          `[DATA-PROVIDER] Failed to fetch from API ${endpoint} after ${retries + 1} attempts:`,
+          errorMessage
+        );
+        return null;
+      } else {
+        // Exponential backoff: wait 500ms, 1000ms, etc.
+        const delay = 500 * Math.pow(2, attempt);
+        console.warn(
+          `[DATA-PROVIDER] Attempt ${attempt + 1} failed for ${endpoint}, retrying in ${delay}ms...`,
+          errorMessage
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  return null;
 }
 
 // Data Provider Functions
