@@ -43,26 +43,29 @@ async function getCompanySettingsForFooter(): Promise<CompanySettings> {
         return false;
       };
 
-      // Log raw settings for debugging (only in development or when explicitly enabled)
-      if (
-        process.env.NODE_ENV === "development" ||
-        process.env.NEXT_PUBLIC_DEBUG_FOOTER === "true"
-      ) {
-        console.log("[FOOTER] Raw settings received:", {
-          show_facebook: settings.show_facebook,
-          show_facebook_type: typeof settings.show_facebook,
-          facebook_url: settings.facebook_url,
-          show_instagram: settings.show_instagram,
-          show_instagram_type: typeof settings.show_instagram,
-          instagram_url: settings.instagram_url,
-          show_google: settings.show_google,
-          show_google_type: typeof settings.show_google,
-          google_url: settings.google_url,
-          show_youtube: settings.show_youtube,
-          show_youtube_type: typeof settings.show_youtube,
-          youtube_url: settings.youtube_url,
-        });
-      }
+      // ALWAYS log raw settings for debugging in production
+      console.log(
+        "[FOOTER] Raw settings received:",
+        JSON.stringify(
+          {
+            show_facebook: settings.show_facebook,
+            show_facebook_type: typeof settings.show_facebook,
+            facebook_url: settings.facebook_url,
+            show_instagram: settings.show_instagram,
+            show_instagram_type: typeof settings.show_instagram,
+            instagram_url: settings.instagram_url,
+            show_google: settings.show_google,
+            show_google_type: typeof settings.show_google,
+            google_url: settings.google_url,
+            show_youtube: settings.show_youtube,
+            show_youtube_type: typeof settings.show_youtube,
+            youtube_url: settings.youtube_url,
+            allKeys: Object.keys(settings),
+          },
+          null,
+          2
+        )
+      );
 
       // Helper to normalize URL - ensure empty strings become null
       const normalizeUrl = (url: unknown): string | null => {
@@ -85,31 +88,38 @@ async function getCompanySettingsForFooter(): Promise<CompanySettings> {
         youtube_url: normalizeUrl(settings.youtube_url),
       };
 
-      // Log processed settings for debugging
-      if (
-        process.env.NODE_ENV === "development" ||
-        process.env.NEXT_PUBLIC_DEBUG_FOOTER === "true"
-      ) {
-        console.log("[FOOTER] Processed settings:", {
-          show_facebook: processedSettings.show_facebook,
-          has_facebook_url: !!processedSettings.facebook_url,
-          will_show_facebook:
-            processedSettings.show_facebook && !!processedSettings.facebook_url,
-          show_instagram: processedSettings.show_instagram,
-          has_instagram_url: !!processedSettings.instagram_url,
-          will_show_instagram:
-            processedSettings.show_instagram &&
-            !!processedSettings.instagram_url,
-          show_google: processedSettings.show_google,
-          has_google_url: !!processedSettings.google_url,
-          will_show_google:
-            processedSettings.show_google && !!processedSettings.google_url,
-          show_youtube: processedSettings.show_youtube,
-          has_youtube_url: !!processedSettings.youtube_url,
-          will_show_youtube:
-            processedSettings.show_youtube && !!processedSettings.youtube_url,
-        });
-      }
+      // ALWAYS log processed settings for debugging in production
+      console.log(
+        "[FOOTER] Processed settings:",
+        JSON.stringify(
+          {
+            show_facebook: processedSettings.show_facebook,
+            has_facebook_url: !!processedSettings.facebook_url,
+            facebook_url: processedSettings.facebook_url,
+            will_show_facebook:
+              processedSettings.show_facebook &&
+              !!processedSettings.facebook_url,
+            show_instagram: processedSettings.show_instagram,
+            has_instagram_url: !!processedSettings.instagram_url,
+            instagram_url: processedSettings.instagram_url,
+            will_show_instagram:
+              processedSettings.show_instagram &&
+              !!processedSettings.instagram_url,
+            show_google: processedSettings.show_google,
+            has_google_url: !!processedSettings.google_url,
+            google_url: processedSettings.google_url,
+            will_show_google:
+              processedSettings.show_google && !!processedSettings.google_url,
+            show_youtube: processedSettings.show_youtube,
+            has_youtube_url: !!processedSettings.youtube_url,
+            youtube_url: processedSettings.youtube_url,
+            will_show_youtube:
+              processedSettings.show_youtube && !!processedSettings.youtube_url,
+          },
+          null,
+          2
+        )
+      );
 
       return processedSettings;
     } else {
@@ -184,6 +194,15 @@ export default async function Footer() {
             </div>
             {/* Social Media Icons */}
             <div className="flex space-x-4">
+              {/* Debug info - remove after fixing */}
+              {process.env.NEXT_PUBLIC_DEBUG_FOOTER === "true" && (
+                <div className="text-xs text-red-400 mb-2">
+                  Debug: FB={String(settings.show_facebook)} URL=
+                  {String(settings.facebook_url?.substring(0, 20))} | IG=
+                  {String(settings.show_instagram)} URL=
+                  {String(settings.instagram_url?.substring(0, 20))}
+                </div>
+              )}
               {/* Facebook */}
               {settings.show_facebook && settings.facebook_url && (
                 <Link

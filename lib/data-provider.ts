@@ -177,13 +177,35 @@ async function fetchFromAPI<T>(
   } else {
     // Server-side: check if it's an internal API route
     if (endpoint.startsWith("/api/")) {
-      // Internal route: use relative URL (Next.js handles this correctly on server)
-      // For production, we may need the full URL, so try to construct it
+      // Internal route: For Next.js server-side, we can use relative URLs
+      // Next.js will automatically resolve them to the same host
+      // However, in some deployment scenarios, we might need absolute URLs
+      // Try to use the app's own URL if available
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
-                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
-      // Use relative URL if we can't determine the app URL (Next.js will handle it)
-      // Otherwise use the full URL for external deployments
-      baseUrl = appUrl || "";
+                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+                     (process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : null);
+      
+      // For internal API routes, try to construct the proper URL
+      // In Next.js server components, relative URLs should work, but in some
+      // deployment scenarios (like Vercel), we might need the full URL
+      if (appUrl) {
+        baseUrl = appUrl;
+      } else {
+        // Try to use localhost as fallback for development
+        // In production, Next.js should handle relative URLs
+        const port = process.env.PORT || "3000";
+        baseUrl = process.env.NODE_ENV === "production" ? "" : `http://localhost:${port}`;
+      }
+      
+      // Log for debugging
+      console.log("[DATA-PROVIDER] Internal API route detected:", {
+        endpoint,
+        baseUrl,
+        finalUrl: `${baseUrl}${endpoint}`,
+        VERCEL_URL: process.env.VERCEL_URL,
+        NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+        NODE_ENV: process.env.NODE_ENV,
+      });
     } else {
       // External route: use dashboard URL
       baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "";
@@ -430,22 +452,35 @@ export async function getCompanySettings(): Promise<any> {
       settings: any;
     }>("/api/company-settings");
     
+    // ALWAYS log API response for debugging in production
+    console.log("[DATA-PROVIDER] getCompanySettings API response:", JSON.stringify({
+      hasResponse: !!response,
+      responseType: typeof response,
+      responseKeys: response ? Object.keys(response) : [],
+      hasSettings: !!response?.settings,
+      success: response?.success,
+      fullResponse: response,
+    }, null, 2));
+    
     // Extract settings from response
     const settings = response?.settings || {};
     
-    // Log for debugging if enabled
-    if (process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_DEBUG_FOOTER === "true") {
-      console.log("[DATA-PROVIDER] getCompanySettings API response:", {
-        hasResponse: !!response,
-        hasSettings: !!response?.settings,
-        success: response?.success,
-        settingsKeys: Object.keys(settings),
-        show_facebook: settings.show_facebook,
-        show_instagram: settings.show_instagram,
-        show_google: settings.show_google,
-        show_youtube: settings.show_youtube,
-      });
-    }
+    // ALWAYS log extracted settings
+    console.log("[DATA-PROVIDER] Extracted settings:", JSON.stringify({
+      settingsKeys: Object.keys(settings),
+      show_facebook: settings.show_facebook,
+      show_facebook_type: typeof settings.show_facebook,
+      facebook_url: settings.facebook_url,
+      show_instagram: settings.show_instagram,
+      show_instagram_type: typeof settings.show_instagram,
+      instagram_url: settings.instagram_url,
+      show_google: settings.show_google,
+      show_google_type: typeof settings.show_google,
+      google_url: settings.google_url,
+      show_youtube: settings.show_youtube,
+      show_youtube_type: typeof settings.show_youtube,
+      youtube_url: settings.youtube_url,
+    }, null, 2));
     
     return settings;
   } else {
