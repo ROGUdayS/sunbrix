@@ -425,10 +425,11 @@ export async function isPageEnabled(pageId: string): Promise<boolean> {
 
 export async function getCompanySettings(): Promise<any> {
   if (USE_API_DATA) {
+    // Use longer timeout (15 seconds) for company settings to handle slow dashboard API responses
     const response = await fetchFromAPI<{
       success: boolean;
       settings: any;
-    }>("/api/company-settings");
+    }>("/api/company-settings", 2, 15000);
     return response?.settings || {};
   } else {
     const data = await readStaticData<any>("company-settings.json");
