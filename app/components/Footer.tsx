@@ -28,57 +28,20 @@ async function getCompanySettingsForFooter(): Promise<CompanySettings> {
       typeof settings === "object" &&
       Object.keys(settings).length > 0
     ) {
-      // Helper function to ensure boolean values are properly converted
-      const toBoolean = (value: unknown): boolean => {
-        if (typeof value === "boolean") return value;
-        if (typeof value === "string") return value.toLowerCase() === "true";
-        if (typeof value === "number") return value !== 0;
-        return false;
-      };
-
-      // Log for debugging (helps diagnose production issues)
-      console.log("[FOOTER] Received settings:", {
-        show_facebook: settings.show_facebook,
-        show_instagram: settings.show_instagram,
-        show_google: settings.show_google,
-        show_youtube: settings.show_youtube,
-        facebook_url: settings.facebook_url,
-        instagram_url: settings.instagram_url,
-        google_url: settings.google_url,
-        youtube_url: settings.youtube_url,
-      });
-
-      // Ensure all required fields exist with proper defaults and convert booleans
-      const result = {
+      // Ensure all required fields exist with proper defaults
+      return {
         company_name: settings.company_name || "SUNBRIX Constructions",
         contact_email: settings.contact_email || "sunbrix.co@gmail.com",
         contact_phone: settings.contact_phone || "+91 8867920940",
-        show_facebook: toBoolean(settings.show_facebook),
+        show_facebook: settings.show_facebook ?? false,
         facebook_url: settings.facebook_url || null,
-        show_instagram: toBoolean(settings.show_instagram),
+        show_instagram: settings.show_instagram ?? false,
         instagram_url: settings.instagram_url || null,
-        show_google: toBoolean(settings.show_google),
+        show_google: settings.show_google ?? false,
         google_url: settings.google_url || null,
-        show_youtube: toBoolean(settings.show_youtube),
+        show_youtube: settings.show_youtube ?? false,
         youtube_url: settings.youtube_url || null,
       };
-
-      console.log("[FOOTER] Processed settings:", {
-        show_facebook: result.show_facebook,
-        show_instagram: result.show_instagram,
-        show_google: result.show_google,
-        show_youtube: result.show_youtube,
-        has_facebook_url: !!result.facebook_url,
-        has_instagram_url: !!result.instagram_url,
-        has_google_url: !!result.google_url,
-        has_youtube_url: !!result.youtube_url,
-        will_show_facebook: result.show_facebook && !!result.facebook_url,
-        will_show_instagram: result.show_instagram && !!result.instagram_url,
-        will_show_google: result.show_google && !!result.google_url,
-        will_show_youtube: result.show_youtube && !!result.youtube_url,
-      });
-
-      return result;
     } else {
       console.warn(
         "[FOOTER] getCompanySettings returned empty or invalid data, using fallback"
