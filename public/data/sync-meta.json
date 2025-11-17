@@ -1,5 +1,5 @@
 {
-  "lastSync": "2025-11-16T18:11:15.156Z",
+  "lastSync": "2025-11-17T17:10:17.365Z",
   "version": "1.0.0",
   "source": "dashboard-sync",
   "totalRecords": {
@@ -9,7 +9,7 @@
     "testimonials": 7,
     "galleryImages": 3,
     "mainPageContent": 0,
-    "pageContent": 12,
+    "pageContent": 13,
     "blogs": 4,
     "contactMeta": 0,
     "faqs": 17,
@@ -63,7 +63,7 @@
     },
     {
       "filename": "gallery.json",
-      "size": 1644,
+      "size": 1691,
       "records": 3
     },
     {
@@ -113,7 +113,7 @@
     },
     {
       "filename": "main-page-content.json",
-      "size": 4008,
+      "size": 3961,
       "records": 9
     },
     {
@@ -123,7 +123,7 @@
     },
     {
       "filename": "company-settings.json",
-      "size": 2688,
+      "size": 2874,
       "records": 16
     }
   ]
