@@ -177,13 +177,24 @@ async function fetchFromAPI<T>(
   } else {
     // Server-side: check if it's an internal API route
     if (endpoint.startsWith("/api/")) {
-      // Internal route: use relative URL (Next.js handles this correctly on server)
-      // For production, we may need the full URL, so try to construct it
+      // Internal route: For server-side, we need the full URL
+      // Try to get the app URL from environment variables
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
-                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
-      // Use relative URL if we can't determine the app URL (Next.js will handle it)
-      // Otherwise use the full URL for external deployments
-      baseUrl = appUrl || "";
+                     process.env.NEXT_PUBLIC_SITE_URL ||
+                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+                     (process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : null);
+      
+      // If we still don't have a URL, try localhost as fallback (for local development)
+      // In production, this should be set via environment variables
+      baseUrl = appUrl || "http://localhost:3000";
+      
+      // Log warning if using localhost in what seems like production
+      if (!appUrl && process.env.NODE_ENV === "production") {
+        console.warn(
+          `[DATA-PROVIDER] No app URL configured, using localhost fallback for ${endpoint}. ` +
+          `Set NEXT_PUBLIC_APP_URL or NEXT_PUBLIC_SITE_URL environment variable.`
+        );
+      }
     } else {
       // External route: use dashboard URL
       baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || "";
@@ -425,12 +436,60 @@ export async function isPageEnabled(pageId: string): Promise<boolean> {
 
 export async function getCompanySettings(): Promise<any> {
   if (USE_API_DATA) {
-    // Use longer timeout (15 seconds) for company settings to handle slow dashboard API responses
-    const response = await fetchFromAPI<{
-      success: boolean;
-      settings: any;
-    }>("/api/company-settings", 2, 15000);
-    return response?.settings || {};
+    // On server-side, fetch directly from dashboard API to avoid double fetch
+    // On client-side, use the internal API route
+    if (typeof window === "undefined") {
+      // Server-side: fetch directly from dashboard
+      const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
+      if (!dashboardUrl) {
+        console.error("[DATA-PROVIDER] NEXT_PUBLIC_DASHBOARD_URL not configured");
+        return {};
+      }
+
+      try {
+        // Create AbortController for timeout (15 seconds)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        try {
+          const response = await fetch(`${dashboardUrl}/api/company-settings`, {
+            signal: controller.signal,
+            cache: "no-store",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new Error(`Dashboard API responded with status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          return data.settings || data || {};
+        } catch (fetchError: any) {
+          clearTimeout(timeoutId);
+          
+          if (fetchError.name === "AbortError") {
+            console.error("[DATA-PROVIDER] Timeout fetching company settings from dashboard API (15s)");
+          } else {
+            console.error("[DATA-PROVIDER] Error fetching company settings from dashboard:", fetchError);
+          }
+          return {};
+        }
+      } catch (error) {
+        console.error("[DATA-PROVIDER] Failed to fetch company settings:", error);
+        return {};
+      }
+    } else {
+      // Client-side: use internal API route
+      const response = await fetchFromAPI<{
+        success: boolean;
+        settings: any;
+      }>("/api/company-settings", 2, 15000);
+      return response?.settings || {};
+    }
   } else {
     const data = await readStaticData<any>("company-settings.json");
     return data || {};
