@@ -1,50 +1,27 @@
 {
   "projects": [
     {
-      "id": "cmi1z0tn000f3os94o6kdcop9",
-      "title": "Anuj & Manoj Lunia - Sunbrix",
+      "id": "cmiewvay90000l809p3iqqxse",
+      "title": "Chandrashekar House",
       "location": "Bengaluru",
-      "year": "2005",
-      "plotSize": "4400 sq. ft",
+      "year": "2024",
+      "plotSize": "3125 Sq.ft",
       "facing": "North",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png",
+      "propertyType": "Mixed Use",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/chandrashekar-house/IMG_0640-1764095418845-adl3uh0hwx.webp",
       "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png"
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/chandrashekar-house/IMG_0640-1764095418845-adl3uh0hwx.webp"
       ],
       "image_alt_texts": [
-        "Anuj & Manoj Lunia's house - Built by Sunbrix"
+        "Rental house"
       ],
-      "description": "First house built by Sunbrix, however the house hasn't been painted ever since",
+      "description": "To obtain maximum rental yield ",
       "specifications": {
-        "bedrooms": "6"
+        "bedrooms": "9"
       },
       "active": true,
-      "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-16T17:42:09.142Z"
-    },
-    {
-      "id": "cmi1z0tro00f4os94d8ccaf8x",
-      "title": "Kiran Hulla Sunbrix",
-      "location": "Bengaluru",
-      "year": "2010",
-      "plotSize": "8000 sq. ft",
-      "facing": "North",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png"
-      ],
-      "image_alt_texts": [
-        "Kiran Hulla House | Sunbrix Constructions"
-      ],
-      "description": "This is a bunglow built for Mr. Kiran Holla & Family kiran hullla was a fantastic client he did great decisions his house had marble and other floorings his house is in maruti layout",
-      "specifications": {
-        "bedrooms": "8"
-      },
-      "active": true,
-      "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-16T17:46:20.073Z"
+      "created_at": "2025-11-25T18:30:26.866Z",
+      "updated_at": "2025-11-25T18:32:21.129Z"
     },
     {
       "id": "cmi1z0tic00f2os94gdkb1cke",
@@ -67,30 +44,101 @@
       },
       "active": true,
       "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-16T17:38:23.910Z"
+      "updated_at": "2025-11-25T18:32:21.525Z"
     },
     {
-      "id": "cmi1z0twj00f5os94x5z93f4f",
-      "title": "Srinath House Sunbrix",
+      "id": "cmi1z0tro00f4os94d8ccaf8x",
+      "title": "Kiran Hulla Sunbrix",
       "location": "Bengaluru",
-      "year": "2023",
-      "plotSize": "1100 sq. ft",
-      "facing": "North",
+      "year": "2010",
+      "plotSize": "4800 sq.ft",
+      "facing": "South-West",
       "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
       "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp"
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png"
       ],
       "image_alt_texts": [
-        "Srinath House Sunbrix"
+        "Kiran Hulla House | Sunbrix Constructions"
       ],
-      "description": "Built for a close friend who wanted to move and settle into his house own house with his family.",
+      "description": "Elegance, presence and a home that stands out. Defined by clean architecture, thoughtful design, and premium materials this 2010 built bungalow continues to embody simplicity and enduring appeal.",
       "specifications": {
-        "bedrooms": "2"
+        "bedrooms": "5"
       },
       "active": true,
       "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-16T17:44:24.834Z"
+      "updated_at": "2025-11-25T18:32:21.920Z"
+    },
+    {
+      "id": "cmi8yd11h0000ks09tk05t5bo",
+      "title": "Lakshmiah Shetty x Sridhar Gupta",
+      "location": "Bengaluru",
+      "year": "2010",
+      "plotSize": "21976 Sq.ft",
+      "facing": "West",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/lakshmiah-shetty-x-sridhar-gupta/laksmai-shetty-1764094507828-cvmv1jpypa.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/lakshmiah-shetty-x-sridhar-gupta/laksmai-shetty-1764094507828-cvmv1jpypa.webp"
+      ],
+      "image_alt_texts": [
+        "rear"
+      ],
+      "description": "This is an apartment constructed for our client",
+      "specifications": {
+        "bedrooms": "40"
+      },
+      "active": true,
+      "created_at": "2025-11-21T14:25:36.390Z",
+      "updated_at": "2025-11-25T18:32:22.316Z"
+    },
+    {
+      "id": "cmi8uttm90000jt09iksnzsoj",
+      "title": "Narayana Ramiah City",
+      "location": "Bengaluru",
+      "year": "2022",
+      "plotSize": "4400 Sq.ft",
+      "facing": "North",
+      "propertyType": "Mixed Use",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/temp-1763728960318/Narayana%20Ramiah-1763729159844-7mv4qd5fcb9.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/temp-1763728960318/Narayana%20Ramiah-1763729159844-7mv4qd5fcb9.webp"
+      ],
+      "image_alt_texts": [
+        "Front Elevation - Sunbrix"
+      ],
+      "description": "Shop and houses",
+      "specifications": {
+        "bedrooms": "9"
+      },
+      "active": true,
+      "created_at": "2025-11-21T12:46:41.458Z",
+      "updated_at": "2025-11-25T18:32:22.711Z"
+    },
+    {
+      "id": "cmi8tqyvd0002l509docallnb",
+      "title": "House",
+      "location": "Bengaluru",
+      "year": "2012",
+      "plotSize": "Details to be filled",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/house/IMG_0313-min-1764094538497-zfpt1nradgr.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/house/IMG_0313-min-1764094538497-zfpt1nradgr.webp",
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/details-to-be-filled/Kumar-min-1763727176369-wm6d398iq6e.jpg"
+      ],
+      "image_alt_texts": [
+        "Rear View",
+        "front"
+      ],
+      "description": "Details to be filled after upload",
+      "specifications": {
+        "bedrooms": "4"
+      },
+      "active": true,
+      "created_at": "2025-11-21T12:16:28.484Z",
+      "updated_at": "2025-11-25T18:32:23.106Z"
     },
     {
       "id": "cmi20lddt0000l209dd6a1hwb",
@@ -113,8 +161,77 @@
       },
       "active": true,
       "created_at": "2025-11-16T17:53:40.430Z",
-      "updated_at": "2025-11-16T17:53:40.430Z"
+      "updated_at": "2025-11-25T18:32:23.500Z"
+    },
+    {
+      "id": "cmi8ukh8c0000l109w7aa3fyz",
+      "title": "Vinutha House - Sunbrix",
+      "location": "Bengaluru",
+      "year": "2021",
+      "plotSize": "3125 Sq.ft",
+      "facing": "West",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/temp-1763728203431/Vinutha-1763728691855-ionv8kftjja.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/temp-1763728203431/Vinutha-1763728691855-ionv8kftjja.webp"
+      ],
+      "image_alt_texts": [
+        "Vinutha House - Sunbrix"
+      ],
+      "description": "Vinutha story of a stranger turned to family",
+      "specifications": {
+        "bedrooms": "3"
+      },
+      "active": true,
+      "created_at": "2025-11-21T12:39:25.501Z",
+      "updated_at": "2025-11-25T18:32:23.896Z"
+    },
+    {
+      "id": "cmi1z0twj00f5os94x5z93f4f",
+      "title": "Srinath House - Sunbrix",
+      "location": "Bengaluru",
+      "year": "2023",
+      "plotSize": "1100 sq.ft",
+      "facing": "East",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp"
+      ],
+      "image_alt_texts": [
+        "Srinath House Sunbrix"
+      ],
+      "description": "A place for his family to grow and belong, built for a close friend looking to finally settle into a home of his own.",
+      "specifications": {
+        "bedrooms": "3"
+      },
+      "active": true,
+      "created_at": "2025-11-16T17:09:43.141Z",
+      "updated_at": "2025-11-25T18:32:24.291Z"
+    },
+    {
+      "id": "cmi1z0tn000f3os94o6kdcop9",
+      "title": "Anuj & Manoj Lunia - Sunbrix",
+      "location": "Bengaluru",
+      "year": "2005",
+      "plotSize": "4400 sq. ft",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png"
+      ],
+      "image_alt_texts": [
+        "Anuj & Manoj Lunia's house - Built by Sunbrix"
+      ],
+      "description": "First house built by Sunbrix, however the house hasn't been painted ever since",
+      "specifications": {
+        "bedrooms": "6"
+      },
+      "active": true,
+      "created_at": "2025-11-16T17:09:43.141Z",
+      "updated_at": "2025-11-25T18:32:24.686Z"
     }
   ],
-  "count": 5
+  "count": 10
 }
