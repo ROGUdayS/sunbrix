@@ -1,6 +1,6 @@
 {
   "demoVideoUrl": "/videos/video_demo.mp4",
-  "heroHeading": "",
+  "heroHeading": "Home - Sunbrix",
   "galleryImages": [
     {
       "id": "cmi1z0zpy00ffos941qkv1pqj",
@@ -43,13 +43,13 @@
     }
   ],
   "commitmentSection": {
-    "title": "Our Commitment to Quality",
-    "description": "At Sunbrix, quality isn't a feature, it's the foundation of everything we do. For over 20 years, we've crafted homes that last and function with purpose, building each one with care in every corner and meaning in every brick laid.",
+    "title": "Our Commitment",
+    "description": "At Sunbrix, quality isn't a feature, it's the foundation of everything we do. For over 25 years, we've crafted homes that last and function with purpose, building each one with care in every corner and meaning in every brick laid.",
     "features": [
       {
         "icon": "/icons/commitment-to-quality/Design & Strength.svg",
         "title": "Design & Strength",
-        "description": "At Sunbrix, we build and designs, using time tested practices."
+        "description": "At Sunbrix, we build and design using time tested practices."
       },
       {
         "icon": "/icons/commitment-to-quality/20 Year Warranty.svg",
@@ -64,7 +64,7 @@
       {
         "icon": "/icons/commitment-to-quality/High quality materials.svg",
         "title": "High quality materials",
-        "description": "At Sunbrix, Using the best quality materials is simply the norm."
+        "description": "At Sunbrix, Using the highest quality materials is simply the norm."
       }
     ]
   },
@@ -78,17 +78,17 @@
   },
   "testimonialsSection": {
     "title": "Testimonials",
-    "subtitle": "See what our customers have to say."
+    "subtitle": "Where every story is built by us"
   },
   "metaContent": {
-    "meta_title": "Sunbrix - Premium Home Construction Services",
-    "meta_description": "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty. Get your free quote today!",
-    "meta_keywords": "home construction, building contractors, house builders, construction services, premium homes",
-    "og_title": "Sunbrix - Premium Home Construction Services",
-    "og_description": "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty.",
-    "og_image": "/images/og-image.jpg",
-    "twitter_title": "Sunbrix - Premium Home Construction Services",
-    "twitter_description": "Transform your dream home into reality with Sunbrix. Premium construction services, transparent pricing, and 20-year warranty.",
-    "twitter_image": "/images/twitter-image.jpg"
+    "meta_title": "Sunbrix Constructions - India",
+    "meta_description": "Sunbrix builds design friendly, purpose driven homes using highest quality materials, backed by a 20-year warranty. Homes built to last since 1999.",
+    "meta_keywords": "home construction, building contractors, house builders, construction services, premium homes, homes in Bangalore, home construction in bellary, Home construction in mysore",
+    "og_title": "Sunbrix - Home Construction Services",
+    "og_description": "Sunbrix Constructions is the most trusted builder for many families, having built more than 100 homes with design and purpose at the core. Call: 8217657307",
+    "og_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/content/og-images/1763528195706-2ataydt6x7h.jpg",
+    "twitter_title": "Sunbrix - Home Construction Services",
+    "twitter_description": "Sunbrix Constructions is the most trusted builder for many families, having built more than 100 homes with design and purpose at the core. Call: 8217657307",
+    "twitter_image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/content/twitter-images/1763528288679-e0mtcxd4taq.jpg"
   }
 }
