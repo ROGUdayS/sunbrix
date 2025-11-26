@@ -1,9 +1,9 @@
 {
-  "lastSync": "2025-11-25T18:35:12.081Z",
+  "lastSync": "2025-11-26T18:11:58.754Z",
   "version": "1.0.0",
   "source": "dashboard-sync",
   "totalRecords": {
-    "projects": 10,
+    "projects": 13,
     "cities": 2,
     "packages": 3,
     "testimonials": 7,
@@ -38,7 +38,7 @@
   "writeResults": [
     {
       "filename": "projects.json",
-      "size": 9692,
+      "size": 14117,
       "records": 2
     },
     {
@@ -53,7 +53,7 @@
     },
     {
       "filename": "testimonials.json",
-      "size": 4973,
+      "size": 3241,
       "records": 7
     },
     {
