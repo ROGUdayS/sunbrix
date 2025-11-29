@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
+    optimizeCss: true, // Enable critical CSS inlining
     staleTimes: {
       dynamic: 30, // 30 seconds for dynamic routes
       static: 300, // 5 minutes for static routes

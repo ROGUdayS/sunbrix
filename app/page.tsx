@@ -1272,7 +1272,7 @@ export default function Home() {
                               goToSlide(index);
                             }}
                             aria-label={`Go to slide ${index + 1}`}
-                            className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-200 ${
+                            className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-200 ${
                               index === actualCurrentSlide
                                 ? "bg-gray-800"
                                 : "bg-gray-300 hover:bg-gray-400"
@@ -2039,7 +2039,8 @@ export default function Home() {
                             <button
                               key={index}
                               onClick={() => goToPackage(index)}
-                              className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                              aria-label={`Go to package ${index + 1}`}
+                              className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-200 ${
                                 index === actualCurrentPackage
                                   ? "bg-amber-600"
                                   : "bg-gray-300 hover:bg-gray-400"
@@ -2321,7 +2322,7 @@ export default function Home() {
                   <button
                     key={`bank-dot-${index}`}
                     onClick={() => setCurrentBankSlide(index)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                    className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-200 ${
                       index === actualCurrentBank
                         ? "bg-gray-800"
                         : "bg-gray-300 hover:bg-gray-400"
@@ -2669,7 +2670,7 @@ export default function Home() {
                         key={index}
                         onClick={() => goToTestimonial(index)}
                         aria-label={`Go to testimonial ${index + 1}`}
-                        className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-200 ${
+                        className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-200 ${
                           index === actualCurrentTestimonial
                             ? "bg-gray-800"
                             : "bg-gray-300 hover:bg-gray-400"
@@ -2688,7 +2689,7 @@ export default function Home() {
                       key={index}
                       onClick={() => setCurrentDesktopTestimonialPage(index)}
                       aria-label={`Go to testimonial page ${index + 1}`}
-                      className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-200 ${
+                      className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-200 ${
                         index === currentDesktopTestimonialPage
                           ? "bg-gray-800"
                           : "bg-gray-300 hover:bg-gray-400"
