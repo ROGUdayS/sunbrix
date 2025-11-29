@@ -6,6 +6,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Header from "./components/Header";
 import ContactForm from "./components/ContactForm";
 import FloatingBookButton from "./components/FloatingBookButton";
+import YouTubeFacade from "./components/YouTubeFacade";
 
 import { useCity } from "./contexts/CityContext";
 import {
@@ -1317,14 +1318,11 @@ export default function Home() {
               {/* Video Element - Conditional rendering for YouTube vs direct video */}
               {isYouTubeUrl(demoVideoUrl) ? (
                 <div className="aspect-video w-full">
-                  <iframe
+                  <YouTubeFacade
                     className="w-full h-full rounded-2xl"
-                    src={convertToEmbedUrl(demoVideoUrl)}
+                    videoUrl={demoVideoUrl}
                     title="Build Your Dream Home Video"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
+                  />
                 </div>
               ) : (
                 <video
@@ -2454,14 +2452,11 @@ export default function Home() {
                           <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                             <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                               {testimonial.videoUrl && (
-                                <iframe
+                                <YouTubeFacade
                                   className="w-full h-full"
-                                  src={convertToEmbedUrl(testimonial.videoUrl)}
+                                  videoUrl={testimonial.videoUrl}
                                   title={`Customer Testimonial ${testimonial.id}`}
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  allowFullScreen
-                                ></iframe>
+                                />
                               )}
                             </div>
                             <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
@@ -2494,14 +2489,11 @@ export default function Home() {
                           <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                             <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                               {testimonial.videoUrl && (
-                                <iframe
+                                <YouTubeFacade
                                   className="w-full h-full"
-                                  src={convertToEmbedUrl(testimonial.videoUrl)}
+                                  videoUrl={testimonial.videoUrl}
                                   title={`Customer Testimonial ${testimonial.id}`}
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  allowFullScreen
-                                ></iframe>
+                                />
                               )}
                             </div>
                             <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
@@ -2534,14 +2526,11 @@ export default function Home() {
                           <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
                             <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                               {testimonial.videoUrl && (
-                                <iframe
+                                <YouTubeFacade
                                   className="w-full h-full"
-                                  src={convertToEmbedUrl(testimonial.videoUrl)}
+                                  videoUrl={testimonial.videoUrl}
                                   title={`Customer Testimonial ${testimonial.id}`}
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  allowFullScreen
-                                ></iframe>
+                                />
                               )}
                             </div>
                             <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
@@ -2580,14 +2569,11 @@ export default function Home() {
                       >
                         <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                           {testimonial.videoUrl && (
-                            <iframe
+                            <YouTubeFacade
                               className="w-full h-full"
-                              src={convertToEmbedUrl(testimonial.videoUrl)}
+                              videoUrl={testimonial.videoUrl}
                               title={`Customer Testimonial`}
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                            ></iframe>
+                            />
                           )}
                         </div>
                         <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
@@ -2639,14 +2625,11 @@ export default function Home() {
                         >
                           <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                             {testimonial.videoUrl && (
-                              <iframe
+                              <YouTubeFacade
                                 className="w-full h-full"
-                                src={convertToEmbedUrl(testimonial.videoUrl)}
+                                videoUrl={testimonial.videoUrl}
                                 title={`Customer Testimonial ${startIndex + index + 1}`}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowFullScreen
-                              ></iframe>
+                              />
                             )}
                           </div>
                           <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
