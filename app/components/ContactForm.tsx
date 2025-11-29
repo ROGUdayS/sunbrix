@@ -104,7 +104,7 @@ export default function ContactForm({
   // Don't render if cities are still loading
   if (loading || !selectedCity) {
     return (
-      <section id="contact-form" className="py-8 sm:py-12 lg:py-16 bg-gray-50">
+      <section id="contact-form" className="py-8 sm:py-12 lg:py-16 bg-gray-50 min-h-[600px]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4 text-gray-900">{title}</h2>
@@ -121,7 +121,7 @@ export default function ContactForm({
   }
 
   return (
-    <section id="contact-form" className="py-8 sm:py-12 lg:py-16 bg-gray-50">
+    <section id="contact-form" className="py-8 sm:py-12 lg:py-16 bg-gray-50 min-h-[600px]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4 text-gray-900">{title}</h2>

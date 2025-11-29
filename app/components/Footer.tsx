@@ -84,7 +84,7 @@ export default async function Footer() {
                 alt="Sunbrix"
                 width={150}
                 height={50}
-                className="h-12 w-auto"
+                className="h-12 w-[150px] object-contain"
                 priority
               />
             </div>
