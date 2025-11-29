@@ -6,12 +6,12 @@
   "storySection": {
     "title": "Our Story",
     "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/content/about-us/1759667377952-tgnyvl317zp.jpg",
-    "imageAlt": "Sunbrix construction team working on a modern home project",
-    "image_alt_text": "Sunbrix construction team working on a modern home project",
+    "imageAlt": "Sunbrix logo",
+    "image_alt_text": "Sunbrix logo",
     "paragraphs": [
-      "Sunbrix was launched in 2021 as part of the Sunbrix Group, a leading name in steel, cement, energy, and other core sectors. We recognized that building a home shouldn't be a stressful experience filled with uncertainty and delays.",
-      "Our mission is simple: to offer independent homeowners a hassle-free home-building experience with complete transparency, quality materials, and trusted professionals. We believe that building your dream home should put you firmly in control.",
-      "With the backing of Sunbrix Group's decades of expertise in construction materials and our commitment to innovation, we're reshaping the future of independent homebuilding - one dream home at a time."
+      "It all starts with a dream, a dream searching for freedom, purpose, and a place where you truly belong. A place where imagination takes shape, where memories are built, and where generations feel proud. A place you call home.",
+      "We listen, understand, and connect deeply with your vision. Through thoughtful design, planning and craftsmanship, we shape every space with intention.",
+      ""
     ]
   },
   "valuesSection": {
@@ -22,24 +22,28 @@
         "id": "1",
         "icon": "/icons/about-us/Quality First.svg",
         "title": "Quality First",
+        "iconAlt": "Quality First icon",
         "description": "We use only certified-grade materials and work with trusted professionals to ensure the highest standards."
       },
       {
         "id": "2",
         "icon": "/icons/about-us/Transparency.svg",
         "title": "Transparency",
+        "iconAlt": "Transparency icon",
         "description": "Clear pricing, regular updates, and no hidden surprises. You'll know exactly what to expect at every step."
       },
       {
         "id": "3",
         "icon": "/icons/about-us/Innovation.svg",
         "title": "Innovation",
+        "iconAlt": "Innovation icon",
         "description": "We leverage technology and modern construction methods to deliver better homes faster and more efficiently."
       },
       {
         "id": "4",
         "icon": "/icons/about-us/Customer Focus.svg",
         "title": "Customer Focus",
+        "iconAlt": "Customer Focus icon",
         "description": "Your vision is our priority. We work closely with you to ensure your dream home becomes reality."
       }
     ]
