@@ -241,7 +241,7 @@ async function fetchFromAPI<T>(
       try {
         const response = await fetch(`${baseUrl}${endpoint}`, {
           signal: controller.signal,
-          cache: "no-store", // Always fetch fresh data
+          next: { revalidate: 3600 }, // Cache for 1 hour (ISR)
           headers: {
             "Content-Type": "application/json",
           },
