@@ -889,7 +889,7 @@ export default function Home() {
           {/* Fallback/Poster image - Rendered first so it's behind video */}
           <div className="absolute inset-0">
             <Image
-              src="/images/motions-background.webp"
+              src="/images/motions-background.svg"
               alt="Modern dream home"
               fill
               sizes="100vw"
@@ -1271,7 +1271,7 @@ export default function Home() {
                               goToSlide(index);
                             }}
                             aria-label={`Go to slide ${index + 1}`}
-                            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
+                            className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-200 ${
                               index === actualCurrentSlide
                                 ? "bg-gray-800"
                                 : "bg-gray-300 hover:bg-gray-400"
@@ -1332,7 +1332,7 @@ export default function Home() {
                   className="w-full h-auto rounded-2xl"
                   controls
                   muted
-                  poster="/images/video-poster.jpg"
+                  poster="/images/video-poster.svg"
                   preload="metadata"
                   playsInline
                 >
@@ -2686,7 +2686,7 @@ export default function Home() {
                         key={index}
                         onClick={() => goToTestimonial(index)}
                         aria-label={`Go to testimonial ${index + 1}`}
-                        className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                        className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-200 ${
                           index === actualCurrentTestimonial
                             ? "bg-gray-800"
                             : "bg-gray-300 hover:bg-gray-400"
@@ -2705,7 +2705,7 @@ export default function Home() {
                       key={index}
                       onClick={() => setCurrentDesktopTestimonialPage(index)}
                       aria-label={`Go to testimonial page ${index + 1}`}
-                      className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                      className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-200 ${
                         index === currentDesktopTestimonialPage
                           ? "bg-gray-800"
                           : "bg-gray-300 hover:bg-gray-400"
