@@ -889,7 +889,7 @@ export default function Home() {
           {/* Fallback/Poster image - Rendered first so it's behind video */}
           <div className="absolute inset-0">
             <Image
-              src="/images/motions-background.svg"
+              src="/images/motion-background.webp"
               alt="Modern dream home"
               fill
               sizes="100vw"
