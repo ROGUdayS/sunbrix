@@ -127,7 +127,7 @@ export default function Header({
                 alt="Sunbrix"
                 width={120}
                 height={40}
-                className="h-8 w-auto"
+                className="h-8 w-[120px] object-contain"
                 priority
                 fetchPriority="high"
               />

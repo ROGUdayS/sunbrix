@@ -347,6 +347,9 @@ export default function ProjectGallery() {
                         width={500}
                         height={320}
                         className="w-full h-48 sm:h-56 lg:h-64 object-cover"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        priority={currentProjects.indexOf(project) === 0}
+                        fetchPriority={currentProjects.indexOf(project) === 0 ? "high" : "auto"}
                       />
                     )}
 
