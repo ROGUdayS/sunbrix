@@ -81,6 +81,7 @@ export default function ImageModal({
                 alt={`${title} - Image ${currentIndex + 1}`}
                 width={1200}
                 height={800}
+                sizes="100vw"
                 className="w-full h-auto max-h-[90vh] object-contain"
                 priority
               />

@@ -38,20 +38,28 @@ export const metadata: Metadata = {
   },
 };
 
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
         <meta name="msapplication-TileImage" content="/icon-192.png" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
         <GoogleTagManager />
       </head>
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
         <GoogleTagManagerNoScript />
         <Suspense fallback={null}>
           <AnalyticsTracker />
