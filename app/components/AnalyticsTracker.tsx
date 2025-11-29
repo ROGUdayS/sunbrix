@@ -70,34 +70,22 @@ async function trackEvent(
       duration: duration || null,
     };
 
-    const response = await fetch("/api/analytics", {
+    // Fire and forget - don't await response to avoid blocking main thread
+    fetch("/api/analytics", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
+      keepalive: true, // Ensure request completes even if page unloads
+    }).catch((err) => {
+      // Silently fail for network errors to avoid console noise
+      if (process.env.NODE_ENV === "development") {
+        console.warn("Analytics tracking failed:", err);
+      }
     });
 
-    if (!response.ok) {
-      // Don't log 503 (Service Unavailable) as errors - these are temporary during schema cache refresh
-      if (response.status === 503) {
-        // Silently handle - analytics will work once schema cache refreshes
-        return;
-      }
-      
-      // Only log actual errors (not temporary service unavailability)
-      const errorText = await response.text();
-      try {
-        const errorData = JSON.parse(errorText);
-        // If it's a schema cache initialization message, don't log as error
-        if (errorData.error?.includes("being initialized") || errorData.message?.includes("schema cache")) {
-          return;
-        }
-      } catch {
-        // If parsing fails, log the error
-        console.error("Failed to track analytics event:", errorText);
-      }
-    }
+
   } catch (error) {
     // Only log unexpected errors, not network issues or temporary unavailability
     if (error instanceof TypeError && error.message.includes("fetch")) {
@@ -208,7 +196,7 @@ export default function AnalyticsTracker() {
     }, 30000);
 
     // Track page exit
-    const handleBeforeUnload = () => {
+    const handlePageHide = () => {
       const duration = Math.floor((Date.now() - sessionStartTime.current) / 1000);
       // Use sendBeacon for reliable tracking on page unload
       const trackingUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -233,13 +221,13 @@ export default function AnalyticsTracker() {
     document.addEventListener("click", handleClick);
     document.addEventListener("submit", handleSubmit);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("pagehide", handlePageHide);
 
     return () => {
       document.removeEventListener("click", handleClick);
       document.removeEventListener("submit", handleSubmit);
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("pagehide", handlePageHide);
       clearInterval(timeOnPageInterval);
     };
   }, []);

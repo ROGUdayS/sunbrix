@@ -886,8 +886,20 @@ export default function Home() {
       <section className="relative min-h-screen flex flex-col justify-end overflow-hidden">
         {/* Motion Background Video */}
         <div className="absolute inset-0 w-full h-full">
+          {/* Fallback/Poster image - Rendered first so it's behind video */}
+          <div className="absolute inset-0">
+            <Image
+              src="/images/motions-background.webp"
+              alt="Modern dream home"
+              fill
+              sizes="100vw"
+              className="object-cover"
+              priority
+              fetchPriority="high"
+            />
+          </div>
           <video
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover relative z-10"
             autoPlay
             muted
             loop
@@ -895,17 +907,9 @@ export default function Home() {
             preload="auto"
           >
             <source src="/videos/motion-backgorund.mp4" type="video/mp4" />
-            {/* Fallback image if video doesn't load */}
-            <Image
-              src="/images/motions-background.webp"
-              alt="Modern dream home"
-              fill
-              className="object-cover"
-              priority
-            />
           </video>
           {/* Dark overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-black/40 z-20"></div>
         </div>
 
         {/* Hero Content - Positioned at bottom */}
@@ -1038,6 +1042,7 @@ export default function Home() {
                               ]?.quote || "Previous image"
                             }
                             fill
+                            sizes="(max-width: 1024px) 0px, 100px"
                             className="object-cover object-right"
                           />
                         </div>
@@ -1085,17 +1090,18 @@ export default function Home() {
                           >
                             <div className="relative">
                               {(image.image_url || image.image) && (
-                                <Image
-                                  src={image.image_url || image.image}
-                                  alt={
-                                    image.altText ||
-                                    image.quote ||
-                                    "Gallery image"
-                                  }
-                                  width={900}
-                                  height={600}
-                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                                />
+                                  <Image
+                                    src={image.image_url || image.image}
+                                    alt={
+                                      image.altText ||
+                                      image.quote ||
+                                      "Gallery image"
+                                    }
+                                    width={900}
+                                    height={600}
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
+                                    className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                  />
                               )}
                               {/* Quote overlay */}
                               {/* {image.quote && (
@@ -1119,17 +1125,18 @@ export default function Home() {
                           >
                             <div className="relative">
                               {(image.image_url || image.image) && (
-                                <Image
-                                  src={image.image_url || image.image}
-                                  alt={
-                                    image.altText ||
-                                    image.quote ||
-                                    "Gallery image"
-                                  }
-                                  width={900}
-                                  height={600}
-                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                                />
+                                  <Image
+                                    src={image.image_url || image.image}
+                                    alt={
+                                      image.altText ||
+                                      image.quote ||
+                                      "Gallery image"
+                                    }
+                                    width={900}
+                                    height={600}
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
+                                    className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                  />
                               )}
                               {/* Quote overlay
                             {image.quote && (
@@ -1153,17 +1160,18 @@ export default function Home() {
                           >
                             <div className="relative">
                               {(image.image_url || image.image) && (
-                                <Image
-                                  src={image.image_url || image.image}
-                                  alt={
-                                    image.altText ||
-                                    image.quote ||
-                                    "Gallery image"
-                                  }
-                                  width={900}
-                                  height={600}
-                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                                />
+                                  <Image
+                                    src={image.image_url || image.image}
+                                    alt={
+                                      image.altText ||
+                                      image.quote ||
+                                      "Gallery image"
+                                    }
+                                    width={900}
+                                    height={600}
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
+                                    className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                  />
                               )}
                               {/* Quote overlay */}
                               {/* {image.quote && (
@@ -1204,6 +1212,7 @@ export default function Home() {
                               ]?.quote || "Next image"
                             }
                             fill
+                            sizes="(max-width: 1024px) 0px, 100px"
                             className="object-cover object-left"
                           />
                         </div>

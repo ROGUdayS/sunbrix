@@ -8,8 +8,14 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    domains: ["rzkmikgqpkblsjbrmnkw.supabase.co"], // Add domains for external images if needed
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "rzkmikgqpkblsjbrmnkw.supabase.co",
+      },
+    ],
     formats: ["image/webp", "image/avif"],
+    minimumCacheTTL: 604800, // Cache optimized images for 1 week
   },
   // Enable compression
   compress: true,
