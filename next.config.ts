@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "rzkmikgqpkblsjbrmnkw.supabase.co",
       },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
     ],
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 604800, // Cache optimized images for 1 week
