@@ -1264,18 +1264,19 @@ export default function Home() {
                           dynamicGalleryImages.length) %
                         dynamicGalleryImages.length;
                       return (
-                        <button
-                          key={index}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            goToSlide(index);
-                          }}
-                          className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
-                            index === actualCurrentSlide
-                              ? "bg-gray-800"
-                              : "bg-gray-300 hover:bg-gray-400"
-                          }`}
-                        />
+                          <button
+                            key={index}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              goToSlide(index);
+                            }}
+                            aria-label={`Go to slide ${index + 1}`}
+                            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
+                              index === actualCurrentSlide
+                                ? "bg-gray-800"
+                                : "bg-gray-300 hover:bg-gray-400"
+                            }`}
+                          />
                       );
                     })}
                   </div>
@@ -2404,6 +2405,7 @@ export default function Home() {
                       );
                     }}
                     className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                    aria-label="Next testimonial page"
                   >
                     <svg
                       className="w-6 h-6"
@@ -2683,6 +2685,7 @@ export default function Home() {
                       <button
                         key={index}
                         onClick={() => goToTestimonial(index)}
+                        aria-label={`Go to testimonial ${index + 1}`}
                         className={`w-3 h-3 rounded-full transition-all duration-200 ${
                           index === actualCurrentTestimonial
                             ? "bg-gray-800"
@@ -2701,6 +2704,7 @@ export default function Home() {
                     <button
                       key={index}
                       onClick={() => setCurrentDesktopTestimonialPage(index)}
+                      aria-label={`Go to testimonial page ${index + 1}`}
                       className={`w-3 h-3 rounded-full transition-all duration-200 ${
                         index === currentDesktopTestimonialPage
                           ? "bg-gray-800"

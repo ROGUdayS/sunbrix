@@ -197,6 +197,7 @@ export default function ContactForm({
                 }}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
+                aria-label="Select City"
                 className="w-full px-4 py-3 rounded-lg border-2 border-orange-400 bg-white text-orange-600 focus:outline-none appearance-none"
               >
                 <option disabled value="Choose City">
@@ -233,6 +234,7 @@ export default function ContactForm({
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 required
+                aria-label="Timeline of Construction"
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-700 focus:border-transparent focus:ring-2 focus:ring-orange-400 outline-none appearance-none"
               >
                 <option value="" disabled>
