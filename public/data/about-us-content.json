@@ -9,9 +9,9 @@
     "imageAlt": "Sunbrix logo",
     "image_alt_text": "Sunbrix logo",
     "paragraphs": [
-      "It all starts with a dream, a dream searching for freedom, purpose, and a place where you truly belong. A place where imagination takes shape, where memories are built, and where generations feel proud. A place you call home.",
-      "We listen, understand, and connect deeply with your vision. Through thoughtful design, planning and craftsmanship, we shape every space with intention.",
-      ""
+      "It all starts with a dream, a dream searching for freedom, purpose, and a place where you truly belong. A place where imagination takes shape, where memories are built, and where generations feel proud. \nThis belief guides everything we do. ",
+      "We listen, understand, and connect deeply with your vision. Every space is designed and planned with intention, thought, and meaning. Craftsmanship leads our hands. Planned execution, high-quality materials, innovation, transparency and unwavering attention to detail form the principles we build on. These principles have shaped our mastery in creating homes with precision and integrity.",
+      "With over 25 years of expertise, we deliver homes built with passion, honesty, and craft. Homes that honour the trust people place in us. Homes that bring your vision to life.\n\n\"In India, a home is never just a structure. It is identity, security, and pride. This belief shaped our journey.\nFor over two decades, we’ve built homes with the same intention and care that a family invests in their dream.\nOur mission is simple. We give life to their vision and build homes that honour the trust people place in us.\"\n\n- Muthamola Chinnaswamy Sridhar Naidu  \nFounder - Sunbrix"
     ]
   },
   "valuesSection": {
@@ -23,7 +23,7 @@
         "icon": "/icons/about-us/Quality First.svg",
         "title": "Quality First",
         "iconAlt": "Quality First icon",
-        "description": "We use only certified-grade materials and work with trusted professionals to ensure the highest standards."
+        "description": "We use only best materials and work with trusted professionals to ensure the highest standards."
       },
       {
         "id": "2",
@@ -37,19 +37,19 @@
         "icon": "/icons/about-us/Innovation.svg",
         "title": "Innovation",
         "iconAlt": "Innovation icon",
-        "description": "We leverage technology and modern construction methods to deliver better homes faster and more efficiently."
+        "description": "We leverage technology and construction expertise to deliver better homes, faster and more efficiently."
       },
       {
         "id": "4",
         "icon": "/icons/about-us/Customer Focus.svg",
         "title": "Customer Focus",
         "iconAlt": "Customer Focus icon",
-        "description": "Your vision is our priority. We work closely with you to ensure your dream home becomes reality."
+        "description": "Your vision drives us. Your dream becomes our responsibility."
       }
     ]
   },
   "metaContent": {
-    "meta_title": "About Sunbrix - Premium Home Construction Services",
+    "meta_title": "About Sunbrix",
     "meta_description": "Learn about Sunbrix's commitment to quality home construction. Building dreams with trust, quality, and innovation since 1999.",
     "meta_keywords": "about sunbrix, home construction company, building contractors, construction services",
     "og_title": "About Sunbrix - Premium Home Construction Services",
