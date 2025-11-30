@@ -1,5 +1,5 @@
 {
-  "lastSync": "2025-11-29T12:59:38.115Z",
+  "lastSync": "2025-11-30T16:27:04.348Z",
   "version": "1.0.0",
   "source": "dashboard-sync",
   "totalRecords": {
@@ -38,7 +38,7 @@
   "writeResults": [
     {
       "filename": "projects.json",
-      "size": 14117,
+      "size": 14396,
       "records": 2
     },
     {
@@ -103,7 +103,7 @@
     },
     {
       "filename": "terms-conditions.json",
-      "size": 2120,
+      "size": 13088,
       "records": 3
     },
     {
@@ -118,7 +118,7 @@
     },
     {
       "filename": "about-us-content.json",
-      "size": 3078,
+      "size": 3826,
       "records": 4
     },
     {

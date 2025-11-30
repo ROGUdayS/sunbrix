@@ -117,6 +117,8 @@ export default async function About() {
                 width={600}
                 height={400}
                 className="w-full h-auto object-cover"
+                priority
+                fetchPriority="high"
               />
             </div>
           </div>
