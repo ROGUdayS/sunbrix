@@ -52,7 +52,7 @@ export default async function About() {
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 sm:mb-6">
             {heroTitle}
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto whitespace-pre-line">
             {heroSubtitle}
           </p>
         </div>
@@ -70,7 +70,7 @@ export default async function About() {
                 (paragraph, index) => (
                   <p
                     key={index}
-                    className={`text-base sm:text-lg text-gray-700 leading-relaxed ${
+                    className={`text-base sm:text-lg text-gray-700 leading-relaxed whitespace-pre-line ${
                       index <
                       (aboutContent.storySection?.paragraphs?.length || 0) - 1
                         ? "mb-4 sm:mb-6"
@@ -153,7 +153,7 @@ export default async function About() {
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
                   {value.title}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-700">
+                <p className="text-sm sm:text-base text-gray-700 whitespace-pre-line">
                   {value.description}
                 </p>
               </div>
