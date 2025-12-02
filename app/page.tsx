@@ -2450,7 +2450,7 @@ export default function Home() {
                           key={`prev-${testimonial.id}`}
                           className="w-full flex-shrink-0"
                         >
-                          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4 h-full flex flex-col">
                             <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                               {testimonial.videoUrl && (
                                 <YouTubeFacade
@@ -2460,7 +2460,7 @@ export default function Home() {
                                 />
                               )}
                             </div>
-                            <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                            <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                               <div className="flex items-center justify-center mb-4">
                                 <svg
                                   className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -2487,7 +2487,7 @@ export default function Home() {
                           key={testimonial.id}
                           className="w-full flex-shrink-0"
                         >
-                          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4 h-full flex flex-col">
                             <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                               {testimonial.videoUrl && (
                                 <YouTubeFacade
@@ -2497,7 +2497,7 @@ export default function Home() {
                                 />
                               )}
                             </div>
-                            <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                            <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                               <div className="flex items-center justify-center mb-4">
                                 <svg
                                   className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
@@ -2524,7 +2524,7 @@ export default function Home() {
                           key={`next-${testimonial.id}`}
                           className="w-full flex-shrink-0"
                         >
-                          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4">
+                          <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl overflow-hidden shadow-lg border border-orange-100 mx-4 h-full flex flex-col">
                             <div className="relative aspect-video bg-gray-900 rounded-t-2xl overflow-hidden">
                               {testimonial.videoUrl && (
                                 <YouTubeFacade
@@ -2534,7 +2534,7 @@ export default function Home() {
                                 />
                               )}
                             </div>
-                            <div className="p-4 sm:p-6 bg-white flex flex-col h-48">
+                            <div className="p-4 sm:p-6 bg-white flex flex-col flex-grow">
                               <div className="flex items-center justify-center mb-4">
                                 <svg
                                   className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400"
