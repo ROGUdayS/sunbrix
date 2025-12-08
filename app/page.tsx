@@ -48,7 +48,8 @@ const convertToEmbedUrl = (url: string): string => {
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [currentDesktopTestimonialPage, setCurrentDesktopTestimonialPage] = useState(0);
+  const [currentDesktopTestimonialPage, setCurrentDesktopTestimonialPage] =
+    useState(0);
   // City context is used by the Header component and CityModal
   const { selectedCity, setShowCityModal } = useCity();
 
@@ -929,7 +930,7 @@ export default function Home() {
                 key={index}
                 className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-4 border border-white/20"
               >
-                <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-orange-400 mb-1">
+                <div className="text-2xl sm:text-2xl lg:text-3xl font-bold text-[#f8be00] mb-1">
                   {stat.value}
                 </div>
                 <div className="text-sm sm:text-sm lg:text-base font-medium">
@@ -1091,18 +1092,18 @@ export default function Home() {
                           >
                             <div className="relative">
                               {(image.image_url || image.image) && (
-                                  <Image
-                                    src={image.image_url || image.image}
-                                    alt={
-                                      image.altText ||
-                                      image.quote ||
-                                      "Gallery image"
-                                    }
-                                    width={900}
-                                    height={600}
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
-                                    className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                                  />
+                                <Image
+                                  src={image.image_url || image.image}
+                                  alt={
+                                    image.altText ||
+                                    image.quote ||
+                                    "Gallery image"
+                                  }
+                                  width={900}
+                                  height={600}
+                                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
+                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                />
                               )}
                               {/* Quote overlay */}
                               {/* {image.quote && (
@@ -1126,18 +1127,18 @@ export default function Home() {
                           >
                             <div className="relative">
                               {(image.image_url || image.image) && (
-                                  <Image
-                                    src={image.image_url || image.image}
-                                    alt={
-                                      image.altText ||
-                                      image.quote ||
-                                      "Gallery image"
-                                    }
-                                    width={900}
-                                    height={600}
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
-                                    className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                                  />
+                                <Image
+                                  src={image.image_url || image.image}
+                                  alt={
+                                    image.altText ||
+                                    image.quote ||
+                                    "Gallery image"
+                                  }
+                                  width={900}
+                                  height={600}
+                                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
+                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                />
                               )}
                               {/* Quote overlay
                             {image.quote && (
@@ -1161,18 +1162,18 @@ export default function Home() {
                           >
                             <div className="relative">
                               {(image.image_url || image.image) && (
-                                  <Image
-                                    src={image.image_url || image.image}
-                                    alt={
-                                      image.altText ||
-                                      image.quote ||
-                                      "Gallery image"
-                                    }
-                                    width={900}
-                                    height={600}
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
-                                    className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
-                                  />
+                                <Image
+                                  src={image.image_url || image.image}
+                                  alt={
+                                    image.altText ||
+                                    image.quote ||
+                                    "Gallery image"
+                                  }
+                                  width={900}
+                                  height={600}
+                                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 900px"
+                                  className="w-full h-[240px] sm:h-[280px] md:h-[320px] lg:h-[400px] xl:h-[480px] object-cover"
+                                />
                               )}
                               {/* Quote overlay */}
                               {/* {image.quote && (
@@ -1265,19 +1266,19 @@ export default function Home() {
                           dynamicGalleryImages.length) %
                         dynamicGalleryImages.length;
                       return (
-                          <button
-                            key={index}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              goToSlide(index);
-                            }}
-                            aria-label={`Go to slide ${index + 1}`}
-                            className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-200 ${
-                              index === actualCurrentSlide
-                                ? "bg-gray-800"
-                                : "bg-gray-300 hover:bg-gray-400"
-                            }`}
-                          />
+                        <button
+                          key={index}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            goToSlide(index);
+                          }}
+                          aria-label={`Go to slide ${index + 1}`}
+                          className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-200 ${
+                            index === actualCurrentSlide
+                              ? "bg-gray-800"
+                              : "bg-gray-300 hover:bg-gray-400"
+                          }`}
+                        />
                       );
                     })}
                   </div>
@@ -2374,9 +2375,11 @@ export default function Home() {
                   <button
                     onClick={() => {
                       const testimonialsPerPage = 3;
-                      const totalPages = Math.ceil(testimonials.length / testimonialsPerPage);
-                      setCurrentDesktopTestimonialPage((prev) => 
-                        (prev - 1 + totalPages) % totalPages
+                      const totalPages = Math.ceil(
+                        testimonials.length / testimonialsPerPage
+                      );
+                      setCurrentDesktopTestimonialPage(
+                        (prev) => (prev - 1 + totalPages) % totalPages
                       );
                     }}
                     className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
@@ -2398,9 +2401,11 @@ export default function Home() {
                   <button
                     onClick={() => {
                       const testimonialsPerPage = 3;
-                      const totalPages = Math.ceil(testimonials.length / testimonialsPerPage);
-                      setCurrentDesktopTestimonialPage((prev) => 
-                        (prev + 1) % totalPages
+                      const totalPages = Math.ceil(
+                        testimonials.length / testimonialsPerPage
+                      );
+                      setCurrentDesktopTestimonialPage(
+                        (prev) => (prev + 1) % totalPages
                       );
                     }}
                     className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
@@ -2613,7 +2618,8 @@ export default function Home() {
                     {(() => {
                       // Calculate which 3 testimonials to show
                       const testimonialsPerPage = 3;
-                      const startIndex = currentDesktopTestimonialPage * testimonialsPerPage;
+                      const startIndex =
+                        currentDesktopTestimonialPage * testimonialsPerPage;
                       const visibleTestimonials = testimonials.slice(
                         startIndex,
                         startIndex + testimonialsPerPage
@@ -2629,7 +2635,9 @@ export default function Home() {
                               <YouTubeFacade
                                 className="w-full h-full"
                                 videoUrl={testimonial.videoUrl}
-                                title={`Customer Testimonial ${startIndex + index + 1}`}
+                                title={`Customer Testimonial ${
+                                  startIndex + index + 1
+                                }`}
                               />
                             )}
                           </div>
@@ -2684,7 +2692,9 @@ export default function Home() {
               {/* Desktop Pagination Dots - Show if more than 3 testimonials */}
               {testimonials.length > 3 && (
                 <div className="hidden md:flex justify-center mt-6 space-x-2">
-                  {Array.from({ length: Math.ceil(testimonials.length / 3) }).map((_, index) => (
+                  {Array.from({
+                    length: Math.ceil(testimonials.length / 3),
+                  }).map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentDesktopTestimonialPage(index)}
