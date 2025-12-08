@@ -247,7 +247,7 @@ export default function Testimonials() {
               {/* Navigation Arrows */}
               <button
                 onClick={prevTestimonial}
-                className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-2 sm:p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-2 sm:p-3 shadow-lg transition-colors duration-200 z-10"
               >
                 <svg
                   className="w-5 h-5 sm:w-6 sm:h-6"
@@ -265,7 +265,7 @@ export default function Testimonials() {
               </button>
               <button
                 onClick={nextTestimonial}
-                className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-2 sm:p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-2 sm:p-3 shadow-lg transition-colors duration-200 z-10"
               >
                 <svg
                   className="w-5 h-5 sm:w-6 sm:h-6"
@@ -292,15 +292,13 @@ export default function Testimonials() {
                   ].videoUrl && (
                     <iframe
                       className="w-full h-full"
-                      src={
-                        convertToEmbedUrl(
-                          testimonials[
-                            ((currentTestimonial % testimonials.length) +
-                              testimonials.length) %
-                              testimonials.length
-                          ].videoUrl
-                        )
-                      }
+                      src={convertToEmbedUrl(
+                        testimonials[
+                          ((currentTestimonial % testimonials.length) +
+                            testimonials.length) %
+                            testimonials.length
+                        ].videoUrl
+                      )}
                       title={`Customer Testimonial - ${
                         testimonials[
                           ((currentTestimonial % testimonials.length) +

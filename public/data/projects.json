@@ -1,39 +1,83 @@
 {
   "projects": [
     {
+      "id": "cmitrotxv0000jp09u9swsuju",
+      "title": "Hema Mahesh - Sunbrix",
+      "location": "Bengaluru",
+      "year": "2018",
+      "plotSize": "3200 Sq.ft",
+      "facing": "West",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/hongsandra/Hongsandra-1764993712105-4ch8ayr5i8l.webp",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/hongsandra/Hongsandra-1764993712105-4ch8ayr5i8l.webp"
+      ],
+      "image_alt_texts": [
+        "Hema Mahesh - Sunbrix"
+      ],
+      "description": "This house comprises of a owner floor along with well planned rental units, located in a premium locality offering good rental yield.",
+      "specifications": {
+        "bedrooms": "8"
+      },
+      "active": true,
+      "created_at": "2025-12-06T04:01:59.444Z",
+      "updated_at": "2025-12-07T22:24:17.569Z"
+    },
+    {
+      "id": "cmigbgv930000os6w7utl9kh8",
+      "title": "Vinay & Narayana - Sunbrix",
+      "location": "Bengaluru",
+      "year": "2018",
+      "plotSize": "4700 Sq.ft",
+      "facing": "North",
+      "propertyType": "Residential",
+      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/vinay/IMG_1255-1764180409328-iaxv5wu0pp.png",
+      "images": [
+        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/vinay/IMG_1255-1764180409328-iaxv5wu0pp.png"
+      ],
+      "image_alt_texts": [
+        "Vinay & Narayana - Sunbrix"
+      ],
+      "description": "A cost friendly modern elevation featuring a clean brick texture finish designed for individual houses along with an RK unit for maximum rental yield. The layout includes private balconies for the 2 BHK units, ensuring better ventilation, comfort, and tenant appeal.",
+      "specifications": {
+        "bedrooms": "9"
+      },
+      "active": true,
+      "created_at": "2025-11-26T18:06:53.718Z",
+      "updated_at": "2025-12-07T22:26:49.145Z"
+    },
+    {
       "id": "cmiftnlgd0000l809czjbkrdy",
       "title": "Anil - Sunbrix",
       "location": "Bellary",
       "year": "2022",
-      "plotSize": "6000 sq.ft",
-      "facing": "North",
+      "plotSize": "7200 Sq.ft",
+      "facing": "South",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anil---sunbrix/PHOTO-2023-01-10-19-43-32-1764180666826-n1h3zb76ca8.webp",
       "images": [
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anil---sunbrix/PHOTO-2023-01-10-19-43-32-1764180666826-n1h3zb76ca8.webp",
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anil---sunbrix/PHOTO-2023-01-10-19-43-24-1764180625297-1omqh2hww5k.webp",
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anil---sunbrix/PHOTO-2025-07-06-16-40-50-1764180698121-2le0ut04g1m.webp"
       ],
       "image_alt_texts": [
-        "Anil House",
-        "Anil House 2",
-        "Anil House Brick Phase"
+        "Anil House - Sunbrix",
+        "Anil House - Sunbrix"
       ],
       "description": "A contemporary residential building crafted with clean geometry, bright open spaces and a strong structural base. The design combines modern aesthetics with solid construction quality, visible from the early stages to the final elevation.",
       "specifications": {
-        "bedrooms": "5"
+        "bedrooms": "11"
       },
       "active": true,
       "created_at": "2025-11-26T09:48:13.354Z",
-      "updated_at": "2025-11-26T18:11:41.944Z"
+      "updated_at": "2025-12-07T22:23:05.384Z"
     },
     {
       "id": "cmift4r3r0000jo09uv9k4wqu",
       "title": "Ravishankar - Sunbrix",
       "location": "Bengaluru",
-      "year": "2015",
-      "plotSize": "2600 Sq.ft",
-      "facing": "North",
+      "year": "2012",
+      "plotSize": "3300 Sq.ft",
+      "facing": "West",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/ravishankar---sunbrix/Ravishankar%20-%20Sunbrix-1764180190693-picvnwwywn.webp",
       "images": [
@@ -44,42 +88,19 @@
       ],
       "description": "Built with a simple, solid design and a low-maintenance approach as desired by the customer, this home features open balconies and clean forms that keep it bright and airy.",
       "specifications": {
-        "bedrooms": "4"
+        "bedrooms": "6"
       },
       "active": true,
       "created_at": "2025-11-26T09:33:35.415Z",
-      "updated_at": "2025-11-26T18:03:19.134Z"
-    },
-    {
-      "id": "cmigbgv930000os6w7utl9kh8",
-      "title": "Vinay & Narayana - Sunbrix",
-      "location": "Bengaluru",
-      "year": "2019",
-      "plotSize": "5500 sq ft",
-      "facing": "North",
-      "propertyType": "Residential",
-      "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/vinay/IMG_1255-1764180409328-iaxv5wu0pp.png",
-      "images": [
-        "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/vinay/IMG_1255-1764180409328-iaxv5wu0pp.png"
-      ],
-      "image_alt_texts": [
-        "Vinay house"
-      ],
-      "description": "A cost friendly modern elevation featuring a clean brick texture finish designed for individual houses along with an RK unit for maximum rental yield. The layout includes private balconies for the 2 BHK units, ensuring better ventilation, comfort, and tenant appeal.",
-      "specifications": {
-        "bedrooms": "11"
-      },
-      "active": true,
-      "created_at": "2025-11-26T18:06:53.718Z",
-      "updated_at": "2025-11-30T10:00:26.147Z"
+      "updated_at": "2025-12-07T22:25:13.701Z"
     },
     {
       "id": "cmiewvay90000l809p3iqqxse",
       "title": "Chandrashekar - Sunbrix",
       "location": "Bengaluru",
       "year": "2024",
-      "plotSize": "3125 Sq.ft",
-      "facing": "North",
+      "plotSize": "4200 Sq.ft",
+      "facing": "South-West",
       "propertyType": "Mixed Use",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/chandrashekar---sunbrix/Chandrashekar%20Final-1764144360740-51452huq9ca.webp",
       "images": [
@@ -94,37 +115,37 @@
       },
       "active": true,
       "created_at": "2025-11-25T18:30:26.866Z",
-      "updated_at": "2025-11-26T08:14:20.597Z"
+      "updated_at": "2025-12-07T22:27:37.773Z"
     },
     {
       "id": "cmi1z0tic00f2os94gdkb1cke",
       "title": "Shankar Lal & Brothers - Sunbrix",
       "location": "Bengaluru",
       "year": "2011",
-      "plotSize": "4400 Sq.ft",
-      "facing": "North",
+      "plotSize": "5500 Sq.ft",
+      "facing": "South-West",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal-house---sunbrix/LAL%20-1758532908777-mzpdytlyyk.png",
       "images": [
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shankar-lal-house---sunbrix/LAL%20-1758532908777-mzpdytlyyk.png"
       ],
       "image_alt_texts": [
-        "Shankar Lal's & Brothers - Sunbrix"
+        "Shankar Lal & Brother's - Sunbrix"
       ],
       "description": "House built for three brothers who wanted to live with each other along with their family, equal space distribution among all houses.",
       "specifications": {
-        "bedrooms": "6"
+        "bedrooms": "13"
       },
       "active": true,
       "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-25T18:32:21.525Z"
+      "updated_at": "2025-12-07T22:28:37.608Z"
     },
     {
       "id": "cmi1z0tro00f4os94d8ccaf8x",
       "title": "Kiran Holla - Sunbrix",
       "location": "Bengaluru",
-      "year": "2010",
-      "plotSize": "4800 sq.ft",
+      "year": "2012",
+      "plotSize": "6600 Sq.ft",
       "facing": "South-West",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png",
@@ -132,7 +153,7 @@
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/kiran-holla/Kiran%20Holla%20House-1758470134866-f3q68wfqgk5.png"
       ],
       "image_alt_texts": [
-        "Kiran Holla House | Sunbrix Constructions"
+        "Kiran Holla - Sunbrix Constructions"
       ],
       "description": "Elegance, presence and a home that stands out. Defined by clean architecture, thoughtful design, and premium materials this 2010 built bungalow continues to embody simplicity and enduring appeal.",
       "specifications": {
@@ -140,7 +161,7 @@
       },
       "active": true,
       "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-26T09:12:23.998Z"
+      "updated_at": "2025-12-07T22:29:48.148Z"
     },
     {
       "id": "cmi8yd11h0000ks09tk05t5bo",
@@ -148,30 +169,30 @@
       "location": "Bengaluru",
       "year": "2010",
       "plotSize": "21976 Sq.ft",
-      "facing": "West",
+      "facing": "South",
       "propertyType": "Educational",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/lakshmiah-shetty-x-sridhar-gupta/laksmai-shetty-1764094507828-cvmv1jpypa.webp",
       "images": [
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/lakshmiah-shetty-x-sridhar-gupta/laksmai-shetty-1764094507828-cvmv1jpypa.webp"
       ],
       "image_alt_texts": [
-        "Sridhar Gupta - Sunbrix"
+        "Lakshmiah Shetty x Sridhar Gupta - Sunbrix"
       ],
       "description": "Lt Mr. Lakshmiah Shetty entrusted us with this project coordinated by Mr. Sridhar Gupta. We built the original structure when it was planned as a school. The apartment that stands today was completed later through a joint venture, not by Sunbrix. The evolution of this building reflects the thoughtful planning and strong foundation we delivered at the start.",
       "specifications": {
-        "bedrooms": "40"
+        "bedrooms": "36"
       },
       "active": true,
       "created_at": "2025-11-21T14:25:36.390Z",
-      "updated_at": "2025-11-26T10:15:13.794Z"
+      "updated_at": "2025-12-07T22:30:57.935Z"
     },
     {
       "id": "cmi8uttm90000jt09iksnzsoj",
       "title": "Kumar - Sunbrix",
       "location": "Bengaluru",
-      "year": "2022",
+      "year": "2019",
       "plotSize": "4400 Sq.ft",
-      "facing": "North",
+      "facing": "West",
       "propertyType": "Mixed Use",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/temp-1763728960318/Narayana%20Ramiah-1763729159844-7mv4qd5fcb9.webp",
       "images": [
@@ -186,14 +207,14 @@
       },
       "active": true,
       "created_at": "2025-11-21T12:46:41.458Z",
-      "updated_at": "2025-11-26T08:21:50.322Z"
+      "updated_at": "2025-12-07T22:31:46.406Z"
     },
     {
       "id": "cmi8tqyvd0002l509docallnb",
       "title": "Kumar - Sunbrix",
       "location": "Bengaluru",
-      "year": "2015",
-      "plotSize": "3640 Sq.ft",
+      "year": "2014",
+      "plotSize": "4750 Sq.ft",
       "facing": "South-West",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/house/IMG_0313-min-1764094538497-zfpt1nradgr.webp",
@@ -202,8 +223,8 @@
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/details-to-be-filled/Kumar-min-1763727176369-wm6d398iq6e.jpg"
       ],
       "image_alt_texts": [
-        "Kumar Front View - Sunbrix",
-        "Kumar Rear View - Sunbrix"
+        "Kumar - Sunbrix",
+        "Kumar  - Sunbrix"
       ],
       "description": "This south-west corner property features a well balanced elevation with clean lines and warm earthy tones. It is designed for both function and aesthetics, with dedicated parking included.",
       "specifications": {
@@ -211,22 +232,22 @@
       },
       "active": true,
       "created_at": "2025-11-21T12:16:28.484Z",
-      "updated_at": "2025-11-26T09:10:25.847Z"
+      "updated_at": "2025-12-07T22:32:40.789Z"
     },
     {
       "id": "cmi20lddt0000l209dd6a1hwb",
       "title": "Shashikala House - Sunbrix",
       "location": "Bengaluru",
       "year": "2012",
-      "plotSize": "1500 Sq.ft",
-      "facing": "North",
+      "plotSize": "1550 Sq.ft",
+      "facing": "West",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shashikala-house---sunbrix/Cropped-1758532505829-ddjmi4hf8mg.png",
       "images": [
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/shashikala-house---sunbrix/Cropped-1758532505829-ddjmi4hf8mg.png"
       ],
       "image_alt_texts": [
-        "Shashikala's House 375 Sqft plot - Sunbrix"
+        "Shashikala - Sunbrix"
       ],
       "description": "A compact house built on 375 Sq.ft plot an architectural marvel to prove how much space a family really needs for a spacious, bright and happy home.",
       "specifications": {
@@ -234,7 +255,7 @@
       },
       "active": true,
       "created_at": "2025-11-16T17:53:40.430Z",
-      "updated_at": "2025-11-25T18:32:23.500Z"
+      "updated_at": "2025-12-07T22:34:21.637Z"
     },
     {
       "id": "cmi8ukh8c0000l109w7aa3fyz",
@@ -264,7 +285,7 @@
       "title": "Srinath House - Sunbrix",
       "location": "Bengaluru",
       "year": "2023",
-      "plotSize": "1100 sq.ft",
+      "plotSize": "1300 sq.ft",
       "facing": "East",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp",
@@ -272,7 +293,7 @@
         "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/srinath-house-sunbrix/DSC00053%20(1)-1759666208425-096iu7rrg375.webp"
       ],
       "image_alt_texts": [
-        "Srinath House Sunbrix"
+        "Srinath - Sunbrix"
       ],
       "description": "A place for his family to grow and belong, built for a close friend looking to finally settle into a home of his own.",
       "specifications": {
@@ -280,7 +301,7 @@
       },
       "active": true,
       "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-25T18:32:24.291Z"
+      "updated_at": "2025-12-07T22:36:45.906Z"
     },
     {
       "id": "cmi1z0tn000f3os94o6kdcop9",
@@ -288,7 +309,7 @@
       "location": "Bengaluru",
       "year": "2005",
       "plotSize": "4400 sq. ft",
-      "facing": "North",
+      "facing": "West",
       "propertyType": "Residential",
       "image": "https://rzkmikgqpkblsjbrmnkw.supabase.co/storage/v1/object/public/project-images/anuj---manoj-lunia---sunbrix/Anuj%20&%20Manoj-1759665615229-r28kd7hoo7.png",
       "images": [
@@ -303,8 +324,8 @@
       },
       "active": true,
       "created_at": "2025-11-16T17:09:43.141Z",
-      "updated_at": "2025-11-26T10:12:43.789Z"
+      "updated_at": "2025-12-07T22:37:14.669Z"
     }
   ],
-  "count": 13
+  "count": 14
 }
