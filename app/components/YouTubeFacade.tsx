@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 interface YouTubeFacadeProps {
@@ -15,6 +15,7 @@ export default function YouTubeFacade({
   className = "",
 }: YouTubeFacadeProps) {
   const [showVideo, setShowVideo] = useState(false);
+  const [thumbnailSrc, setThumbnailSrc] = useState<string | null>(null);
 
   // Helper to extract video ID
   const getVideoId = (url: string): string | null => {
@@ -30,12 +31,28 @@ export default function YouTubeFacade({
 
   const videoId = getVideoId(videoUrl);
 
-  if (!videoId) {
+  useEffect(() => {
+    if (videoId) {
+      setThumbnailSrc(
+        `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+      );
+    } else {
+      setThumbnailSrc(null);
+    }
+  }, [videoId]);
+
+  if (!videoId || !thumbnailSrc) {
     return null;
   }
 
   const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+  const handleThumbnailError = () => {
+    // Fallback if maxres thumbnail is unavailable
+    if (thumbnailSrc.includes("maxresdefault")) {
+      setThumbnailSrc(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
+    }
+  };
 
   if (showVideo) {
     return (
@@ -58,11 +75,12 @@ export default function YouTubeFacade({
       aria-label={`Play video: ${title}`}
     >
       <Image
-        src={thumbnailUrl}
+        src={thumbnailSrc}
         alt={title}
         fill
         className="object-cover"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        onError={handleThumbnailError}
       />
       {/* Play Button Overlay */}
       <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">

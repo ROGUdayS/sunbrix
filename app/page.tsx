@@ -2382,7 +2382,7 @@ export default function Home() {
                         (prev) => (prev - 1 + totalPages) % totalPages
                       );
                     }}
-                    className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                    className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-colors duration-200 z-10"
                   >
                     <svg
                       className="w-6 h-6"
@@ -2408,7 +2408,7 @@ export default function Home() {
                         (prev) => (prev + 1) % totalPages
                       );
                     }}
-                    className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 z-10"
+                    className="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white hover:bg-gray-50 text-gray-800 rounded-full p-3 shadow-lg transition-colors duration-200 z-10"
                     aria-label="Next testimonial page"
                   >
                     <svg
